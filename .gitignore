@@ -1,4 +1,6 @@
 head.batch
 tail.batch
+*qsub*
+mothur*logfile
 
 data/
