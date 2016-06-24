@@ -16,7 +16,7 @@ $(REFS)/silva.bacteria.% : $(REFS)/silva.bact_archaea.align $(REFS)/silva.bact_a
 	mv $(REFS)/silva.bact_archaea.pick.align $(REFS)/silva.bacteria.align
 	mv $(REFS)/silva.bact_archaea.pick.tax $(REFS)/silva.bacteria.tax
 
-$(REFS)/silva.v4.align : $(REFS)/silva.bacteria.align
+$(REFS)/silva.v4.% : $(REFS)/silva.bacteria.align
 	mothur "#pcr.seqs(fasta=$^, start=13862, end=23445, keepdots=F, processors=8);degap.seqs();unique.seqs()"
 	cut -f 1 $(REFS)/silva.bacteria.pcr.ng.names > $(REFS)/silva.bacteria.pcr.ng.accnos
 	mothur "#get.seqs(fasta=$(REFS)/silva.bacteria.pcr.align, accnos=$(REFS)/silva.bacteria.pcr.ng.accnos);screen.seqs(minlength=240, maxlength=275, maxambig=0, maxhomop=8, processors=8); filter.seqs(vertical=T)"
