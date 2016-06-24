@@ -14,7 +14,7 @@ done
 
 rm -f $MARINE/*sra
 
-R -e "source('marine.R'); make_files_file()"
+R -e "source('code/marine.R'); make_files_file()"
 
 mothur "#set.dir(output=$MARINE);
 	make.contigs(inputdir=$MARINE, file=marine.files, processors=12);
