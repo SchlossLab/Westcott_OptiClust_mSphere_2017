@@ -1,0 +1,16 @@
+SOIL=data/soil
+
+R -e "source('code/soil.R')"
+
+mothur "#screen.seqs(fasta=$SOIL/soil.raw.fasta, minlength=86, maxlength=120, maxambig=0, outputdir=$SOIL);
+unique.seqs(fasta=current);
+align.seqs(fasta=current, reference=data/references/silva.bacteria.align, processors=2)
+screen.seqs(fasta=current, optimize=start, criteria=95, end=43116)
+filter.seqs(fasta=current, vertical=T, trump=.)
+unique.seqs(fasta=current, name=current)
+precluster(fasta=current, name=current, diffs=1)
+chimera.uchime(fasta=current, name=current, minchunk=20, xn=7, skipgaps2=F);
+remove.seqs(fasta=current, name=current, accnos=current);
+count.seqs(name=current);
+classify.seqs(fasta=current, count=current, reference=data/references/trainset14_032015.pds.fasta, taxonomy=data/references/trainset14_032015.pds.tax, cutoff=80);
+remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);"
