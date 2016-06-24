@@ -2,7 +2,7 @@ REFS = data/references
 
 
 
-$(REFS)/silva.bact_archaea.% : 
+$(REFS)/silva.bact_archaea.% :
 	wget -N -P $(REFS)/ http://www.mothur.org/w/images/b/be/Silva.nr_v123.tgz
 	tar xvzf $(REFS)/Silva.nr_v123.tgz -C $(REFS)/;
 	mothur "#get.lineage(fasta=$(REFS)/silva.nr_v123.align, taxonomy=$(REFS)/silva.nr_v123.tax, taxon=Bacteria-Archaea)";
@@ -33,3 +33,8 @@ $(REFS)/trainset14_032015.pds.% :
 	rm -rf $(REFS)/rdp $(REFS)/Trainset*
 
 
+data/mice/mice.% : code/mice.batch code/mice.R\
+									data/references/silva.v4.align\
+ 									data/references/trainset14_032015.pds.fasta\
+ 									data/references/trainset14_032015.pds.tax
+	bash code/mice.batch

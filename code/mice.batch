@@ -9,8 +9,7 @@
 # cluster.split
 #
 # Dependencies...
-# * data/mice/mice.files
-# * data/references/silva.bacteria.align
+# * data/references/silva.v4.align
 # * data/references/trainset14_032015.pds.fasta
 # * data/references/trainset14_032015.pds.tax
 #
