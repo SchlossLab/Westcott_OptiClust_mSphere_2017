@@ -1,0 +1,14 @@
+#!/bin/bash
+
+REFS=data/references
+EVEN=data/even
+mkdir -p $EVEN
+
+grep "^>" $REFS/silva.v4.align | cut -c 2- | awk 'NR % 8 == 0' > $EVEN/simulated.accnos
+mothur "#get.seqs(fasta=$REFS/silva.v4.align, taxonomy=$REFS/silva.v4.tax, accnos=$EVEN/simulated.accnos, outputdir=$EVEN)"
+
+mv $EVEN/silva.v4.pick.align $EVEN/even.fasta
+mv $EVEN/silva.v4.pick.tax $EVEN/even.taxonomy
+rm $EVEN/simulated.accnos
+
+R -e "source('code/even.R');even('$EVEN/even.fasta')"

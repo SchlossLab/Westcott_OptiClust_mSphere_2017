@@ -35,8 +35,11 @@ $(REFS)/trainset14_032015.pds.% :
 	rm -rf $(REFS)/rdp $(REFS)/Trainset*
 
 
-data/mice/mice.% : code/mice.batch code/mice.R\
+data/%.fasta : code/mice.batch code/mice.R\
 									data/references/silva.v4.align\
  									data/references/trainset14_032015.pds.fasta\
  									data/references/trainset14_032015.pds.tax
 	bash code/mice.batch
+
+data/%.count_table : data/%.fasta
+data/%.tax : data/%.fasta
