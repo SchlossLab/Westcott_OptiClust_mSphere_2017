@@ -1,0 +1,14 @@
+#!/bin/bash
+
+REFS=data/references
+STAGGERED=data/staggered
+mkdir -p $STAGGERED
+
+grep "^>" $REFS/silva.v4.align | cut -c 2- | awk 'NR % 8 == 0' > $STAGGERED/simulated.accnos
+mothur "#get.seqs(fasta=$REFS/silva.v4.align, taxonomy=$REFS/silva.v4.tax, accnos=$STAGGERED/simulated.accnos, outputdir=$STAGGERED)"
+
+mv $STAGGERED/silva.v4.pick.align $STAGGERED/staggered.fasta
+mv $STAGGERED/silva.v4.pick.tax $STAGGERED/staggered.taxonomy
+rm $STAGGERED/simulated.accnos
+
+R -e "source('code/staggered.R');staggered('$STAGGERED/staggered.fasta')"
