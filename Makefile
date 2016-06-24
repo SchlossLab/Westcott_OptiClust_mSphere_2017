@@ -23,9 +23,9 @@ $(REFS)/silva.v4.% : $(REFS)/silva.bacteria.align
 	mv $(REFS)/silva.bacteria.pcr.pick.good.filter.fasta $(REFS)/silva.v4.align
 	grep "^>" $(REFS)/silva.v4.align | cut -c 2- > $(REFS)/silva.v4.accnos
 	mothur "#get.seqs(taxonomy=$(REFS)/silva.bacteria.tax, accnos=$(REFS)/silva.v4.accnos)"
+	mv data/references/silva.bacteria.pick.tax data/references/silva.v4.tax
 	rm $(REFS)/silva.bacteria.pcr.*
 	rm $(REFS)/silva.filter
-	rm $(REFS)/silva.bacteria.ng.fasta
 
 $(REFS)/trainset14_032015.pds.% :
 	mkdir -p $(REFS)/rdp
