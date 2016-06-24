@@ -1,6 +1,6 @@
 get_contigsfile <- function(p){
 	p <- gsub("\\/$", "", p)
-	f <- list.files(p)
+	f <- list.files(path=p, pattern="*.fastq.gz")
 	f <- f[!grepl("Mock", f)] #let's ignore the mock community data
 
 	r1 <- f[grep("_R1_", f)]
