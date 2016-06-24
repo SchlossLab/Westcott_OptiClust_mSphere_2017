@@ -79,6 +79,8 @@ rm $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.fast
 rm $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.tax.summary
 rm $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
 rm $MICE_PATH/*.filter
+rm $MICE_PATH/*files
+rm $MICE_PATH/*fastq*
 
 #keeping...
 mv $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta $MICE_PATH/mice.fasta
