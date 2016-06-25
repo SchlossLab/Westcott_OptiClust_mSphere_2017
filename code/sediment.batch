@@ -17,7 +17,7 @@ rm -f $SEDIMENT/*sra
 R -e "source('code/sediment.R'); make_files_file()"
 
 mothur "#set.dir(output=$SEDIMENT);
-	make.contigs(inputdir=$SEDIMENT, file=SEDIMENT.files, processors=12);
+	make.contigs(inputdir=$SEDIMENT, file=$SEDIMENT.files, processors=12);
 	screen.seqs(fasta=current, group=current, maxambig=0, maxlength=275, maxhomop=8);
 	unique.seqs();
 	count.seqs(name=current, group=current);
