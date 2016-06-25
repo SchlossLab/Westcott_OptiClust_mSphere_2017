@@ -22,6 +22,7 @@ mothur "#set.dir(output=$SEDIMENT);
 	unique.seqs();
 	count.seqs(name=current, group=current);
 	align.seqs(fasta=current, reference=data/references/silva.v4.align, processors=2);
+	summary.seqs(fasta=current, count=current);
 	screen.seqs(fasta=current, count=current, start=1968, end=11550);
 	filter.seqs(fasta=current, vertical=T, trump=.);
 	unique.seqs(fasta=current, count=current);
@@ -33,41 +34,41 @@ mothur "#set.dir(output=$SEDIMENT);
 
 
 # Garbage collection
-rm $SEDIMENT/silva.v4.8mer
-rm $SEDIMENT/silva.v4.align
-rm $SEDIMENT/*.contigs.good.groups
-rm $SEDIMENT/*.contigs.groups
-rm $SEDIMENT/*.contigs.report
-rm $SEDIMENT/*.trim.contigs.qual
-rm $SEDIMENT/*.scrap.contigs.qual
-rm $SEDIMENT/*.scrap.contigs.fasta
-rm $SEDIMENT/*.trim.contigs.bad.accnos
-rm $SEDIMENT/*.trim.contigs.fasta
-rm $SEDIMENT/*.trim.contigs.good.count_table
-rm $SEDIMENT/*.trim.contigs.good.fasta
-rm $SEDIMENT/*.trim.contigs.good.good.count_table
-rm $SEDIMENT/*.trim.contigs.good.names
-rm $SEDIMENT/*.trim.contigs.good.unique.align
-rm $SEDIMENT/*.trim.contigs.good.unique.align.report
-rm $SEDIMENT/*.trim.contigs.good.unique.bad.accnos
-rm $SEDIMENT/*.trim.contigs.good.unique.fasta
-rm $SEDIMENT/*.trim.contigs.good.unique.flip.accnos
-rm $SEDIMENT/*.trim.contigs.good.unique.good.align
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.count_table
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.fasta
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.fasta
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.count_table
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.fasta
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique*map
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.chimeras
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.accnos
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.tax.summary
-rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
-rm $SEDIMENT/*.filter
-rm $SEDIMENT/*files
-rm $SEDIMENT/*fastq*
+#rm $SEDIMENT/silva.v4.8mer
+#rm $SEDIMENT/silva.v4.align
+#rm $SEDIMENT/*.contigs.good.groups
+#rm $SEDIMENT/*.contigs.groups
+#rm $SEDIMENT/*.contigs.report
+#rm $SEDIMENT/*.trim.contigs.qual
+#rm $SEDIMENT/*.scrap.contigs.qual
+#rm $SEDIMENT/*.scrap.contigs.fasta
+#rm $SEDIMENT/*.trim.contigs.bad.accnos
+#rm $SEDIMENT/*.trim.contigs.fasta
+#rm $SEDIMENT/*.trim.contigs.good.count_table
+#rm $SEDIMENT/*.trim.contigs.good.fasta
+#rm $SEDIMENT/*.trim.contigs.good.good.count_table
+#rm $SEDIMENT/*.trim.contigs.good.names
+#rm $SEDIMENT/*.trim.contigs.good.unique.align
+#rm $SEDIMENT/*.trim.contigs.good.unique.align.report
+#rm $SEDIMENT/*.trim.contigs.good.unique.bad.accnos
+#rm $SEDIMENT/*.trim.contigs.good.unique.fasta
+#rm $SEDIMENT/*.trim.contigs.good.unique.flip.accnos
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.align
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.count_table
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.fasta
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.fasta
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.count_table
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.fasta
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique*map
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.chimeras
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.accnos
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.tax.summary
+#rm $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
+#rm $SEDIMENT/*.filter
+#rm $SEDIMENT/*files
+#rm $SEDIMENT/*fastq*
 
 #keeping...
 mv $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta $SEDIMENT/SEDIMENT.fasta
