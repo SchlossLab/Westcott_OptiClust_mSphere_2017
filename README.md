@@ -65,3 +65,17 @@ These should be installed the specified folders
 * sumaclust (v.1.0.20 installed in code/sumaclust_v1.0.20)
 * swarm (v.2.1.1 installed in code/swarm)
 * NINJA-OPS (v.1.5.0 installed in code/NINJA-OPS
+
+
+seawater:
+http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4894692/
+
+sediment:
+http://journal.frontiersin.org/article/10.3389/fmicb.2016.00284/full
+
+landfill:
+http://journal.frontiersin.org/article/10.3389/fmicb.2016.00534/full
+
+
+
+soil:
