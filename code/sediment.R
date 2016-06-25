@@ -1,7 +1,7 @@
 make_files_file <- function(){
 
 	mimarks <- read.table(file="data/sediment/sediment.metadata", header=T,
-	 											stringsAsFactors=FALSE)
+	 											stringsAsFactors=FALSE, sep='\t')
 
 	sample_map <- mimarks$Sample_Name_s
 	names(sample_map) <- mimarks$Run_s
