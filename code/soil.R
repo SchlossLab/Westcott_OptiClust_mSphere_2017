@@ -1,28 +1,18 @@
-library(rentrez)
-NCBI_data <- entrez_link(dbfrom = "pubmed", id = "18043639", db = "all")
-n_popsets <- length(NCBI_data$pubmed_popset)
+make_files_file <- function(){
 
-fetched_data <- character()
-for(i in 1:n_popsets){
-    fetched_data[i] <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[i])
+	mimarks <- read.table(file="data/soil/soil.metadata", header=T,
+	 											stringsAsFactors=FALSE, sep='\t')
+
+	sample_map <- mimarks$Sample_Name_s
+	names(sample_map) <- mimarks$Run_s
+
+	read_1 <- list.files(path="data/soil/", pattern="*1.fastq.gz")
+	read_2 <- gsub("_1", "_2", read_1)
+
+	stub <- gsub("_1.*", "", read_1)
+	sample <- sample_map[stub]
+
+	files <- data.frame(sample, read_1, read_2)
+	write.table(files, "data/soil/soil.files", row.names=F, col.names=F, quote=F, sep='\t')
+
 }
-
-full_fasta_file <- paste(fetched_data, collapse="")
-full_fasta_file <- gsub("\n\n", "\n", full_fasta_file)
-split_fasta_file <- unlist(strsplit(full_fasta_file, ">"))[-1]
-
-seq_ids <- sub("^gi\\|\\d*\\|gb\\|EF(\\d*).1\\|.*", "\\1", split_fasta_file)
-seq_ids <- as.numeric(seq_ids)
-
-seq_bases <- sub("^.*partial sequence\n", "\\1", split_fasta_file)
-seq_bases <- gsub("\\n", "", seq_bases)
-
-used_ids <- 308591:361836
-
-keep_sequences <- seq_ids %in% used_ids
-
-keep_ids <- seq_ids[keep_sequences]
-keep_bases <- seq_bases[keep_sequences]
-keep_fasta <- paste0(">EF", keep_ids, "\n", keep_bases)
-
-write(keep_fasta, "data/soil/soil.raw.fasta")
