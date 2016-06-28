@@ -46,6 +46,7 @@ mothur "#set.dir(output=$MICE_PATH);
 
 
 # Garbage collection
+rm $MICE_PATH/*fastq.gz
 rm $MICE_PATH/silva.v4.8mer
 rm $MICE_PATH/silva.v4.align
 rm $MICE_PATH/*.contigs.good.groups
