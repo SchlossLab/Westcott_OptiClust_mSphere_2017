@@ -31,45 +31,43 @@ mothur "#set.dir(output=$MARINE);
 	classify.seqs(fasta=current, count=current, reference=data/references/trainset14_032015.pds.fasta, taxonomy=data/references/trainset14_032015.pds.tax, cutoff=80);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);"
 
-
-# Garbage collection
-#rm $MARINE/silva.v4.8mer
-#rm $MARINE/silva.v4.align
-#rm $MARINE/*.contigs.good.groups
-#rm $MARINE/*.contigs.groups
-#rm $MARINE/*.contigs.report
-#rm $MARINE/*.trim.contigs.qual
-#rm $MARINE/*.scrap.contigs.qual
-#rm $MARINE/*.scrap.contigs.fasta
-#rm $MARINE/*.trim.contigs.bad.accnos
-#rm $MARINE/*.trim.contigs.fasta
-#rm $MARINE/*.trim.contigs.good.count_table
-#rm $MARINE/*.trim.contigs.good.fasta
-#rm $MARINE/*.trim.contigs.good.good.count_table
-#rm $MARINE/*.trim.contigs.good.names
-#rm $MARINE/*.trim.contigs.good.unique.align
-#rm $MARINE/*.trim.contigs.good.unique.align.report
-#rm $MARINE/*.trim.contigs.good.unique.bad.accnos
-#rm $MARINE/*.trim.contigs.good.unique.fasta
-#rm $MARINE/*.trim.contigs.good.unique.flip.accnos
-#rm $MARINE/*.trim.contigs.good.unique.good.align
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.count_table
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.fasta
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.fasta
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.count_table
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.fasta
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique*map
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.chimeras
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.accnos
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.tax.summary
-#rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
-#rm $MARINE/*.filter
-#rm $MARINE/*files
-#rm $MARINE/*fastq*
-
 #keeping...
-#mv $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta $MARINE/marine.fasta
-#mv $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table $MARINE/marine.count_table
-#mv $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy $MARINE/marine.taxonomy
+mv $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta $MARINE/marine.fasta
+mv $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table $MARINE/marine.count_table
+mv $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy $MARINE/marine.taxonomy
+
+
+
+rm $MARINE/*fastq.gz
+rm $MARINE/*.contigs.good.groups
+rm $MARINE/*.contigs.groups
+rm $MARINE/*.contigs.report
+rm $MARINE/*.trim.contigs.qual
+rm $MARINE/*.scrap.contigs.qual
+rm $MARINE/*.scrap.contigs.fasta
+rm $MARINE/*.trim.contigs.bad.accnos
+rm $MARINE/*.trim.contigs.fasta
+rm $MARINE/*.trim.contigs.good.count_table
+rm $MARINE/*.trim.contigs.good.fasta
+rm $MARINE/*.trim.contigs.good.good.count_table
+rm $MARINE/*.trim.contigs.good.names
+rm $MARINE/*.trim.contigs.good.unique.align
+rm $MARINE/*.trim.contigs.good.unique.align.report
+rm $MARINE/*.trim.contigs.good.unique.bad.accnos
+rm $MARINE/*.trim.contigs.good.unique.fasta
+rm $MARINE/*.trim.contigs.good.unique.flip.accnos
+rm $MARINE/*.trim.contigs.good.unique.good.align
+rm $MARINE/*.trim.contigs.good.unique.good.filter.count_table
+rm $MARINE/*.trim.contigs.good.unique.good.filter.fasta
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.fasta
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.count_table
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.fasta
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique*map
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.chimeras
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.accnos
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.tax.summary
+rm $MARINE/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
+rm $MARINE/*.filter
+rm $MARINE/*files
