@@ -1,19 +1,18 @@
 SOIL=data/soil
 mkdir -p $SOIL
 
-wget -r -q -np -nd -k -P $SOIL ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP065
-/SRP065999/
 
-for SRA in $SOIL/*.sra
+for FILE in {59..77}
 do
-	fastq-dump --split-files $SRA -O $SOIL
-	R1=`echo $SRA | sed -e "s/.sra/_1.fastq/"`
-	R2=`echo $SRA | sed -e "s/.sra/_2.fastq/"`
-	gzip "$R1"
-	gzip "$R2"
+	wget -N -P $SOIL ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR103/ERR10394${FILE}/ERR10394${FILE}.sra
+	fastq-dump --split-files $SOIL/ERR10394${FILE}.sra -O $SOIL/
+	gzip $SOIL/ERR10394${FILE}_1.fastq
+	gzip $SOIL/ERR10394${FILE}_2.fastq
 done
 
-rm -f $SOIL/*.sra
+rm -f data/soil/ERR1039470.* #this wasn't part of the current study
+
+
 
 R -e "source('code/soil.R'); make_files_file()"
 
