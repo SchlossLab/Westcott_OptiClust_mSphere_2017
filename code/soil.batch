@@ -9,7 +9,7 @@ do
 	gzip $SOIL/ERR10394${FILE}_2.fastq
 done
 
-rm -f data/soil/ERR1039470.* #this wasn't part of the current study
+rm -f data/soil/ERR1039470* #this wasn't part of the current study
 rm -f data/soil/*sra
 
 R -e "source('code/soil.R'); make_files_file()"
