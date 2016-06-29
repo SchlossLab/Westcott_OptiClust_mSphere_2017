@@ -1,5 +1,7 @@
 REFS = data/references
 
+print-%:
+	@echo '$*=$($*)'
 
 
 $(REFS)/silva.bact_archaea.% :
@@ -44,6 +46,22 @@ data/%.fasta data/%.count_table data/%.taxonomy : code/$$(notdir $$*).batch code
 
 
 
+SAMPLES = mice human soil sediment marine landfill even staggered
+FRACTIONS = 0_2 0_4 0_6 0_8 1_0
+REPLICATE = 01 02 03 04 05 06 07 08 09 10
+DATAPATH = $(foreach S,$(SAMPLES),$(foreach F,$(FRACTIONS), $(foreach R, $(REPLICATE), data/$S/$S.$F.$R)))
+SUB_FASTA = $(foreach D,$(DATAPATH),$D.fasta)
+SUB_TAX = $(foreach D,$(DATAPATH),$D.taxonomy)
+SUB_COUNT = $(foreach D,$(DATAPATH),$D.count_table)
+SUB_FILES = $(SUB_FASTA) $(SUB_TAX) $(SUB_COUNT)
 
-data/mice/mice.1_0.% : code/subsample.R data/mice/mice.fasta data/mice/mice.taxonomy data/mice/mice.count_table
-	R -e "source('code/subsample.R'); subsample('mice', 1.0)"
+
+.SECONDEXPANSION:
+$(SUB_FILES) : code/subsample.R $$(basename $$(basename $$(basename $$@))).fasta $$(basename $$(basename $$(basename $$@))).taxonomy $$(basename $$(basename $$(basename $$@))).count_table
+	@echo $^
+	$(eval SAMPLE=$(basename $(basename $(basename $(notdir $@)))))
+	$(eval REP=$(subst .,,$(suffix $(basename $@))))
+	$(eval FRAC=$(subst .,,$(suffix $(basename $(basename $@)))))
+	@echo $(FRAC)
+	@echo $(REP)
+	R -e "source('code/subsample.R'); subsample('$(SAMPLE)', '$(FRAC)', '$(REP)')"

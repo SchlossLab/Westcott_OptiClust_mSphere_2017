@@ -1,4 +1,9 @@
-subsample <- function(stub, fraction){
+subsample <- function(stub, fraction, replicate){
+
+	fraction <- as.numeric(gsub("_", "\\.", fraction))
+
+	rep <- as.numeric(gsub("^0", "", replicate))
+	set.seed(rep)
 
 	path <- paste0('data/', stub, '/', stub)
 
@@ -25,16 +30,17 @@ subsample <- function(stub, fraction){
 	subsample_size <- floor(n_seqs * fraction)
 	keep <- sample(1:n_seqs, subsample_size)
 
-	fraction <- gsub('.', '_', fraction)
+	fraction <- format(fraction, nsmall=1L)
+	fraction <- gsub('\\.', '_', fraction)
 
 	#fasta
 	fasta_names <- paste0(">", fasta_names)
-	write(paste(fasta_names[keep], fasta_seqs[keep], sep='\n'), paste0(path, '.', fraction, '.fasta'))
+	write(paste(fasta_names[keep], fasta_seqs[keep], sep='\n'), paste0(path, '.', fraction, '.', replicate, '.fasta'))
 
 	#taxonomy
-	write.table(taxonomy[keep,], paste0(path, '.', fraction, '.taxonomy'), col.names=F, row.names=F, quote=F)
+	write.table(taxonomy[keep,], paste0(path, '.', fraction, '.', replicate, '.taxonomy'), col.names=F, row.names=F, quote=F)
 
 	#count
-	write.table(count[keep,], paste0(path, '.', fraction, '.count_table'), col.names=F, row.names=F, quote=F)
+	write.table(count[keep,], paste0(path, '.', fraction, '.', replicate, '.count_table'), col.names=F, row.names=F, quote=F)
 
 }
