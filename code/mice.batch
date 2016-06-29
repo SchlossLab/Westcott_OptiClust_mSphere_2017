@@ -47,8 +47,6 @@ mothur "#set.dir(output=$MICE_PATH);
 
 # Garbage collection
 rm $MICE_PATH/*fastq.gz
-rm $MICE_PATH/silva.v4.8mer
-rm $MICE_PATH/silva.v4.align
 rm $MICE_PATH/*.contigs.good.groups
 rm $MICE_PATH/*.contigs.groups
 rm $MICE_PATH/*.contigs.report
@@ -81,9 +79,8 @@ rm $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.
 rm $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
 rm $MICE_PATH/*.filter
 rm $MICE_PATH/*files
-rm $MICE_PATH/*fastq*
 
 #keeping...
 mv $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta $MICE_PATH/mice.fasta
-mv $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table $MICE_PATH/mice.count_table
+mv $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table $MICE_PATH/mice.count_table
 mv $MICE_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy $MICE_PATH/mice.taxonomy
