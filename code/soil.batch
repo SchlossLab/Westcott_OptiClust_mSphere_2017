@@ -1,7 +1,6 @@
 SOIL=data/soil
 mkdir -p $SOIL
 
-
 for FILE in {59..77}
 do
 	wget -N -P $SOIL ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR103/ERR10394${FILE}/ERR10394${FILE}.sra
@@ -11,8 +10,7 @@ do
 done
 
 rm -f data/soil/ERR1039470.* #this wasn't part of the current study
-
-
+rm -f data/soil/*sra
 
 R -e "source('code/soil.R'); make_files_file()"
 
