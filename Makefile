@@ -41,3 +41,9 @@ data/%.fasta data/%.count_table data/%.taxonomy : code/$$(notdir $$*).batch code
 			$(REFS)/trainset14_032015.pds.fasta\
 			$(REFS)/trainset14_032015.pds.tax
 	bash $<
+
+
+
+
+data/mice/mice.1_0.% : code/subsample.R data/mice/mice.fasta data/mice/mice.taxonomy data/mice/mice.count_table
+	R -e "source('code/subsample.R'); subsample('mice', 1.0)"
