@@ -77,3 +77,38 @@ $(SUB_LG_DIST) : $$(subst lg.dist,fasta,$$@)
 	mothur "#dist.seqs(fasta=$^, cutoff=0.15, processors=8)"
 	$(eval FULL_NAME=$(subst lg.dist,dist,$@))
 	mv $(FULL_NAME) $@
+
+
+
+
+NN_LIST = $(subst sm.dist,nn.list,$(SUB_SM_DIST))
+FN_LIST = $(subst sm.dist,fn.list,$(SUB_SM_DIST))
+AN_LIST = $(subst lg.dist,an.list,$(SUB_LG_DIST))
+
+.SECONDEXPANSION:
+$(NN_LIST) : $$(subst .nn.list,.sm.dist, $$@) $$(subst nn.list,count_table, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	zsh -i -c 'time mothur "#cluster(column=$(DIST), count=$(COUNT), method=nearest)" > /dev/null' &> $(STATS)
+	$(eval TEMP=$(subst nn.list,sm.nn.unique_list.list,$@))
+	mv $(TEMP) $@
+
+.SECONDEXPANSION:
+$(FN_LIST) : $$(subst .fn.list,.sm.dist, $$@) $$(subst fn.list,count_table, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	zsh -i -c 'time mothur "#cluster(column=$(DIST), count=$(COUNT), method=furthest)" > /dev/null' &> $(STATS)
+	$(eval TEMP=$(subst fn.list,sm.fn.unique_list.list,$@))
+	mv $(TEMP) $@
+
+.SECONDEXPANSION:
+$(AN_LIST) : $$(subst .an.list,.lg.dist, $$@) $$(subst an.list,count_table, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	zsh -i -c 'time mothur "#cluster(column=$(DIST), count=$(COUNT), method=average)" > /dev/null' &> $(STATS)
+	$(eval TEMP=$(subst an.list,lg.an.unique_list.list,$@))
+	mv $(TEMP) $@
+
