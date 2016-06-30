@@ -41,6 +41,6 @@ subsample <- function(stub, fraction, replicate){
 	write.table(taxonomy[keep,], paste0(path, '.', fraction, '.', replicate, '.taxonomy'), col.names=F, row.names=F, quote=F)
 
 	#count
-	write.table(count[keep,], paste0(path, '.', fraction, '.', replicate, '.count_table'), col.names=F, row.names=F, quote=F)
+	write.table(count[keep,], paste0(path, '.', fraction, '.', replicate, '.count_table'), col.names=T, row.names=F, quote=F)
 
 }
