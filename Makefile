@@ -84,8 +84,14 @@ $(SUB_LG_DIST) : $$(subst lg.dist,fasta,$$@)
 NN_LIST = $(subst sm.dist,nn.list,$(SUB_SM_DIST))
 FN_LIST = $(subst sm.dist,fn.list,$(SUB_SM_DIST))
 AN_LIST = $(subst lg.dist,an.list,$(SUB_LG_DIST))
-SPLIT5_8_LIST = $(subst fasta,split5_8.list,$(SUB_FASTA))
-SPLIT5_1_LIST = $(subst fasta,split5_1.list,$(SUB_FASTA))
+VAGC_LIST = $(subst sm.dist,vagc.list,$(SUB_SM_DIST))
+VDGC_LIST = $(subst sm.dist,vdgc.list,$(SUB_SM_DIST))
+MCC_LIST = $(subst sm.dist,mcc.list,$(SUB_SM_DIST))
+F1SCORE_LIST = $(subst sm.dist,f1score.list,$(SUB_SM_DIST))
+ACCURACY_LIST = $(subst sm.dist,accuracy.list,$(SUB_SM_DIST))
+
+AN_SPLIT5_8_LIST = $(subst fasta,split5_8.list,$(SUB_FASTA))
+AN_SPLIT5_1_LIST = $(subst fasta,split5_1.list,$(SUB_FASTA))
 
 
 OTUCLUST_LIST = $(subst fasta,otuclust.list,$(SUB_FASTA))
@@ -120,24 +126,88 @@ $(AN_LIST) : $$(subst .an.list,.lg.dist, $$@) $$(subst an.list,count_table, $$@)
 	mv $(TEMP) $@
 
 .SECONDEXPANSION:
-$(SPLIT5_8_LIST) : $$(subst .split5_8.list,.fasta, $$@) $$(subst .split5_8.list,.taxonomy, $$@) $$(subst split5_8.list,count_table, $$@)
+$(VAGC_LIST) : $$(subst vagc.list,fasta, $$@) $$(subst vagc.list,count_table, $$@)
 	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
+	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8)" > /dev/null
-	$(eval TEMP=$(subst split5_8.list,an.unique_list.list,$@))
+	/usr/bin/time -o $(STATS) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=agc, cutoff=0.03)" > /dev/null
+	$(eval TEMP=$(subst vagc.list,agc.unique_list.list,$@))
 	mv $(TEMP) $@
 
 .SECONDEXPANSION:
-$(SPLIT5_1_LIST) : $$(subst .split5_1.list,.fasta, $$@) $$(subst .split5_1.list,.taxonomy, $$@) $$(subst split5_1.list,count_table, $$@)
+$(VDGC_LIST) : $$(subst vdgc.list,fasta, $$@) $$(subst vdgc.list,count_table, $$@)
+	$(eval FASTA=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	/usr/bin/time -o $(STATS) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=dgc, cutoff=0.03)" > /dev/null
+	$(eval TEMP=$(subst vdgc.list,dgc.unique_list.list,$@))
+	mv $(TEMP) $@
+
+.SECONDEXPANSION:
+$(MCC_LIST) : $$(subst .mcc.list,.sm.dist, $$@) $$(subst mcc.list,count_table, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=mcc)" > /dev/null
+	$(eval TEMP=$(subst mcc.list,sm.opti_mcc.list,$@))
+	mv $(TEMP) $@
+	$(eval TEMP1=$(subst mcc.list,sm.opti_mcc.sensspec,$@))
+	$(eval TEMP2=$(subst mcc.list,mcc.sensspec,$@))
+	mv $(TEMP1) $(TEMP2)
+
+
+.SECONDEXPANSION:
+$(F1SCORE_LIST) : $$(subst .f1score.list,.sm.dist, $$@) $$(subst f1score.list,count_table, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=f1score)" > /dev/null
+	$(eval TEMP=$(subst f1score.list,sm.opti_f1score.list,$@))
+	mv $(TEMP) $@
+	$(eval TEMP1=$(subst f1score.list,sm.opti_f1score.sensspec,$@))
+	$(eval TEMP2=$(subst f1score.list,f1score.sensspec,$@))
+	mv $(TEMP1) $(TEMP2)
+
+.SECONDEXPANSION:
+$(ACCURACY_LIST) : $$(subst .accuracy.list,.sm.dist, $$@) $$(subst accuracy.list,count_table, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=accuracy)" > /dev/null
+	$(eval TEMP=$(subst accuracy.list,sm.opti_accuracy.list,$@))
+	mv $(TEMP) $@
+	$(eval TEMP1=$(subst accuracy.list,sm.opti_accuracy.sensspec,$@))
+	$(eval TEMP2=$(subst accuracy.list,accuracy.sensspec,$@))
+	mv $(TEMP1) $(TEMP2)
+
+
+
+
+
+.SECONDEXPANSION:
+$(AN_SPLIT5_1_LIST) : $$(subst an_split5_1.list,fasta, $$@) $$(subst an_split5_1.list,taxonomy, $$@) $$(subst an_split5_1.list,count_table, $$@)
 	$(eval FASTA=$(word 1,$^))
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=1)" > /dev/null
-	$(eval TEMP=$(subst split5_1.list,an.unique_list.list,$@))
+	$(eval TEMP=$(subst an_split5_1.list,an.unique_list.list,$@))
 	mv $(TEMP) $@
+
+.SECONDEXPANSION:
+$(AN_SPLIT5_8_LIST) : $$(subst an_split5_8.list,fasta, $$@) $$(subst an_split5_8.list,taxonomy, $$@) $$(subst an_split5_8.list,count_table, $$@)
+	$(eval FASTA=$(word 1,$^))
+	$(eval TAXONOMY=$(word 2,$^))
+	$(eval COUNT=$(word 3,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8)" > /dev/null
+	$(eval TEMP=$(subst an_split5_8.list,an.unique_list.list,$@))
+	mv $(TEMP) $@
+
+
+
+
+
 
 
 .SECONDEXPANSION:
