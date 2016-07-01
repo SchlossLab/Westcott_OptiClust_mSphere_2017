@@ -38,9 +38,9 @@ subsample <- function(stub, fraction, replicate){
 	write(paste(fasta_names[keep], fasta_seqs[keep], sep='\n'), paste0(path, '.', fraction, '.', replicate, '.fasta'))
 
 	#taxonomy
-	write.table(taxonomy[keep,], paste0(path, '.', fraction, '.', replicate, '.taxonomy'), col.names=F, row.names=F, quote=F)
+	write.table(taxonomy[keep,], paste0(path, '.', fraction, '.', replicate, '.taxonomy'), col.names=F, row.names=F, quote=F, sep='\t')
 
 	#count
-	write.table(count[keep,], paste0(path, '.', fraction, '.', replicate, '.count_table'), col.names=T, row.names=F, quote=F)
+	write.table(count[keep,], paste0(path, '.', fraction, '.', replicate, '.count_table'), col.names=T, row.names=F, quote=F, sep='\t')
 
 }
