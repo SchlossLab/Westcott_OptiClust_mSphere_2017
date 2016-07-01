@@ -89,6 +89,8 @@ SPLIT5_1_LIST = $(subst fasta,split5_1.list,$(SUB_FASTA))
 
 
 OTUCLUST_LIST = $(subst fasta,otuclust.list,$(SUB_FASTA))
+SUMACLUST_LIST = $(subst fasta,sumaclust.list,$(SUB_FASTA))
+
 
 .SECONDEXPANSION:
 $(NN_LIST) : $$(subst .nn.list,.sm.dist, $$@) $$(subst nn.list,count_table, $$@)
@@ -148,3 +150,17 @@ $(OTUCLUST_LIST) : $$(subst .otuclust.list,.fasta, $$@) $$(subst .otuclust.list,
 	mothur "#degap.seqs(fasta=$(TEMP_FASTA));deunique.seqs(fasta=current, count=$(COUNT))"
 	$(eval RED_FASTA=$(subst fasta,ng.redundant.fasta,$(TEMP_FASTA)))
 	/usr/bin/time -o $(STATS) ./code/run_otuclust.sh $(RED_FASTA)
+
+
+.SECONDEXPANSION:
+$(SUMACLUST_LIST) : $$(subst .sumaclust.list,.fasta, $$@) $$(subst .sumaclust.list,.count_table, $$@) code/run_sumaclust.sh code/run_sumaclust.R
+	$(eval FASTA=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	$(eval TEMP_FASTA=$(subst fasta,sumaclust.fasta,$(FASTA)))
+	cp $(FASTA) $(TEMP_FASTA)
+	mothur "#degap.seqs(fasta=$(TEMP_FASTA));deunique.seqs(fasta=current, count=$(COUNT))"
+	$(eval NG_FASTA=$(subst fasta,ng.fasta,$(TEMP_FASTA)))
+	$(eval RED_FASTA=$(subst fasta,ng.redundant.fasta,$(TEMP_FASTA)))
+	/usr/bin/time -o $(STATS) ./code/run_sumaclust.sh $(RED_FASTA)
+	rm $(TEMP_FASTA) $(RED_FASTA) $(NG_FASTA)
