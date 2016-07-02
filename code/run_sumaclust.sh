@@ -4,15 +4,23 @@
 # tag. We'll assume that sumaclust is in code/sumaclust_v1.0.20. We will also
 # assign sequences to OTUs based on 97% similarity (-t 0.97) and because we want
 # to eventually generate a list file we want to output the mapping file with the
-# -O flag
+# -O flag. The outputted list file is a unqiue_list formatted file
 
 FASTA=$1
+COUNT=$2
+
+TEMP_FASTA=$(echo $FASTA | sed 's/fasta/sumaclust.fasta/')
+cp $FASTA $TEMP_FASTA
+
+mothur "#degap.seqs(fasta=$TEMP_FASTA);deunique.seqs(fasta=current, count=$COUNT)"
+NG_FASTA=$(echo $TEMP_FASTA | sed 's/fasta/ng.fasta/')
+RED_FASTA=$(echo $TEMP_FASTA | sed 's/fasta/ng.redundant.fasta/')
+
 SUMACLUST_CLUST=$(echo $FASTA | sed 's/fasta/sumaclust.clust/')
 
-code/sumaclust_v1.0.20/sumaclust -t 0.97 $FASTA -O $SUMACLUST_CLUST >/dev/null
+code/sumaclust_v1.0.20/sumaclust -t 0.97 $RED_FASTA -O $SUMACLUST_CLUST >/dev/null
 
 R -e "source('code/run_sumaclust.R'); sumaclust_to_list('$SUMACLUST_CLUST')"
 
 
-rm $SUMACLUST_CLUST
-
+rm $TEMP_FASTA $NG_FASTA $RED_FASTA $SUMACLUST_CLUST

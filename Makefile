@@ -282,10 +282,4 @@ $(SUMACLUST_LIST) : $$(subst .sumaclust.list,.fasta, $$@) $$(subst .sumaclust.li
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	$(eval TEMP_FASTA=$(subst fasta,sumaclust.fasta,$(FASTA)))
-	cp $(FASTA) $(TEMP_FASTA)
-	mothur "#degap.seqs(fasta=$(TEMP_FASTA));deunique.seqs(fasta=current, count=$(COUNT))"
-	$(eval NG_FASTA=$(subst fasta,ng.fasta,$(TEMP_FASTA)))
-	$(eval RED_FASTA=$(subst fasta,ng.redundant.fasta,$(TEMP_FASTA)))
-	/usr/bin/time -o $(STATS) ./code/run_sumaclust.sh $(RED_FASTA)
-	rm $(TEMP_FASTA) $(RED_FASTA) $(NG_FASTA)
+	/usr/bin/time -o $(STATS) ./code/run_sumaclust.sh $(FASTA) $(COUNT)
