@@ -8,10 +8,6 @@
 # because we want to include all of the sequences we'll keep the singletons (-m 1)
 
 
-#data/mice/mice.0_2.02.otuclust.redundant.fasta
-	# $(eval NG_FASTA=$(sbust fasta,ng.fasta,$(TEMP_FASTA)))
-	# $(eval RED_FASTA=$(subst fasta,ng.redundant.fasta,$(TEMP_FASTA)))
-
 FASTA=$1
 COUNT=$2
 
@@ -22,7 +18,6 @@ mothur "#degap.seqs(fasta=$TEMP_FASTA);deunique.seqs(fasta=current, count=$COUNT
 OTUCLUST_FASTA=$(echo $FASTA | sed 's/fasta/ng.redundant.fasta/')
 OTUCLUST_CLUST=$(echo $OTUCLUST_FASTA | sed 's/ng.redundant.fasta/clust/')
 OTUCLUST_REP=$(echo $OTUCLUST_FASTA | sed 's/ng.redundant.fasta/rep/')
-
 otuclust -f fasta $OTUCLUST_FASTA --out-clust $OTUCLUST_CLUST --out-rep $OTUCLUST_REP -s 0.97 -m 1
 
 #R -e "source('code/run_otuclust.R'); otuclust_to_list('$OTUCLUST_CLUST')"

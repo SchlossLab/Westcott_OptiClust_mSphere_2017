@@ -270,12 +270,11 @@ $(UAGC_LIST) : $$(subst .uagc.list,.fasta, $$@) $$(subst .uagc.list,.count_table
 	/usr/bin/time -o $(STATS) code/run_uagc.sh $(FASTA) $(COUNT)
 
 .SECONDEXPANSION:
-$(OTUCLUST_LIST) : $$(subst .otuclust.list,.fasta, $$@) $$(subst .otuclust.list,.count_table, $$@)
+$(OTUCLUST_LIST) : $$(subst .otuclust.list,.fasta, $$@) $$(subst .otuclust.list,.count_table, $$@) code/run_otuclust.sh
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) ./code/run_otuclust.sh $(RED_FASTA)
-
+	/usr/bin/time -o $(STATS) ./code/run_otuclust.sh $(FASTA) $(COUNT)
 
 .SECONDEXPANSION:
 $(SUMACLUST_LIST) : $$(subst .sumaclust.list,.fasta, $$@) $$(subst .sumaclust.list,.count_table, $$@) code/run_sumaclust.sh code/run_sumaclust.R
