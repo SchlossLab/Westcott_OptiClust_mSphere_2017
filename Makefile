@@ -256,21 +256,21 @@ $(VDGC_SPLIT5_8_LIST) : $$(subst vdgc_split5_8.list,fasta, $$@)  $$(subst vdgc_s
 
 
 .SECONDEXPANSION:
-$(UDGC_LIST) : $$(subst .udgc.list,.fasta, $$@) $$(subst .udgc.list,.count_table, $$@)
+$(UDGC_LIST) : $$(subst .udgc.list,.fasta, $$@) $$(subst .udgc.list,.count_table, $$@) code/run_udgc.sh code/uc_to_list.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	/usr/bin/time -o $(STATS) code/run_udgc.sh $(FASTA) $(COUNT)
 
 .SECONDEXPANSION:
-$(UAGC_LIST) : $$(subst .uagc.list,.fasta, $$@) $$(subst .uagc.list,.count_table, $$@)
+$(UAGC_LIST) : $$(subst .uagc.list,.fasta, $$@) $$(subst .uagc.list,.count_table, $$@) code/run_uagc.sh code/uc_to_list.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	/usr/bin/time -o $(STATS) code/run_uagc.sh $(FASTA) $(COUNT)
 
 .SECONDEXPANSION:
-$(OTUCLUST_LIST) : $$(subst .otuclust.list,.fasta, $$@) $$(subst .otuclust.list,.count_table, $$@) code/run_otuclust.sh
+$(OTUCLUST_LIST) : $$(subst .otuclust.list,.fasta, $$@) $$(subst .otuclust.list,.count_table, $$@) code/run_otuclust.sh code/run_otuclust.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
