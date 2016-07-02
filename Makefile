@@ -70,7 +70,7 @@ SUB_SM_DIST = $(subst fasta,sm.dist,$(SUB_FASTA))
 $(SUB_SM_DIST) : $$(subst sm.dist,fasta,$$@)
 	mothur "#dist.seqs(fasta=$^, cutoff=0.03, processors=8)"
 	$(eval FULL_NAME=$(subst sm.dist,dist,$@))
-	mv $(FULL_NAME) $@ 
+	mv $(FULL_NAME) $@
 
 SUB_LG_DIST = $(subst fasta,lg.dist,$(SUB_FASTA))
 $(SUB_LG_DIST) : $$(subst lg.dist,fasta,$$@)
@@ -96,7 +96,6 @@ MCC_SPLIT5_1_LIST = $(subst fasta,mcc_split5_1.list,$(SUB_FASTA))
 MCC_SPLIT5_8_LIST = $(subst fasta,mcc_split5_8.list,$(SUB_FASTA))
 VDGC_SPLIT5_1_LIST = $(subst fasta,vdgc_split5_1.list,$(SUB_FASTA))
 VDGC_SPLIT5_8_LIST = $(subst fasta,vdgc_split5_8.list,$(SUB_FASTA))
-
 
 UAGC_LIST = $(subst fasta,uagc.list,$(SUB_FASTA))
 UDGC_LIST = $(subst fasta,udgc.list,$(SUB_FASTA))
@@ -275,13 +274,7 @@ $(OTUCLUST_LIST) : $$(subst .otuclust.list,.fasta, $$@) $$(subst .otuclust.list,
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	$(eval TEMP_FASTA=$(subst fasta,otuclust.fasta,$(FASTA)))
-	cp $(FASTA) $(TEMP_FASTA)
-	mothur "#degap.seqs(fasta=$(TEMP_FASTA));deunique.seqs(fasta=current, count=$(COUNT))"
-	$(eval NG_FASTA=$(sbust fasta,ng.fasta,$(TEMP_FASTA)))
-	$(eval RED_FASTA=$(subst fasta,ng.redundant.fasta,$(TEMP_FASTA)))
 	/usr/bin/time -o $(STATS) ./code/run_otuclust.sh $(RED_FASTA)
-	rm $(TEMP_FASTA)
 
 
 .SECONDEXPANSION:
