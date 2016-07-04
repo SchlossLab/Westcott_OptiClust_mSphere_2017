@@ -15,11 +15,16 @@ TEMP_FASTA=$(echo $FASTA | sed 's/fasta/otuclust.fasta/')
 cp $FASTA $TEMP_FASTA
 mothur "#degap.seqs(fasta=$TEMP_FASTA);deunique.seqs(fasta=current, count=$COUNT)"
 
+NG_FASTA=$(echo $TEMP_FASTA | sed 's/fasta/ng.fasta/')
 OTUCLUST_FASTA=$(echo $TEMP_FASTA | sed 's/fasta/ng.redundant.fasta/')
 OTUCLUST_CLUST=$(echo $OTUCLUST_FASTA | sed 's/ng.redundant.fasta/clust/')
 OTUCLUST_REP=$(echo $OTUCLUST_FASTA | sed 's/ng.redundant.fasta/rep/')
+
 otuclust -f fasta $OTUCLUST_FASTA --out-clust $OTUCLUST_CLUST --out-rep $OTUCLUST_REP -s 0.97 -m 1
 
-#R -e "source('code/run_otuclust.R'); otuclust_to_list('$OTUCLUST_CLUST')"
+R -e "source('code/run_otuclust.R'); otuclust_to_list('$OTUCLUST_CLUST')"
+rm $TEMP_FASTA $OTUCLUST_FASTA $OTUCLUST_CLUST $OTUCLUST_REP
 
-#rm $TEMP_FASTA $OTUCLUST_FASTA $OTUCLUST_CLUST $OTUCLUST_REP
+rm $TEMP_FASTA $OTUCLUST_CLUST $OTUCLUST_FASTA $NG_FASTA $OTUCLUST_REP
+
+
