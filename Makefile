@@ -68,13 +68,15 @@ $(SUB_FILES) : code/subsample.R $$(basename $$(basename $$(basename $$@))).fasta
 
 SUB_SM_DIST = $(subst fasta,sm.dist,$(SUB_FASTA))
 $(SUB_SM_DIST) : $$(subst sm.dist,fasta,$$@)
-	mothur "#dist.seqs(fasta=$^, cutoff=0.03, processors=8)"
+	$(eval STATS=$(subst dist,stats, $@))
+	/usr/bin/time -o $(STATS) mothur "#dist.seqs(fasta=$^, cutoff=0.03, processors=8)"
 	$(eval FULL_NAME=$(subst sm.dist,dist,$@))
 	mv $(FULL_NAME) $@
 
 SUB_LG_DIST = $(subst fasta,lg.dist,$(SUB_FASTA))
 $(SUB_LG_DIST) : $$(subst lg.dist,fasta,$$@)
-	mothur "#dist.seqs(fasta=$^, cutoff=0.15, processors=8)"
+	$(eval STATS=$(subst dist,stats, $@))
+	/usr/bin/time -o $(STATS) mothur "#dist.seqs(fasta=$^, cutoff=0.15, processors=8)"
 	$(eval FULL_NAME=$(subst lg.dist,dist,$@))
 	mv $(FULL_NAME) $@
 
