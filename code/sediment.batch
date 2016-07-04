@@ -33,9 +33,9 @@ mothur "#set.dir(output=$SEDIMENT);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);"
 
 #keeping...
-mv $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta $SEDIMENT/$SEDIMENT.fasta
-mv $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table $SEDIMENT/$SEDIMENT.count_table
-mv $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy $SEDIMENT/$SEDIMENT.taxonomy
+mv $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta $SEDIMENT/sediment.fasta
+mv $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table $SEDIMENT/sediment.count_table
+mv $SEDIMENT/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy $SEDIMENT/sediment.taxonomy
 
 # Garbage collection
 rm $SEDIMENT/*.contigs.*
