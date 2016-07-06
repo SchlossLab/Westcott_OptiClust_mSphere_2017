@@ -1,8 +1,9 @@
 notes.md
-head.batch
+head*.batch
 tail.batch
 *qsub*
 mothur*logfile
 
 data/
 code/sumaclust_v1.0.20
+code/swarm
