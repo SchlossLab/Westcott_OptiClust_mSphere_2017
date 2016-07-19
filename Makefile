@@ -167,7 +167,7 @@ $(VAGC_LIST) : $$(subst vagc.list,fasta, $$@) $$(subst vagc.list,count_table, $$
 	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst vagc.list,agc.unique_list.list,$@))
 	touch $(TEMP)
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=agc, cutoff=0.03)" 2> $(TIMEOUT)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=agc, cutoff=0.03, processors=1)" 2> $(TIMEOUT)
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
@@ -180,7 +180,7 @@ $(VDGC_LIST) : $$(subst vdgc.list,fasta, $$@) $$(subst vdgc.list,count_table, $$
 	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst vdgc.list,dgc.unique_list.list,$@))
 	touch $(TEMP)
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=dgc, cutoff=0.03)" 2> $(TIMEOUT)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=dgc, cutoff=0.03, processors=1)" 2> $(TIMEOUT)
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
