@@ -164,55 +164,77 @@ $(VAGC_LIST) : $$(subst vagc.list,fasta, $$@) $$(subst vagc.list,count_table, $$
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=agc, cutoff=0.03)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst vagc.list,agc.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=agc, cutoff=0.03)" 2> $(TIMEOUT)
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(VDGC_LIST) : $$(subst vdgc.list,fasta, $$@) $$(subst vdgc.list,count_table, $$@)
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=dgc, cutoff=0.03)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst vdgc.list,dgc.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(fasta=$(FASTA), count=$(COUNT), method=dgc, cutoff=0.03)" 2> $(TIMEOUT)
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(MCC_LIST) : $$(subst .mcc.list,.sm.dist, $$@) $$(subst mcc.list,count_table, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=mcc, cutoff=0.03)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst mcc.list,sm.opti_mcc.list,$@))
-	mv $(TEMP) $@
+	touch $(TEMP)
 	$(eval TEMP1=$(subst mcc.list,sm.opti_mcc.sensspec,$@))
+	touch $(TEMP1)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=mcc, cutoff=0.03)"
+	mv $(TEMP) $@
 	$(eval TEMP2=$(subst mcc.list,mcc.sensspec,$@))
 	mv $(TEMP1) $(TEMP2)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(F1SCORE_LIST) : $$(subst .f1score.list,.sm.dist, $$@) $$(subst f1score.list,count_table, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=f1score, cutoff=0.03)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst f1score.list,sm.opti_f1score.list,$@))
-	mv $(TEMP) $@
+	touch $(TEMP)
 	$(eval TEMP1=$(subst f1score.list,sm.opti_f1score.sensspec,$@))
+	touch $(TEMP1)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=f1score, cutoff=0.03)"
+	mv $(TEMP) $@
 	$(eval TEMP2=$(subst f1score.list,f1score.sensspec,$@))
 	mv $(TEMP1) $(TEMP2)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(ACCURACY_LIST) : $$(subst .accuracy.list,.sm.dist, $$@) $$(subst accuracy.list,count_table, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=accuracy, cutoff=0.03)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst accuracy.list,sm.opti_accuracy.list,$@))
-	mv $(TEMP) $@
+	touch $(TEMP)
 	$(eval TEMP1=$(subst accuracy.list,sm.opti_accuracy.sensspec,$@))
+	touch $(TEMP1)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=accuracy, cutoff=0.03)"
+	mv $(TEMP) $@
 	$(eval TEMP2=$(subst accuracy.list,accuracy.sensspec,$@))
 	mv $(TEMP1) $(TEMP2)
-
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 
 
@@ -222,10 +244,13 @@ $(AN_SPLIT5_1_LIST) : $$(subst an_split5_1.list,fasta, $$@) $$(subst an_split5_1
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=1, cutoff=0.15)"
-	code/timeout -t 150 -s 10000000 mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=1, cutoff=0.15)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst an_split5_1.list,an.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=1, cutoff=0.15)"
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(AN_SPLIT5_8_LIST) : $$(subst an_split5_8.list,fasta, $$@) $$(subst an_split5_8.list,taxonomy, $$@) $$(subst an_split5_8.list,count_table, $$@)
@@ -233,10 +258,13 @@ $(AN_SPLIT5_8_LIST) : $$(subst an_split5_8.list,fasta, $$@) $$(subst an_split5_8
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8, cutoff=0.15)"
-	code/timeout -t 150 -s 10000000 mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8, cutoff=0.15)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst an_split5_8.list,an.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8, cutoff=0.15)"
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(MCC_SPLIT5_1_LIST) : $$(subst mcc_split5_1.list,fasta, $$@)  $$(subst mcc_split5_1.list,taxonomy, $$@) $$(subst mcc_split5_1.list,count_table, $$@)
@@ -244,12 +272,17 @@ $(MCC_SPLIT5_1_LIST) : $$(subst mcc_split5_1.list,fasta, $$@)  $$(subst mcc_spli
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, processors=1)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst mcc_split5_1.list,opti_mcc.unique_list.list,$@))
-	mv $(TEMP) $@
+	touch $(TEMP)
 	$(eval TEMP1=$(subst mcc_split5_1.list,opti_mcc.unique_list.sensspec,$@))
+	touch $(TEMP1)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, processors=1)"
+	mv $(TEMP) $@
 	$(eval TEMP2=$(subst mcc_split5_1.list,mcc_split5_1.sensspec,$@))
 	mv $(TEMP1) $(TEMP2)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(MCC_SPLIT5_8_LIST) : $$(subst mcc_split5_8.list,fasta, $$@)  $$(subst mcc_split5_8.list,taxonomy, $$@) $$(subst mcc_split5_8.list,count_table, $$@)
@@ -257,12 +290,17 @@ $(MCC_SPLIT5_8_LIST) : $$(subst mcc_split5_8.list,fasta, $$@)  $$(subst mcc_spli
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, processors=8)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst mcc_split5_8.list,opti_mcc.unique_list.list,$@))
-	mv $(TEMP) $@
+	touch $(TEMP)
 	$(eval TEMP1=$(subst mcc_split5_8.list,opti_mcc.unique_list.sensspec,$@))
+	touch $(TEMP1)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, processors=8)"
+	mv $(TEMP) $@
 	$(eval TEMP2=$(subst mcc_split5_8.list,mcc_split5_8.sensspec,$@))
 	mv $(TEMP1) $(TEMP2)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(VDGC_SPLIT5_1_LIST) : $$(subst vdgc_split5_1.list,fasta, $$@)  $$(subst vdgc_split5_1.list,taxonomy, $$@) $$(subst vdgc_split5_1.list,count_table, $$@)
@@ -270,9 +308,13 @@ $(VDGC_SPLIT5_1_LIST) : $$(subst vdgc_split5_1.list,fasta, $$@)  $$(subst vdgc_s
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=dgc, taxlevel=5, processors=1, cutoff=0.03)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst vdgc_split5_1.list,dgc.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=dgc, taxlevel=5, processors=1, cutoff=0.03)"
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(VDGC_SPLIT5_8_LIST) : $$(subst vdgc_split5_8.list,fasta, $$@)  $$(subst vdgc_split5_8.list,taxonomy, $$@) $$(subst vdgc_split5_8.list,count_table, $$@)
@@ -280,9 +322,13 @@ $(VDGC_SPLIT5_8_LIST) : $$(subst vdgc_split5_8.list,fasta, $$@)  $$(subst vdgc_s
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=dgc, taxlevel=5, processors=8, cutoff=0.03)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst vdgc_split5_8.list,dgc.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=dgc, taxlevel=5, processors=8, cutoff=0.03)"
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 
 
@@ -291,32 +337,47 @@ $(UDGC_LIST) : $$(subst .udgc.list,.fasta, $$@) $$(subst .udgc.list,.count_table
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) code/run_udgc.sh $(FASTA) $(COUNT)
+	$(eval TIMEOUT=$(subst list,timeout, $@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) code/run_udgc.sh $(FASTA) $(COUNT)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(UAGC_LIST) : $$(subst .uagc.list,.fasta, $$@) $$(subst .uagc.list,.count_table, $$@) code/run_uagc.sh code/uc_to_list.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) code/run_uagc.sh $(FASTA) $(COUNT)
+	$(eval TIMEOUT=$(subst list,timeout, $@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) code/run_uagc.sh $(FASTA) $(COUNT)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(OTUCLUST_LIST) : $$(subst .otuclust.list,.fasta, $$@) $$(subst .otuclust.list,.count_table, $$@) code/run_otuclust.sh code/run_otuclust.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) ./code/run_otuclust.sh $(FASTA) $(COUNT)
+	$(eval TIMEOUT=$(subst list,timeout, $@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) ./code/run_otuclust.sh $(FASTA) $(COUNT)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(SUMACLUST_LIST) : $$(subst .sumaclust.list,.fasta, $$@) $$(subst .sumaclust.list,.count_table, $$@) code/run_sumaclust.sh code/run_sumaclust.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) ./code/run_sumaclust.sh $(FASTA) $(COUNT)
+	$(eval TIMEOUT=$(subst list,timeout, $@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) ./code/run_sumaclust.sh $(FASTA) $(COUNT)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 
 $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table, $$@) code/run_swarm.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) R -e 'source("code/run_swarm.R"); get_mothur_list("$(FASTA)", "$(COUNT)")'
+	$(eval TIMEOUT=$(subst list,timeout, $@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) R -e 'source("code/run_swarm.R"); get_mothur_list("$(FASTA)", "$(COUNT)")'
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
