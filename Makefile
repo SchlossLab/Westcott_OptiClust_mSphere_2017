@@ -122,18 +122,26 @@ $(NN_LIST) : $$(subst .nn.list,.sm.dist, $$@) $$(subst nn.list,count_table, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=nearest)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst nn.list,sm.nn.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=nearest)" 2> $(TIMEOUT)
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(FN_LIST) : $$(subst .fn.list,.sm.dist, $$@) $$(subst fn.list,count_table, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=furthest)"
-	$(eval TEMP=$(subst fn.list,sm.fn.unique_list.list,$@))
+    $(eval TIMEOUT=$(subst list,timeout, $@))
+    $(eval TEMP=$(subst fn.list,sm.fn.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=furthest)" 2> $(TIMEOUT)
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(AN_LIST) : $$(subst .an.list,.lg.dist, $$@) $$(subst an.list,count_table, $$@)
@@ -147,6 +155,9 @@ $(AN_LIST) : $$(subst .an.list,.lg.dist, $$@) $$(subst an.list,count_table, $$@)
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
+
+
+
 
 .SECONDEXPANSION:
 $(VAGC_LIST) : $$(subst vagc.list,fasta, $$@) $$(subst vagc.list,count_table, $$@)
