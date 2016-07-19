@@ -1,3 +1,6 @@
+MAXTIME = $$((60*60*50)) # 50 hours in seconds
+MAXMEM = $$((45 * 1000 * 1000)) #(45gb = 45 x 1,000,000 kb)
+
 REFS = data/references
 
 print-%:
@@ -137,9 +140,13 @@ $(AN_LIST) : $$(subst .an.list,.lg.dist, $$@) $$(subst an.list,count_table, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
-	/usr/bin/time -o $(STATS) mothur "#cluster(column=$(DIST), count=$(COUNT), method=average)"
+	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst an.list,lg.an.unique_list.list,$@))
+	touch $(TEMP)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=average)" 2> $(TIMEOUT)
 	mv $(TEMP) $@
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
 $(VAGC_LIST) : $$(subst vagc.list,fasta, $$@) $$(subst vagc.list,count_table, $$@)
@@ -205,6 +212,7 @@ $(AN_SPLIT5_1_LIST) : $$(subst an_split5_1.list,fasta, $$@) $$(subst an_split5_1
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=1, cutoff=0.15)"
+	code/timeout -t 150 -s 10000000 mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=1, cutoff=0.15)"
 	$(eval TEMP=$(subst an_split5_1.list,an.unique_list.list,$@))
 	mv $(TEMP) $@
 
@@ -215,6 +223,7 @@ $(AN_SPLIT5_8_LIST) : $$(subst an_split5_8.list,fasta, $$@) $$(subst an_split5_8
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	/usr/bin/time -o $(STATS) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8, cutoff=0.15)"
+	code/timeout -t 150 -s 10000000 mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8, cutoff=0.15)"
 	$(eval TEMP=$(subst an_split5_8.list,an.unique_list.list,$@))
 	mv $(TEMP) $@
 
