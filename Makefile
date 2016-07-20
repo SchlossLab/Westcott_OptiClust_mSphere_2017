@@ -110,15 +110,16 @@ OTUCLUST_LIST = $(subst fasta,otuclust.list,$(SUB_FASTA))
 SUMACLUST_LIST = $(subst fasta,sumaclust.list,$(SUB_FASTA))
 SWARM_LIST = $(subst fasta,swarm.list,$(SUB_FASTA))
 
-LIST = $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST)\
+LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST)\
 	$(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLIT5_1_LIST) $(AN_SPLIT5_8_LIST) $(MCC_SPLIT5_1_LIST)\
 	$(MCC_SPLIT5_8_LIST) $(SWARM_LIST) $(VDGC_SPLIT5_1_LIST) $(VDGC_SPLIT5_8_LIST) $(UAGC_LIST)\
 	$(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST)
 
+SENSSPEC = $(subst list,sensspec,$(LIST))
+
 LIST_% :
 	$(eval FILES=$(filter data/$*/%,$(LIST)))
 	@echo '$(FILES)'
-
 
 .SECONDEXPANSION:
 $(NN_LIST) : $$(subst .nn.list,.sm.dist, $$@) $$(subst nn.list,count_table, $$@)
@@ -408,6 +409,7 @@ $(SUMACLUST_LIST) : $$(subst .sumaclust.list,.fasta, $$@) $$(subst .sumaclust.li
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
 
+.SECONDEXPANSION:
 $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table, $$@) code/run_swarm.R
 	$(eval FASTA=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
@@ -423,3 +425,15 @@ $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table,
 %.stats : 
 	rm $*.list
 	$(MAKE) $*.list
+
+
+.SECONDEXPANSION:
+$(SENSSPEC) : $$(subst sensspec,list, $$@) $$(addsuffix .sm.dist, $$(basename $$(basename $$@))) $$(addsuffix .count_table,$$(basename $$(basename $$@)))
+	@echo $^
+	@echo $(word 1,$^)
+	@echo $(word 2,$^)
+	@echo $(word 3,$^)
+	$(eval LIST=$(word 1,$^))
+	$(eval DIST=$(word 2,$^))
+	$(eval COUNT=$(word 3,$^))
+	mothur "#sens.spec(list=$(LIST), column=$(DIST), count=$(COUNT), cutoff=0.03, label=0.03)"
