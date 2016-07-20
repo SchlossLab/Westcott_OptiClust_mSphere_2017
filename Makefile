@@ -417,3 +417,9 @@ $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table,
 	touch $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
+
+
+
+%.stats : 
+	rm $*.list
+	$(MAKE) $*.list
