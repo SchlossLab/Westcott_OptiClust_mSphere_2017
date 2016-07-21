@@ -18,4 +18,4 @@ rm $ROOT.sorted.uc $ROOT.sorted.fna $ROOT.sorted.log $ROOT.clustered.uc $ROOT.cl
 
 rm $(echo $FASTA | sed 's/fasta/ng.fasta/')
 rm $(echo $FASTA | sed 's/fasta/ng.redundant.fasta/')
-rm $(echo $FASTA | sed 's/fasta/redundant.groups/')
+rm -f $(echo $FASTA | sed 's/fasta/redundant.groups/')
