@@ -40,7 +40,7 @@ run_swarm_clust <- function(fasta){
 	swarm_fasta <- gsub("fasta", "swarm.fasta", fasta)
 	swarm_list <- gsub("fasta", "temp_list", swarm_fasta)
 
-	command_string <- paste("code/swarm/bin/swarm -f -t 8 --mothur -o", swarm_list,  swarm_fasta)
+	command_string <- paste("code/swarm/bin/swarm -f -t 1 --mothur -o", swarm_list,  swarm_fasta)
 	system(command_string)
 
 	swarm_list
