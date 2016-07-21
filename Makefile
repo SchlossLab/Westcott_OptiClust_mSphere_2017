@@ -422,7 +422,15 @@ $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table,
 
 
 
-%.stats : 
+%.sm.stats :
+	rm $*.sm.dist
+	$(MAKE) $*.sm.dist
+
+%.lg.stats :
+	rm $*.lg.dist
+	$(MAKE) $*.lg.dist
+
+%.stats :
 	rm $*.list
 	$(MAKE) $*.list
 
