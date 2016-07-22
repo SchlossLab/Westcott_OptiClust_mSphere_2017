@@ -15,6 +15,7 @@ cp $FASTA $TEMP_FASTA
 mothur "#degap.seqs(fasta=$TEMP_FASTA);deunique.seqs(fasta=current, count=$COUNT)"
 NG_FASTA=$(echo $TEMP_FASTA | sed 's/fasta/ng.fasta/')
 RED_FASTA=$(echo $TEMP_FASTA | sed 's/fasta/ng.redundant.fasta/')
+RED_GROUPS=$(echo $TEMP_FASTA | sed 's/fasta/ng.redundant.groups/')
 
 SUMACLUST_CLUST=$(echo $FASTA | sed 's/fasta/sumaclust.clust/')
 
@@ -23,4 +24,4 @@ code/sumaclust_v1.0.20/sumaclust -t 0.97 $RED_FASTA -O $SUMACLUST_CLUST >/dev/nu
 R -e "source('code/run_sumaclust.R'); sumaclust_to_list('$SUMACLUST_CLUST')"
 
 
-rm $TEMP_FASTA $NG_FASTA $RED_FASTA $SUMACLUST_CLUST
+rm -f $TEMP_FASTA $NG_FASTA $RED_FASTA $RED_GROUPS $SUMACLUST_CLUST
