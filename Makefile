@@ -1,5 +1,5 @@
 MAXTIME = $$((60*60*50)) # 50 hours in seconds
-MAXMEM = $$((45 * 1000 * 1000)) #(45gb = 45 x 1,000,000 kb)
+MAXMEM = $$((45 * 1000 * 1000)) #(45gb = 47.9 x 1,000,000 kb)
 
 REFS = data/references
 
