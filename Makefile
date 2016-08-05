@@ -49,7 +49,7 @@ data/%.fasta data/%.count_table data/%.taxonomy : code/$$(notdir $$*).batch code
 
 
 
-SAMPLES = mice human soil sediment marine even staggered
+SAMPLES = mice human soil marine even staggered
 FRACTIONS = 0_2 0_4 0_6 0_8 1_0
 REPLICATE = 01 02 03 04 05 06 07 08 09 10
 DATAPATH = $(foreach S,$(SAMPLES),$(foreach F,$(FRACTIONS), $(foreach R, $(REPLICATE), data/$S/$S.$F.$R)))
