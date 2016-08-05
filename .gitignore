@@ -4,6 +4,7 @@ tail.batch
 *qsub*
 mothur*logfile
 *temp*
+.nfs*
 
 data/
 code/sumaclust_v1.0.20
