@@ -61,12 +61,9 @@ SUB_FILES = $(SUB_FASTA) $(SUB_TAX) $(SUB_COUNT)
 
 .SECONDEXPANSION:
 $(SUB_FILES) : code/subsample.R $$(basename $$(basename $$(basename $$@))).fasta $$(basename $$(basename $$(basename $$@))).taxonomy $$(basename $$(basename $$(basename $$@))).count_table
-	@echo $^
 	$(eval SAMPLE=$(basename $(basename $(basename $(notdir $@)))))
 	$(eval REP=$(subst .,,$(suffix $(basename $@))))
 	$(eval FRAC=$(subst .,,$(suffix $(basename $(basename $@)))))
-	@echo $(FRAC)
-	@echo $(REP)
 	R -e "source('code/subsample.R'); subsample('$(SAMPLE)', '$(FRAC)', '$(REP)')"
 
 SUB_SM_DIST = $(subst fasta,sm.dist,$(SUB_FASTA))
@@ -437,10 +434,6 @@ $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table,
 
 .SECONDEXPANSION:
 $(SENSSPEC) : $$(subst sensspec,list, $$@) $$(addsuffix .sm.dist, $$(basename $$(basename $$@))) $$(addsuffix .count_table,$$(basename $$(basename $$@)))
-	@echo $^
-	@echo $(word 1,$^)
-	@echo $(word 2,$^)
-	@echo $(word 3,$^)
 	$(eval LIST=$(word 1,$^))
 	$(eval DIST=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
