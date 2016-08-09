@@ -23,6 +23,6 @@ OTUCLUST_REP=$(echo $OTUCLUST_FASTA | sed 's/ng.redundant.fasta/rep/')
 
 otuclust -f fasta $OTUCLUST_FASTA --out-clust $OTUCLUST_CLUST --out-rep $OTUCLUST_REP -s 0.97 -m 1
 
-R -e "source('code/run_otuclust.R'); otuclust_to_list('$OTUCLUST_CLUST', '$COUNT')"
+R -e "source('code/run_otuclust.R'); otuclust_to_list('$OTUCLUST_CLUST')"
 
 rm $TEMP_FASTA $OTUCLUST_CLUST $OTUCLUST_FASTA $NG_FASTA $OTUCLUST_REP $REDUNDANT_GROUPS
