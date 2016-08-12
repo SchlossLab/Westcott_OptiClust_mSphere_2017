@@ -113,6 +113,7 @@ LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST
 	$(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST)
 
 SENSSPEC = $(subst list,sensspec,$(LIST))
+STEPS = $(subst list,steps,$(MCC_LIST) $(ACCURACY_LIST), $(F1SCORE_LIST))
 
 LIST_% :
 	$(eval FILES=$(filter data/$*/%,$(LIST)))
@@ -223,12 +224,16 @@ $(MCC_LIST) : $$(subst .mcc.list,.sm.dist, $$@) $$(subst mcc.list,count_table, $
 	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst mcc.list,sm.opti_mcc.list,$@))
 	$(eval TEMP1=$(subst mcc.list,sm.opti_mcc.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=mcc, cutoff=0.03)" 2> $(TIMEOUT)
+	$(eval TEMP2=$(subst mcc.list,mcc.sensspec,$@))
+	$(eval TEMP3=$(subst mcc.list,sm.opti_mcc.steps,$@))
+	$(eval TEMP4=$(subst mcc.list,mcc.steps,$@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=mcc, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
 	mv $(TEMP) $@
-	$(eval TEMP2=$(subst mcc.list,mcc.sensspec,$@))
 	mv $(TEMP1) $(TEMP2)
+	touch $(TEMP3)
+	mv $(TEMP3) $(TEMP4)
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
 
@@ -240,12 +245,15 @@ $(F1SCORE_LIST) : $$(subst .f1score.list,.sm.dist, $$@) $$(subst f1score.list,co
 	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst f1score.list,sm.opti_f1score.list,$@))
 	$(eval TEMP1=$(subst f1score.list,sm.opti_f1score.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=f1score, cutoff=0.03)" 2> $(TIMEOUT)
+	$(eval TEMP2=$(subst f1score.list,f1score.sensspec,$@))
+	$(eval TEMP3=$(subst f1score.list,sm.opti_f1score.steps,$@))
+	$(eval TEMP4=$(subst f1score.list,f1score.steps,$@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=f1score, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
 	mv $(TEMP) $@
-	$(eval TEMP2=$(subst f1score.list,f1score.sensspec,$@))
 	mv $(TEMP1) $(TEMP2)
+	mv $(TEMP3) $(TEMP4)
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
 
@@ -257,12 +265,15 @@ $(ACCURACY_LIST) : $$(subst .accuracy.list,.sm.dist, $$@) $$(subst accuracy.list
 	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst accuracy.list,sm.opti_accuracy.list,$@))
 	$(eval TEMP1=$(subst accuracy.list,sm.opti_accuracy.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=accuracy, cutoff=0.03)" 2> $(TIMEOUT)
+	$(eval TEMP2=$(subst accuracy.list,accuracy.sensspec,$@))
+	$(eval TEMP3=$(subst accuracy.list,sm.opti_accuracy.steps,$@))
+	$(eval TEMP4=$(subst accuracy.list,accuracy.steps,$@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=accuracy, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
-	mv $(TEMP) $@
-	$(eval TEMP2=$(subst accuracy.list,accuracy.sensspec,$@))
+	mv $(TEMP) $
 	mv $(TEMP1) $(TEMP2)
+	mv $(TEMP3) $(TEMP4)
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
 
@@ -305,7 +316,7 @@ $(MCC_SPLIT5_1_LIST) : $$(subst mcc_split5_1.list,fasta, $$@)  $$(subst mcc_spli
 	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst mcc_split5_1.list,opti_mcc.unique_list.list,$@))
 	$(eval TEMP1=$(subst mcc_split5_1.list,opti_mcc.unique_list.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, processors=1)" 2> $(TIMEOUT)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
 	mv $(TEMP) $@
@@ -323,7 +334,7 @@ $(MCC_SPLIT5_8_LIST) : $$(subst mcc_split5_8.list,fasta, $$@)  $$(subst mcc_spli
 	$(eval TIMEOUT=$(subst list,timeout, $@))
 	$(eval TEMP=$(subst mcc_split5_8.list,opti_mcc.unique_list.list,$@))
 	$(eval TEMP1=$(subst mcc_split5_8.list,opti_mcc.unique_list.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, processors=8)" 2> $(TIMEOUT)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, delta=0, processors=8)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
 	mv $(TEMP) $@
@@ -430,6 +441,11 @@ $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table,
 %.stats :
 	rm $*.list
 	$(MAKE) $*.list
+
+%.steps :
+	rm $*.list
+	$(MAKE) $*.list
+
 
 
 .SECONDEXPANSION:
