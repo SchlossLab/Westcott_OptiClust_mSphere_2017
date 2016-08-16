@@ -5,7 +5,7 @@
 parse_otus <- function(otu_line){
 	seqs <- unlist(strsplit(otu_line, '\t'))
 	seqs <- seqs[grepl("_1$", seqs)]
-	seqs <- gsub("_1", "", seqs)
+	seqs <- gsub("_1$", "", seqs)
 	otu <- paste(unique(seqs), collapse=',')
 }
 
