@@ -230,9 +230,9 @@ $(MCC_LIST) : $$(subst .mcc.list,.sm.dist, $$@) $$(subst mcc.list,count_table, $
 	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=mcc, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
+	touch $(TEMP3)
 	mv $(TEMP) $@
 	mv $(TEMP1) $(TEMP2)
-	touch $(TEMP3)
 	mv $(TEMP3) $(TEMP4)
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
@@ -251,6 +251,7 @@ $(F1SCORE_LIST) : $$(subst .f1score.list,.sm.dist, $$@) $$(subst f1score.list,co
 	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=f1score, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
+	touch $(TEMP3)
 	mv $(TEMP) $@
 	mv $(TEMP1) $(TEMP2)
 	mv $(TEMP3) $(TEMP4)
@@ -271,7 +272,7 @@ $(ACCURACY_LIST) : $$(subst .accuracy.list,.sm.dist, $$@) $$(subst accuracy.list
 	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=accuracy, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
-	mv $(TEMP) $
+	mv $(TEMP) $@
 	mv $(TEMP1) $(TEMP2)
 	mv $(TEMP3) $(TEMP4)
 	cat $(TIMEOUT) >> $(STATS)
