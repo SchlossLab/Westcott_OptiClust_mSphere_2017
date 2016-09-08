@@ -454,4 +454,5 @@ $(SENSSPEC) : $$(subst sensspec,list, $$@) $$(addsuffix .sm.dist, $$(basename $$
 	$(eval LIST=$(word 1,$^))
 	$(eval DIST=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
+	touch $@
 	mothur "#sens.spec(list=$(LIST), column=$(DIST), count=$(COUNT), cutoff=0.03, label=0.03)"
