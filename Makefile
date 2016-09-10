@@ -456,3 +456,10 @@ $(SENSSPEC) : $$(subst sensspec,list, $$@) $$(addsuffix .sm.dist, $$(basename $$
 	$(eval COUNT=$(word 3,$^))
 	touch $@
 	mothur "#sens.spec(list=$(LIST), column=$(DIST), count=$(COUNT), cutoff=0.03, label=0.03)"
+
+
+data/processed/sobs_counts.tsv : $(LIST)
+	grep '^0\.03\|user' data/*/*list | cut -f 1,2 | sed 's/:/\t/' > $@
+
+data/processed/cluster_data.summary : data/processed/sobs_counts.tsv $(STATS) $(SUB_SM_DIST) $(SUB_LG_DIST) $(SENSSPEC) code/aggregate_stats.R
+	R -e "source('code/aggregate_stats.R')"
