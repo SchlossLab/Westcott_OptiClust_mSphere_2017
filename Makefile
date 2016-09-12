@@ -293,7 +293,7 @@ $(AN_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
-	rm $(addsuffix .dist,$(basename $(basename $@)))
+	rm -f $(addsuffix .dist,$(basename $(basename $@)))
 
 
 .SECONDEXPANSION:
@@ -315,7 +315,7 @@ $(MCC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 	rm $(TEMP1)
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
-	rm $(addsuffix .dist,$(basename $(basename $@)))
+	rm -f $(addsuffix .dist,$(basename $(basename $@)))
 
 .SECONDEXPANSION:
 $(VDGC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
@@ -333,7 +333,6 @@ $(VDGC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
-	rm $(addsuffix .dist,$(basename $(basename $@)))
 
 .SECONDEXPANSION:
 $(UDGC_LIST) : $$(subst .udgc.list,.fasta, $$@) $$(subst .udgc.list,.count_table, $$@) code/run_udgc.sh code/uc_to_list.R
