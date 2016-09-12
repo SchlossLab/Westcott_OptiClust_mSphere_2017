@@ -310,11 +310,9 @@ $(MCC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
   $(eval TEMP1=$(subst .list,.sensspec,$(TEMP)))
   /usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
   touch $(TEMP)
-  touch $(TEMP1)
   mv $(TEMP) $@
-  $(eval TEMP2=$(subst .list,.sensspec,$@))
-  @echo $(TEMP2)
-  mv $(TEMP1) $(TEMP2)
+  touch $(TEMP1)
+	rm $(TEMP1)
   cat $(TIMEOUT) >> $(STATS)
   rm $(TIMEOUT)
 	rm $(addsuffix .dist,$(basename $(basename $@)))
