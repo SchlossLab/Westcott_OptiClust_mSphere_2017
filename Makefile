@@ -98,6 +98,7 @@ AN_SPLIT5_1_LIST = $(subst fasta,an_split5_1.list,$(SUB_FASTA))
 AN_SPLIT5_8_LIST = $(subst fasta,an_split5_8.list,$(SUB_FASTA))
 MCC_SPLIT5_1_LIST = $(subst fasta,mcc_split5_1.list,$(SUB_FASTA))
 MCC_SPLIT5_8_LIST = $(subst fasta,mcc_split5_8.list,$(SUB_FASTA))
+MCC_SPLIT4_8_LIST = $(subst fasta,mcc_split4_8.list,$(SUB_FASTA))
 VDGC_SPLIT5_1_LIST = $(subst fasta,vdgc_split5_1.list,$(SUB_FASTA))
 VDGC_SPLIT5_8_LIST = $(subst fasta,vdgc_split5_8.list,$(SUB_FASTA))
 
