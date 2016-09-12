@@ -107,10 +107,12 @@ OTUCLUST_LIST = $(subst fasta,otuclust.list,$(SUB_FASTA))
 SUMACLUST_LIST = $(subst fasta,sumaclust.list,$(SUB_FASTA))
 SWARM_LIST = $(subst fasta,swarm.list,$(SUB_FASTA))
 
+MCC_AGG_LIST = $(subst sm.dist,mcc_agg.list,$(SUB_SM_DIST))
+
 LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST)\
 	$(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLIT5_1_LIST) $(AN_SPLIT5_8_LIST) $(MCC_SPLIT5_1_LIST)\
 	$(MCC_SPLIT5_8_LIST) $(SWARM_LIST) $(VDGC_SPLIT5_1_LIST) $(VDGC_SPLIT5_8_LIST) $(UAGC_LIST)\
-	$(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST)
+	$(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST)
 
 SENSSPEC = $(subst list,sensspec,$(LIST))
 STEPS = $(subst list,steps,$(MCC_LIST) $(ACCURACY_LIST), $(F1SCORE_LIST))
@@ -429,6 +431,28 @@ $(SWARM_LIST) : $$(subst swarm.list,fasta, $$@) $$(subst swarm.list,count_table,
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
 
+
+
+.SECONDEXPANSION:
+$(MCC_AGG_LIST) : $$(subst .mcc_agg.list,.sm.dist, $$@) $$(subst mcc_agg.list,count_table, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval COUNT=$(word 2,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	$(eval TIMEOUT=$(subst list,timeout, $@))
+	$(eval TEMP=$(subst mcc_agg.list,sm.opti_mcc.list,$@))
+	$(eval TEMP1=$(subst mcc_agg.list,sm.opti_mcc.sensspec,$@))
+	$(eval TEMP2=$(subst mcc_agg.list,mcc_agg.sensspec,$@))
+	$(eval TEMP3=$(subst mcc_agg.list,sm.opti_mcc.steps,$@))
+	$(eval TEMP4=$(subst mcc_agg.list,mcc_agg.steps,$@))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=mcc, initialize=oneotu, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
+	touch $(TEMP)
+	touch $(TEMP1)
+	touch $(TEMP3)
+	mv $(TEMP) $@
+	mv $(TEMP1) $(TEMP2)
+	mv $(TEMP3) $(TEMP4)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 
 
 %.sm.stats :
