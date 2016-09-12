@@ -293,30 +293,31 @@ $(AN_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
+	rm $(addsuffix .dist,$(basename $(basename $@)))
 
 
 .SECONDEXPANSION:
 $(MCC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 		$$(addsuffix .taxonomy,$$(basename $$(basename $$@)))\
 		$$(addsuffix .count_table,$$(basename $$(basename $$@)))
-    $(eval FASTA=$(word 1,$^))
-    $(eval TAXONOMY=$(word 2,$^))
-    $(eval COUNT=$(word 3,$^))
-    $(eval STATS=$(subst list,stats, $@))
-    $(eval TIMEOUT=$(subst list,timeout, $@))
-    $(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
-    $(eval TEMP=$(addsuffix .opti_mcc.unique_list.list, $(basename $(basename $@))))
-    $(eval TEMP1=$(subst .list,.sensspec,$(TEMP)))
-    /usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
-    touch $(TEMP)
-    touch $(TEMP1)
-    mv $(TEMP) $@
-    $(eval TEMP2=$(subst .list,.sensspec,$@))
-    @echo $(TEMP2)
-    mv $(TEMP1) $(TEMP2)
-    cat $(TIMEOUT) >> $(STATS)
-    rm $(TIMEOUT)
-
+  $(eval FASTA=$(word 1,$^))
+  $(eval TAXONOMY=$(word 2,$^))
+  $(eval COUNT=$(word 3,$^))
+  $(eval STATS=$(subst list,stats, $@))
+  $(eval TIMEOUT=$(subst list,timeout, $@))
+  $(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
+  $(eval TEMP=$(addsuffix .opti_mcc.unique_list.list, $(basename $(basename $@))))
+  $(eval TEMP1=$(subst .list,.sensspec,$(TEMP)))
+  /usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
+  touch $(TEMP)
+  touch $(TEMP1)
+  mv $(TEMP) $@
+  $(eval TEMP2=$(subst .list,.sensspec,$@))
+  @echo $(TEMP2)
+  mv $(TEMP1) $(TEMP2)
+  cat $(TIMEOUT) >> $(STATS)
+  rm $(TIMEOUT)
+	rm $(addsuffix .dist,$(basename $(basename $@)))
 
 .SECONDEXPANSION:
 $(VDGC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
@@ -334,6 +335,7 @@ $(VDGC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
+	rm $(addsuffix .dist,$(basename $(basename $@)))
 
 .SECONDEXPANSION:
 $(UDGC_LIST) : $$(subst .udgc.list,.fasta, $$@) $$(subst .udgc.list,.count_table, $$@) code/run_udgc.sh code/uc_to_list.R
