@@ -94,15 +94,10 @@ MCC_LIST = $(subst sm.dist,mcc.list,$(SUB_SM_DIST))
 F1SCORE_LIST = $(subst sm.dist,f1score.list,$(SUB_SM_DIST))
 ACCURACY_LIST = $(subst sm.dist,accuracy.list,$(SUB_SM_DIST))
 
-AN_SPLIT5_1_LIST = $(subst fasta,an_split5_1.list,$(SUB_FASTA))
-AN_SPLIT5_8_LIST = $(subst fasta,an_split5_8.list,$(SUB_FASTA))
-AN_SPLIT4_8_LIST = $(subst fasta,an_split4_8.list,$(SUB_FASTA))
-MCC_SPLIT5_1_LIST = $(subst fasta,mcc_split5_1.list,$(SUB_FASTA))
-MCC_SPLIT5_8_LIST = $(subst fasta,mcc_split5_8.list,$(SUB_FASTA))
-MCC_SPLIT4_8_LIST = $(subst fasta,mcc_split4_8.list,$(SUB_FASTA))
-VDGC_SPLIT5_1_LIST = $(subst fasta,vdgc_split5_1.list,$(SUB_FASTA))
-VDGC_SPLIT5_8_LIST = $(subst fasta,vdgc_split5_8.list,$(SUB_FASTA))
-VDGC_SPLIT4_8_LIST = $(subst fasta,vdgc_split4_8.list,$(SUB_FASTA))
+SPLIT=$(basename ,$(SUB_FASTA))
+AN_SPLT_LIST = $(foreach L,2 3 4 5 6,$(foreach B,$(SPLIT),$B.an_split$L_8.list))
+MCC_SPLT_LIST = $(foreach L,2 3 4 5 6,$(foreach B,$(SPLIT),$B.mcc_split$L_8.list))
+VDGC_SPLT_LIST = $(foreach L,2 3 4 5 6,$(foreach B,$(SPLIT),$B.vdgc_split$L_8.list))
 
 UAGC_LIST = $(subst fasta,uagc.list,$(SUB_FASTA))
 UDGC_LIST = $(subst fasta,udgc.list,$(SUB_FASTA))
@@ -112,10 +107,7 @@ SWARM_LIST = $(subst fasta,swarm.list,$(SUB_FASTA))
 
 MCC_AGG_LIST = $(subst sm.dist,mcc_agg.list,$(SUB_SM_DIST))
 
-LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST)\
-$(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLIT5_1_LIST) $(AN_SPLIT5_8_LIST) $(AN_SPLIT4_8_LIST) $(MCC_SPLIT5_1_LIST) $(MCC_SPLIT4_8_LIST) $(MCC_SPLIT5_8_LIST)\
-$(SWARM_LIST) $(VDGC_SPLIT5_1_LIST) $(VDGC_SPLIT5_8_LIST) $(VDGC_SPLIT4_8_LIST) $(UAGC_LIST)\
-	$(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST)
+LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST) $(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLT_LIST) $(MCC_SPLT_LIST) $(VDGC_SPLIT_LIST) $(SWARM_LIST)  $(UAGC_LIST) $(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST)
 
 SENSSPEC = $(subst list,sensspec,$(LIST))
 STEPS = $(subst list,steps,$(MCC_LIST) $(ACCURACY_LIST), $(F1SCORE_LIST))
@@ -286,146 +278,62 @@ $(ACCURACY_LIST) : $$(subst .accuracy.list,.sm.dist, $$@) $$(subst accuracy.list
 
 
 .SECONDEXPANSION:
-$(AN_SPLIT5_1_LIST) : $$(subst an_split5_1.list,fasta, $$@) $$(subst an_split5_1.list,taxonomy, $$@) $$(subst an_split5_1.list,count_table, $$@)
+$(AN_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
+										$$(addsuffix .taxonomy,$$(basename $$(basename $$@)))\
+										$$(addsuffix .count_table,$$(basename $$(basename $$@)))
 	$(eval FASTA=$(word 1,$^))
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst an_split5_1.list,an.unique_list.list,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=1, cutoff=0.15)" 2> $(TIMEOUT)
+	$(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
+	$(eval TEMP=$(addsuffix .an.unique_list.list, $(basename $(basename $@))))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=$(LEVEL), processors=8, cutoff=0.15)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	mv $(TEMP) $@
-	cat $(TIMEOUT) >> $(STATS)
-	rm $(TIMEOUT)
-
-.SECONDEXPANSION:
-$(AN_SPLIT5_8_LIST) : $$(subst an_split5_8.list,fasta, $$@) $$(subst an_split5_8.list,taxonomy, $$@) $$(subst an_split5_8.list,count_table, $$@)
-	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
-	$(eval STATS=$(subst list,stats, $@))
-	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst an_split5_8.list,an.unique_list.list,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=5, processors=8, cutoff=0.15)" 2> $(TIMEOUT)
-	touch $(TEMP)
-	mv $(TEMP) $@
-	cat $(TIMEOUT) >> $(STATS)
-	rm $(TIMEOUT)
-
-.SECONDEXPANSION:
-$(AN_SPLIT4_8_LIST) : $$(subst an_split4_8.list,fasta, $$@) $$(subst an_split4_8.list,taxonomy, $$@) $$(subst an_split4_8.list,count_table, $$@)
-	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
-	$(eval STATS=$(subst list,stats, $@))
-	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst an_split4_8.list,an.unique_list.list,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), taxlevel=4, processors=8, cutoff=0.15)" 2> $(TIMEOUT)
-	touch $(TEMP)
-	mv $(TEMP) $@
-	cat $(TIMEOUT) >> $(STATS)
-	rm $(TIMEOUT)
-
-.SECONDEXPANSION:
-$(MCC_SPLIT5_1_LIST) : $$(subst mcc_split5_1.list,fasta, $$@)  $$(subst mcc_split5_1.list,taxonomy, $$@) $$(subst mcc_split5_1.list,count_table, $$@)
-	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
-	$(eval STATS=$(subst list,stats, $@))
-	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst mcc_split5_1.list,opti_mcc.unique_list.list,$@))
-	$(eval TEMP1=$(subst mcc_split5_1.list,opti_mcc.unique_list.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
-	touch $(TEMP)
-	touch $(TEMP1)
-	mv $(TEMP) $@
-	$(eval TEMP2=$(subst mcc_split5_1.list,mcc_split5_1.sensspec,$@))
-	mv $(TEMP1) $(TEMP2)
-	cat $(TIMEOUT) >> $(STATS)
-	rm $(TIMEOUT)
-
-.SECONDEXPANSION:
-$(MCC_SPLIT5_8_LIST) : $$(subst mcc_split5_8.list,fasta, $$@)  $$(subst mcc_split5_8.list,taxonomy, $$@) $$(subst mcc_split5_8.list,count_table, $$@)
-	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
-	$(eval STATS=$(subst list,stats, $@))
-	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst mcc_split5_8.list,opti_mcc.unique_list.list,$@))
-	$(eval TEMP1=$(subst mcc_split5_8.list,opti_mcc.unique_list.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=5, cutoff=0.03, delta=0, processors=8)" 2> $(TIMEOUT)
-	touch $(TEMP)
-	touch $(TEMP1)
-	mv $(TEMP) $@
-	$(eval TEMP2=$(subst mcc_split5_8.list,mcc_split5_8.sensspec,$@))
-	mv $(TEMP1) $(TEMP2)
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
 
 
 .SECONDEXPANSION:
-$(MCC_SPLIT4_8_LIST) : $$(subst mcc_split4_8.list,fasta, $$@)  $$(subst mcc_split4_8.list,taxonomy, $$@) $$(subst mcc_split4_8.list,count_table, $$@)
-	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
-	$(eval STATS=$(subst list,stats, $@))
-	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst mcc_split4_8.list,opti_mcc.unique_list.list,$@))
-	$(eval TEMP1=$(subst mcc_split4_8.list,opti_mcc.unique_list.sensspec,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=4, cutoff=0.03, delta=0, processors=8)" 2> $(TIMEOUT)
-	touch $(TEMP)
-	touch $(TEMP1)
-	mv $(TEMP) $@
-	$(eval TEMP2=$(subst mcc_split4_8.list,mcc_split4_8.sensspec,$@))
-	mv $(TEMP1) $(TEMP2)
-	cat $(TIMEOUT) >> $(STATS)
-	rm $(TIMEOUT)
+$(MCC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
+		$$(addsuffix .taxonomy,$$(basename $$(basename $$@)))\
+		$$(addsuffix .count_table,$$(basename $$(basename $$@)))
+    $(eval FASTA=$(word 1,$^))
+    $(eval TAXONOMY=$(word 2,$^))
+    $(eval COUNT=$(word 3,$^))
+    $(eval STATS=$(subst list,stats, $@))
+    $(eval TIMEOUT=$(subst list,timeout, $@))
+    $(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
+    $(eval TEMP=$(addsuffix .opti_mcc.unique_list.list, $(basename $(basename $@))))
+    $(eval TEMP1=$(subst .list,.sensspec,$(TEMP)))
+    /usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
+    touch $(TEMP)
+    touch $(TEMP1)
+    mv $(TEMP) $@
+    $(eval TEMP2=$(subst .list,.sensspec,$@))
+    @echo $(TEMP2)
+    mv $(TEMP1) $(TEMP2)
+    cat $(TIMEOUT) >> $(STATS)
+    rm $(TIMEOUT)
 
 
 .SECONDEXPANSION:
-$(VDGC_SPLIT5_1_LIST) : $$(subst vdgc_split5_1.list,fasta, $$@)  $$(subst vdgc_split5_1.list,taxonomy, $$@) $$(subst vdgc_split5_1.list,count_table, $$@)
+$(VDGC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
+		$$(addsuffix .taxonomy,$$(basename $$(basename $$@)))\
+		$$(addsuffix .count_table,$$(basename $$(basename $$@)))
 	$(eval FASTA=$(word 1,$^))
 	$(eval TAXONOMY=$(word 2,$^))
 	$(eval COUNT=$(word 3,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst vdgc_split5_1.list,dgc.unique_list.list,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=dgc, taxlevel=5, processors=1, cutoff=0.03)" 2> $(TIMEOUT)
+	$(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
+	$(eval TEMP=$(addsuffix .dgc.unique_list.list, $(basename $(basename $@))))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), count=$(COUNT), taxonomy=$(TAXONOMY), method=dgc, taxlevel=$(LEVEL), processors=8, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	mv $(TEMP) $@
 	cat $(TIMEOUT) >> $(STATS)
 	rm $(TIMEOUT)
-
-.SECONDEXPANSION:
-$(VDGC_SPLIT5_8_LIST) : $$(subst vdgc_split5_8.list,fasta, $$@)  $$(subst vdgc_split5_8.list,taxonomy, $$@) $$(subst vdgc_split5_8.list,count_table, $$@)
-	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
-	$(eval STATS=$(subst list,stats, $@))
-	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst vdgc_split5_8.list,dgc.unique_list.list,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=dgc, taxlevel=5, processors=8, cutoff=0.03)" 2> $(TIMEOUT)
-	touch $(TEMP)
-	mv $(TEMP) $@
-	cat $(TIMEOUT) >> $(STATS)
-	rm $(TIMEOUT)
-
-.SECONDEXPANSION:
-$(VDGC_SPLIT4_8_LIST) : $$(subst vdgc_split4_8.list,fasta, $$@)  $$(subst vdgc_split4_8.list,taxonomy, $$@) $$(subst vdgc_split4_8.list,count_table, $$@)
-	$(eval FASTA=$(word 1,$^))
-	$(eval TAXONOMY=$(word 2,$^))
-	$(eval COUNT=$(word 3,$^))
-	$(eval STATS=$(subst list,stats, $@))
-	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst vdgc_split4_8.list,dgc.unique_list.list,$@))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=dgc, taxlevel=4, processors=8, cutoff=0.03)" 2> $(TIMEOUT)
-	touch $(TEMP)
-	mv $(TEMP) $@
-	cat $(TIMEOUT) >> $(STATS)
-	rm $(TIMEOUT)
-
-
 
 .SECONDEXPANSION:
 $(UDGC_LIST) : $$(subst .udgc.list,.fasta, $$@) $$(subst .udgc.list,.count_table, $$@) code/run_udgc.sh code/uc_to_list.R
