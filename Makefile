@@ -107,7 +107,7 @@ SWARM_LIST = $(subst fasta,swarm.list,$(SUB_FASTA))
 
 MCC_AGG_LIST = $(subst sm.dist,mcc_agg.list,$(SUB_SM_DIST))
 
-LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST) $(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLT_LIST) $(MCC_SPLT_LIST) $(VDGC_SPLIT_LIST) $(SWARM_LIST)  $(UAGC_LIST) $(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST)
+LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST) $(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLT_LIST) $(MCC_SPLT_LIST) $(VDGC_SPLT_LIST) $(SWARM_LIST)  $(UAGC_LIST) $(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST)
 
 SENSSPEC = $(subst list,sensspec,$(LIST))
 STEPS = $(subst list,steps,$(MCC_LIST) $(ACCURACY_LIST), $(F1SCORE_LIST))
@@ -300,21 +300,21 @@ $(AN_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 $(MCC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 		$$(addsuffix .taxonomy,$$(basename $$(basename $$@)))\
 		$$(addsuffix .count_table,$$(basename $$(basename $$@)))
-  $(eval FASTA=$(word 1,$^))
-  $(eval TAXONOMY=$(word 2,$^))
-  $(eval COUNT=$(word 3,$^))
-  $(eval STATS=$(subst list,stats, $@))
-  $(eval TIMEOUT=$(subst list,timeout, $@))
-  $(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
-  $(eval TEMP=$(addsuffix .opti_mcc.unique_list.list, $(basename $(basename $@))))
-  $(eval TEMP1=$(subst .list,.sensspec,$(TEMP)))
-  /usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
-  touch $(TEMP)
-  mv $(TEMP) $@
-  touch $(TEMP1)
+	$(eval FASTA=$(word 1,$^))
+	$(eval TAXONOMY=$(word 2,$^))
+	$(eval COUNT=$(word 3,$^))
+	$(eval STATS=$(subst list,stats, $@))
+	$(eval TIMEOUT=$(subst list,timeout, $@))
+	$(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
+	$(eval TEMP=$(addsuffix .opti_mcc.unique_list.list, $(basename $(basename $@))))
+	$(eval TEMP1=$(subst .list,.sensspec,$(TEMP)))
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
+	touch $(TEMP)
+	mv $(TEMP) $@
+	touch $(TEMP1)
 	rm $(TEMP1)
-  cat $(TIMEOUT) >> $(STATS)
-  rm $(TIMEOUT)
+	cat $(TIMEOUT) >> $(STATS)
+	rm $(TIMEOUT)
 	rm $(addsuffix .dist,$(basename $(basename $@)))
 
 .SECONDEXPANSION:
