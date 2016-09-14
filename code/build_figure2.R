@@ -2,7 +2,6 @@ library(dplyr)
 library(ggplot2)
 library(cowplot)
 
-
 basic_methods <- c('an', 'fn',
 									'nn', 'otuclust', 'sumaclust', 'swarm',
 									'uagc', 'udgc', 'vagc_1', 'vdgc_1', 'mcc')
@@ -35,68 +34,61 @@ method_ordering <- data %>%
 			summarize(avg_mcc=mean(mcc, na.rm=T)) %>%
 			arrange(desc(avg_mcc))
 
-subset$method <- factor(subset$method, ordering$method)
+subset$method <- factor(subset$method, method_ordering$method)
 subset$dataset <- factor(subset$dataset, datasets)
 
-mcc <- ggplot(subset, aes(method, avg_mcc, col=dataset, shape=dataset)) +
-	geom_point(position = position_dodge(0.5), size=2) +
-	coord_cartesian(ylim=c(0,1)) +
-	ylab("Mean Matthew's\nCorrelation Coefficient") +
-	xlab(NULL) +
-	scale_color_discrete(breaks=datasets, labels=pretty_datasets)+
-	scale_shape_manual(breaks=datasets, labels=pretty_datasets,
-						guide=guide_legend(override.aes=aes(size=2)),
-						values = c(15, 16, 17, 21, 22, 23)) +
-	# scale_x_discrete(breaks=levels(subset$method),
-	# 				labels=pretty_methods[levels(subset$method)]) +
-	theme(axis.text.x =element_blank(),legend.position="none")
+my_theme <- theme_classic() +
+	theme(axis.text.x =element_blank(),
+		axis.text.y=element_text(size=8),
+		axis.ticks.x = element_blank(),
+		axis.title.y=element_text(size=8),
+		panel.grid.major = element_blank(),
+		panel.grid.minor = element_blank(),
+		panel.border = element_rect(color = "black", fill=NA, size=1),
+		panel.background = element_rect(fill=NA),
+		legend.position="none"
+	)
 
+plot_performance <- function(x, var, label, ylimits){
+	mcc <- ggplot(x, aes_string("method", var, col="dataset", shape="dataset")) +
+		geom_point(position = position_dodge(0.5), size=2) +
+		geom_vline(xintercept=0.5 + 1:(length(levels(x$method))-1)) +
+		coord_cartesian(ylim=ylimits) +
+		ylab(label) +
+		xlab(NULL) +
+		scale_x_discrete(breaks=levels(subset$method),
+			labels=pretty_methods[levels(subset$method)]) +
+		scale_color_manual(breaks=datasets, labels=pretty_datasets, values=
+			c('black', wes_palette("Darjeeling")))+
+		scale_shape_manual(breaks=datasets, labels=pretty_datasets,
+			guide=guide_legend(override.aes=aes(size=2)),
+			values = c(15, 16, 17, 21, 22, 23))+
+		my_theme
 
-cov <- ggplot(subset, aes(method, cov_mcc, col=dataset, shape=dataset)) +
-	geom_point(position = position_dodge(0.5), size=2) +
-	coord_cartesian(ylim=c(0,0.04)) +
-	ylab("Coefficient of Variation for\nMatthew's Correlation Coefficient") +
-	xlab(NULL) +
-	scale_color_discrete(breaks=datasets, labels=pretty_datasets)+
-	scale_shape_manual(breaks=datasets, labels=pretty_datasets,
-						guide=guide_legend(override.aes=aes(size=2)),
-						values = c(15, 16, 17, 21, 22, 23)) +
-	# scale_x_discrete(breaks=levels(subset$method),
-	# 				labels=pretty_methods[levels(subset$method)]) +
-	theme(axis.text.x =element_blank(),legend.position="none")
+	if(var != 'avg_sobs'){
+		mcc <- mcc + theme(axis.title.y=element_text(margin=margin(0,10,0,0)))
+	}
+	return(mcc)
+}
 
-sobs <- ggplot(subset, aes(method, avg_sobs, col=dataset, shape=dataset)) +
-	geom_point(position = position_dodge(0.5), size=2) +
-#	coord_cartesian(ylim=c(0,1e5)) +
-	ylab("Mean Number of OTUs") +
-	xlab(NULL) +
-	scale_color_discrete(breaks=datasets, labels=pretty_datasets)+
-	scale_shape_manual(breaks=datasets, labels=pretty_datasets,
-						guide=guide_legend(override.aes=aes(size=2)),
-						values = c(15, 16, 17, 21, 22, 23)) +
-	# scale_x_discrete(breaks=levels(subset$method),
-	# 				labels=pretty_methods[levels(subset$method)]) +
-	theme(axis.text.x =element_blank(),legend.position="none")
+mcc <- plot_performance(subset, 'avg_mcc', "Mean Matthew's\nCorrelation Coefficient", c(0,1))
+cov <- plot_performance(subset, 'cov_mcc', "Coefficient of Variation for\nMatthew's Correlation Coefficient", c(0,0.04))
+sobs <- plot_performance(subset, 'avg_sobs', "Number of OTUs", c(0,1.05e5))
 
 my_legend <- theme(
 	legend.title=element_blank(),
-	legend.position = c(0.085, 0.25),
+	legend.position = c(0.12, 0.7),
 	legend.text = element_text(size = 8),
 	legend.key.height=unit(0.7,"line"),
-	legend.key = element_rect(fill = NA),
-	legend.margin = unit(0,"line")
+	legend.key = element_rect(fill = NA, linetype=0),
+	legend.margin = unit(-2,"line")
 )
 
 ggdraw() +
-	draw_plot(mcc + my_legend, 0,0.70,1,0.3) +
-	draw_plot(cov, 0,0.40,1,0.3) +
-	draw_plot(sobs, 0,0.10,1,0.3) +
-	theme(
-	#	axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5, size=8),
-		axis.title=element_text(size=10),
-		panel.grid.major.y = element_blank(),
-		panel.grid.minor.y = element_blank(),
-		panel.grid.major.x = element_line(colour = "gray",size=0.5),
-		panel.border = element_rect(color = "black", fill=NA, size=1),
-		panel.background = element_rect(fill=NA)
-	)
+	draw_plot(mcc,0,0.7,1,0.3) +
+	draw_plot(cov + my_legend, 0,0.40,1,0.3) +
+	draw_plot(sobs + 	theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5, size=8)), 0,0.02,1,0.38) +
+	draw_plot_label(c("A", "B", "C"), x=c(0,0,0), y=c(1.00,0.72,0.42), size=18) +
+	ggsave('results/figures/figure2.tiff', width=5.4, height=7.0, unit='in')
+
+	Saving 5.38 x 7 in image
