@@ -1,6 +1,7 @@
 library(dplyr)
 library(ggplot2)
 library(cowplot)
+library(wesanderson)
 
 basic_methods <- c('an', 'fn',
 									'nn', 'otuclust', 'sumaclust', 'swarm',
@@ -25,9 +26,8 @@ subset <- data %>%
 								avg_sobs=mean(num_otus, na.rm=T),
 								sd_sobs=sd(num_otus, na.rm=T),
 								n=sum(!is.na(mcc))) %>%
-			mutate(cov_mcc=sd_mcc/avg_mcc) %>%
-			print(n=nrow(.))
-
+			mutate(cov_mcc=sd_mcc/avg_mcc)
+			
 method_ordering <- data %>%
 			filter(frac==1.0 & method %in% basic_methods) %>%
 			group_by(method) %>%
@@ -90,5 +90,3 @@ ggdraw() +
 	draw_plot(sobs + 	theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5, size=8)), 0,0.02,1,0.38) +
 	draw_plot_label(c("A", "B", "C"), x=c(0,0,0), y=c(1.00,0.72,0.42), size=18) +
 	ggsave('results/figures/figure2.tiff', width=5.4, height=7.0, unit='in')
-
-	Saving 5.38 x 7 in image
