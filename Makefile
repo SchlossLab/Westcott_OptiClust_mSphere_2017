@@ -94,7 +94,7 @@ MCC_LIST = $(subst sm.dist,mcc.list,$(SUB_SM_DIST))
 F1SCORE_LIST = $(subst sm.dist,f1score.list,$(SUB_SM_DIST))
 ACCURACY_LIST = $(subst sm.dist,accuracy.list,$(SUB_SM_DIST))
 
-SPLIT=$(basename ,$(SUB_FASTA))
+SPLIT=$(basename $(SUB_FASTA))
 AN_SPLT_LIST = $(foreach L,2 3 4 5 6,$(foreach B,$(SPLIT),$B.an_split$L_8.list))
 MCC_SPLT_LIST = $(foreach L,2 3 4 5 6,$(foreach B,$(SPLIT),$B.mcc_split$L_8.list))
 VDGC_SPLT_LIST = $(foreach L,2 3 4 5 6,$(foreach B,$(SPLIT),$B.vdgc_split$L_8.list))
@@ -308,7 +308,7 @@ $(MCC_SPLT_LIST) : $$(addsuffix .fasta,$$(basename $$(basename $$@)))\
 	$(eval LEVEL=$(subst .split,,$(suffix $(basename $(subst _,.,$(suffix $(basename $@)))))))
 	$(eval TEMP=$(addsuffix .opti_mcc.unique_list.list, $(basename $(basename $@))))
 	$(eval TEMP1=$(subst .list,.sensspec,$(TEMP)))
-	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=1)" 2> $(TIMEOUT)
+	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster.split(fasta=$(FASTA), taxonomy=$(TAXONOMY), count=$(COUNT), method=opti, metric=mcc, taxlevel=$(LEVEL), cutoff=0.03, delta=0, processors=8)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	mv $(TEMP) $@
 	touch $(TEMP1)
