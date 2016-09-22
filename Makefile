@@ -441,7 +441,8 @@ $(SENSSPEC) : $$(subst sensspec,list, $$@) $$(addsuffix .sm.dist, $$(basename $$
 
 
 data/processed/sobs_counts.tsv : $(LIST)
-	grep '^0\.03\|user' data/*/*list | cut -f 1,2 | sed 's/:/\t/' > $@
+	> $@
+	find data/*/*list -type f -print0 | xargs -0 grep '^0\.03\|user' | cut -f 1,2 | sed 's/:/\t/' >> $@
 
 data/processed/cluster_data.summary : data/processed/sobs_counts.tsv $(STATS) $(SUB_SM_DIST) $(SUB_LG_DIST) $(SENSSPEC) code/aggregate_stats.R
 	R -e "source('code/aggregate_stats.R')"
