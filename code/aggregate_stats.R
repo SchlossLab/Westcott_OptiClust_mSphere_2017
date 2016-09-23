@@ -153,7 +153,10 @@ replicates <- 1:10
 n_reps <- length(replicates)
 
 # these are the 22 methods that we tested for clustering
-methods <- c("accuracy", "an", "an_split5_1", "an_split5_8", "f1score", "fn", "mcc", "mcc_split5_1", "mcc_split5_8", "nn", "otuclust", "sumaclust", "swarm", "uagc", "udgc", "vagc_1", "vagc_8", "vdgc_1", "vdgc_8", "vdgc_split5_1", "vdgc_split5_8", "mcc_agg")
+methods <- c("accuracy", "an", "an_split2_8", "an_split3_8", "an_split4_8", "an_split5_8", "an_split6_8",
+			"f1score", "fn", "mcc", "mcc_split2_8", "mcc_split3_8", "mcc_split4_8", "mcc_split5_8", "mcc_split6_8",
+			"nn", "otuclust", "sumaclust", "swarm", "uagc", "udgc", "vagc_1", "vagc_8", "vdgc_1", "vdgc_8",
+			"vdgc_split2_8", "vdgc_split3_8", "vdgc_split4_8", "vdgc_split5_8", "vdgc_split6_8", "mcc_agg")
 n_methods <- length(methods)
 
 
