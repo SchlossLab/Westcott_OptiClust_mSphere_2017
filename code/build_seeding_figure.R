@@ -3,7 +3,7 @@ library(ggplot2)
 library(tidyr)
 library(wesanderson)
 
-data <- read.table(file="data/processed/cluster_data.summary", header=TRUE, stringsAsFactors=FALSE)
+cluster_data <- read.table(file="data/processed/cluster_data.summary", header=TRUE, stringsAsFactors=FALSE)
 
 mcc_methods <- c("mcc", "mcc_agg")
 pretty_methods <- c("Separate OTUs", "Single OTU")
@@ -12,12 +12,12 @@ datasets <- c('soil', 'marine', 'mice', 'human', 'even', 'staggered')
 pretty_datasets <- c("Soil", "Marine", "Mice", "Human", "Even", "Staggered")
 names(pretty_datasets) <- datasets
 
-agg_test <- data %>%
+cluster <- cluster_data %>%
 			filter(frac==1.0 & method %in% mcc_methods) %>%
 			group_by(dataset, method) %>%
 			summarize(avg_mcc=mean(mcc, na.rm=T),
 								avg_secs=mean(cluster_secs, na.rm=T))
-agg_test$dataset <- factor(agg_test$dataset, datasets)
+cluster$dataset <- factor(cluster$dataset, datasets)
 
 my_theme <- theme_classic() +
 	theme(
@@ -35,7 +35,7 @@ my_theme <- theme_classic() +
 	)
 
 
-gathered <- gather(agg_test, parameter, variable, avg_mcc, avg_secs)
+gathered <- gather(cluster, parameter, variable, avg_mcc, avg_secs)
 
 facet_labels <- as_labeller(c('avg_mcc' = "Mean Matthew's\nCorrelation Coefficient", 'avg_secs' = "Execution Time\n(seconds)"))
 
