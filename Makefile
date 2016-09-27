@@ -110,7 +110,7 @@ MCC_AGG_LIST = $(subst sm.dist,mcc_agg.list,$(SUB_SM_DIST))
 LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST) $(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLT_LIST) $(MCC_SPLT_LIST) $(VDGC_SPLT_LIST) $(SWARM_LIST)  $(UAGC_LIST) $(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST)
 
 SENSSPEC = $(subst list,sensspec,$(LIST))
-STEPS = $(subst list,steps,$(MCC_LIST) $(ACCURACY_LIST), $(F1SCORE_LIST))
+STEPS = $(subst list,steps,$(MCC_LIST) $(MCC_AGG))
 
 LIST_% :
 	$(eval FILES=$(filter data/$*/%,$(LIST)))
@@ -446,3 +446,8 @@ data/processed/sobs_counts.tsv : $(LIST)
 
 data/processed/cluster_data.summary : data/processed/sobs_counts.tsv $(STATS) $(SUB_SM_DIST) $(SUB_LG_DIST) $(SENSSPEC) code/aggregate_stats.R
 	R -e "source('code/aggregate_stats.R')"
+
+data/processed/cluster_steps.summary: $(STEPS) code/aggregate_steps.R
+	R -e "source('code/aggregate_steps.R')"
+
+
