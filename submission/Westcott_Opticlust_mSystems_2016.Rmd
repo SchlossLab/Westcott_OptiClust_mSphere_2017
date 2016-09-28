@@ -74,7 +74,7 @@ Instead of retrospectively evaluating methods for their ability to correctly ass
 
 ## Results
 
-***OptiClust algorithm (Figure 1A).*** The OptiClust algorithm uses a list of all sequence names in the dataset, the pairs of sequences that are within a desired threshold of each other (e.g. 0.03), and the metric that should be used to assess clustering quality (e.g. MCC). The sequence pairs that are within the user-specified threshold are used to indicate those sequences that should appear within the same OTU and those that have a distance larger than the threshold should not appear within the same OTU. The algorithm starts by placing each sequence within its own OTU and calculating the number of true positives, true negatives, false positives, and false negatives based on the pairwise distances. These counts are used to calculate the metric used for optimization. The algorithm proceeds by interrogating each sequence and re-calculating the metric for the cases where the sequence stays in its current OTU, is moved to each of the other OTUs, or is moved into a new OTU. The location that results in the largest value of the optimization metric indicates whether the sequence remains in its current OTU or is moved. Each iteration consists of interrogating every sequence in the dataset. The algorithm continues until the optimization metric stabilizizes.
+***OptiClust algorithm (Figure 1A).*** The OptiClust algorithm uses a list of all sequence names in the dataset, the pairs of sequences that are within a desired threshold of each other (e.g. 0.03), and the metric that should be used to assess clustering quality (e.g. MCC). The sequence pairs that are within the user-specified threshold are used to indicate those sequences that should appear within the same OTU and those that have a distance larger than the threshold should not appear within the same OTU. The algorithm starts by placing each sequence either within its own OTU or into a single OTU. It then calculates the number of true positives, true negatives, false positives, and false negatives based on the pairwise distances. These counts are used to calculate the metric used for optimization. The algorithm proceeds by interrogating each sequence and re-calculating the metric for the cases where the sequence stays in its current OTU, is moved to each of the other OTUs, or is moved into a new OTU. The location that results in the largest value of the optimization metric indicates whether the sequence remains in its current OTU or is moved. Each iteration consists of interrogating every sequence in the dataset. The algorithm continues until the optimization metric stabilizes.
 
 ***OptiClust stopping criteria (Figure 1B).*** By default, the mothur-based implementation of the algorithm stops when the optimization metric does not change between iterations. It also allows the user to stop the algorithm if a maximum number of iterations is exceeded or if the change in the optimization metric is less than a stopping threshold. For each of the datasets we evaluated, between **XXX** and **XXX** iterations were needed to reach full conversion of the algorithm and between **XXX* and **XXX** iterations were needed to see a change in the metric that was less than 0.01%. To achieve full stabilization of the optimization metric, the **XXXX** algorithm required an average of **XX**% more iterations than the **XXXX** algorithm, which needed **XX**% more iterations than the **XXXX** algorithm. These results suggest that achieving full stabilization of the optimization metric adds computational effort, but that it is relatively small.
 
@@ -144,22 +144,17 @@ To assess how the the memory and time requirements scaled with the number of seq
 
 ## Figures
 
-**Figure 1. The OptiClust algorithm.**
-A. Flowchart describing algorithm with an example (?)
-B. Plot of MCC/F1Score/Accuracy change with iterations
-C. Plot of MCC/F1Score/Accuracy for the different datasets
+**Figure 1. OptiClust performance.**
+Plot of MCC (A) and execution times (B) for the different starting conditions
+(C) A Number of steps required to converge with different thresholds
 
+**Figure 2.** MCC values (A) and their coefficient of variation (B) and the number of observed OTUs (C) for comparison of *de novo* clustering algorithms when applied to four natural and two synthetic datasets. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time. The median of 10 re-orderings of the data is presented for each method and dataset.
 
-**Figure 2.** MCC values for comparison of *de novo* clustering algorithms when applied to five natural and two synthetic datasets. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time. The median of 10 re-orderings of the data is presented for each method and dataset.
+**Figure 3.** Demonstration of how execution time (A) and memory usage (B) scale with the number of unique sequences for each clustering algorithm. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time.
 
-**Figure 3.** F1-score values for comparison of *de novo* clustering algorithms when applied to five natural and two synthetic datasets. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time. The median of 10 re-orderings of the data is presented for each method and dataset.
+**Figure 4.** Comparison of cluster.split and cluster for average neighbor, VSEARCH-based abundance-based greedy clustering, and OptiClust.
 
-**Figure 4.** Accuracy values for comparison of *de novo* clustering algorithms when applied to five natural and two synthetic datasets. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time. The median of 10 re-orderings of the data is presented for each method and dataset.
-
-**Figure 5.** Demonstration of how execution time (A) and memory usage (B) scale with the number of unique sequences for each clustering algorithm. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time.
-
-**Figure 6.** Comparison of cluster.split and cluster for average neighbor, VSEARCH-based abundance-based greedy clustering, and OptiClust.
-
+**Supplemental text.** Worked example of how OptiClust algorithm clusters sequences into OTUs.
 
 \newpage
 
