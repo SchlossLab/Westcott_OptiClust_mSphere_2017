@@ -42,8 +42,8 @@ facet_labels <- as_labeller(c('avg_mcc' = "Mean Matthew's\nCorrelation Coefficie
 ggplot(gathered, aes(dataset, variable, col=dataset, shape=method)) +
 	geom_point(position = position_dodge(0.1), size=2) +
 	facet_grid(parameter~., scales = 'free_y', switch = 'y', labeller = facet_labels) +
-	scale_x_discrete(breaks=levels(agg_test$dataset),
-		labels=pretty_datasets[levels(agg_test$dataset)]) +
+	scale_x_discrete(breaks=levels(gathered$dataset),
+		labels=pretty_datasets[levels(gathered$dataset)]) +
 	scale_color_manual(breaks=datasets, labels=pretty_datasets, values=
 		c('black', wes_palette("Darjeeling")), guide=F)+
 	scale_shape_manual(name="Sequences initialized as", values=c(19,21), labels=pretty_methods) +
