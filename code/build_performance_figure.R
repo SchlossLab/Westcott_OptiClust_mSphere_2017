@@ -52,7 +52,7 @@ my_theme <- theme_classic() +
 plot_performance <- function(x, var, label, ylimits){
 	mcc <- ggplot(x, aes_string("method", var, col="dataset", shape="dataset")) +
 		geom_point(position = position_dodge(0.5), size=2) +
-		geom_vline(xintercept=0.5 + 1:(length(levels(x$method))-1)) +
+		geom_vline(xintercept=0.5 + (1:(length(levels(x$method))-1))) +
 		coord_cartesian(ylim=ylimits) +
 		ylab(label) +
 		xlab(NULL) +
@@ -71,15 +71,15 @@ plot_performance <- function(x, var, label, ylimits){
 	return(mcc)
 }
 
-mcc <- plot_performance(subset, 'avg_mcc', "Mean Matthew's\nCorrelation Coefficient", c(0,1))
-cov <- plot_performance(subset, 'cov_mcc', "Coefficient of Variation for\nMatthew's Correlation Coefficient", c(0,0.04))
+mcc <- plot_performance(subset, 'avg_mcc', "Matthew's\nCorrelation Coefficient", c(0,1))
+cov <- plot_performance(subset, 'cov_mcc', "Coefficient of\nVariation for MCC", c(0,0.04))
 sobs <- plot_performance(subset, 'avg_sobs', "Number of OTUs", c(0,1.05e5))
 
 my_legend <- theme(
-	legend.title=element_blank(),
-	legend.position = c(0.12, 0.7),
-	legend.text = element_text(size = 8),
-	legend.key.height=unit(0.7,"line"),
+	legend.position = c(0.12, 0.6),
+	legend.title=element_text(size=0),
+	legend.text = element_text(size=5),
+	legend.key.size = unit(0.55, "line"),
 	legend.key = element_rect(fill = NA, linetype=0),
 	legend.margin = unit(-2,"line")
 )
@@ -87,6 +87,6 @@ my_legend <- theme(
 ggdraw() +
 	draw_plot(mcc,0,0.7,1,0.3) +
 	draw_plot(cov + my_legend, 0,0.40,1,0.3) +
-	draw_plot(sobs + 	theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5, size=8)), 0,0.02,1,0.38) +
-	draw_plot_label(c("A", "B", "C"), x=c(0,0,0), y=c(1.00,0.72,0.42), size=18) +
-	ggsave('results/figures/seeding.tiff', width=5.4, height=7.0, unit='in')
+	draw_plot(sobs + 	theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5, size=8)), 0,0.02,1,0.39) +
+	draw_plot_label(c("A", "B", "C"), x=c(0,0,0), y=c(1.00,0.72,0.42), size=12) +
+	ggsave('results/figures/performance.tiff', width=4, height=5.0, unit='in')
