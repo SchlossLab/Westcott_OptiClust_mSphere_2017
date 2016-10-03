@@ -1,4 +1,4 @@
-library(dplyr)
+library(dplyr, warn.conflicts=FALSE)
 
 #this function concatenates together the dataset, fraction, replicate number,
 #and method to generate the filename stub
