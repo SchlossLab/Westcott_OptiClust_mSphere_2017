@@ -21,14 +21,17 @@ build_steps_files <- function(x){
 get_required_steps <- function(file, time){
 	steps <- read.table(file=file, header=T)
 
-	mcc_a <- steps[-nrow(steps),"mcc"]
-	mcc_b <- steps[-1, "mcc"]
+	threshold <- which.min((steps$mcc - lag(steps$mcc))/steps$mcc > 0.0001)
+	if(threshold >= nrow(steps)){
+		extra_time <- 0
+	} else {
+		extra_time <- sum(steps$time[(threshold+1):nrow(steps)])
+	}
 
-	threshold <- which.min((mcc_b - mcc_a) / mcc_a > 0.0001) + 1
-	extra_time <- sum(steps$time[(threshold+1):nrow(steps)])
 	full_time <- time[file,"cluster_secs"]
 	partial_time <- full_time-extra_time
 
+	if(partial_time < 0){	partial_time <- 0	}
 	c(steps$iter[threshold], steps$num_otus[threshold], partial_time,
 		 max(steps$iter), steps$num_otus[nrow(steps)], full_time)
 }
@@ -46,7 +49,7 @@ replicates <- 1:10
 n_reps <- length(replicates)
 
 # focus on the mcc method
-methods <- c("mcc", "mcc_agg")
+methods <- c("mcc")
 n_methods <- length(methods)
 
 dataset_vector <- rep(datasets, each=n_reps*n_fracs*n_methods)
@@ -65,8 +68,9 @@ rownames(timings) <- apply(timings[1:4], 1, build_steps_files)
 
 steps_names <- apply(results, 1, build_steps_files)
 all_stats <- t(sapply(steps_names, get_required_steps, time=timings))
-results$close_enough <- all_stats[,1] #within 0.01%
-results$convergence <- all_stats[,2] #complete convergence
 
-write.table(x=results, file='data/processed/cluster_steps.summary',
+colnames(all_stats) <- c("close_steps", "close_sobs", "close_secs",
+											"conv_steps", "conv_sobs", "conv_secs")
+
+write.table(x=all_stats, file='data/processed/cluster_steps.summary',
 			row.names=FALSE, col.names=TRUE, quote=FALSE)
