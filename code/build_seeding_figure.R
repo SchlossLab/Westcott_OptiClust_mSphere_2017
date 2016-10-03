@@ -1,8 +1,8 @@
-library(dplyr)
-library(ggplot2)
-library(tidyr)
-library(wesanderson)
-library(cowplot)
+library(dplyr, quietly=T, warn.conflicts=F)
+library(tidyr, quietly=T, warn.conflicts=F)
+library(ggplot2, quietly=T, warn.conflicts=F)
+library(wesanderson, quietly=T, warn.conflicts=F)
+library(cowplot, quietly=T, warn.conflicts=F)
 
 
 my_theme <- theme_classic() +
