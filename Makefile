@@ -451,3 +451,15 @@ data/processed/cluster_steps.summary: $(STEPS) data/processed/cluster_data.summa
 	R -e "source('code/aggregate_steps.R')"
 
 
+
+
+
+results/figures/convergence.tiff : code/build_convergence_figure.R data/processed/cluster_steps.summary
+	R -e "source('code/build_convergence_figure.R')"
+
+results/figures/seeding.tiff : code/build_seeding_figure.R data/processed/cluster_data.summary
+	R -e "source('code/build_seeding_figure.R')"
+
+results/figures/performance.tiff : code/build_performance_figure.R data/processed/cluster_data.summary
+    R -e "source('code/build_performance_figure.R')"
+
