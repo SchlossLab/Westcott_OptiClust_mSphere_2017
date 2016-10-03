@@ -72,5 +72,5 @@ all_stats <- t(sapply(steps_names, get_required_steps, time=timings))
 colnames(all_stats) <- c("close_steps", "close_sobs", "close_secs",
 											"conv_steps", "conv_sobs", "conv_secs")
 
-write.table(x=all_stats, file='data/processed/cluster_steps.summary',
+write.table(x=cbind(results, all_stats), file='data/processed/cluster_steps.summary',
 			row.names=FALSE, col.names=TRUE, quote=FALSE)
