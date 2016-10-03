@@ -24,9 +24,11 @@ datasets <- c('soil', 'marine', 'mice', 'human', 'even', 'staggered')
 pretty_datasets <- c("Soil", "Marine", "Mice", "Human", "Even", "Staggered")
 names(pretty_datasets) <- datasets
 
-conv <- c("close", "full")
-pretty_conv <- c("Converge within 0.01%", "Complete convergence")
+conv <- c("full", "close")
+pretty_conv <- c("Complete convergence", "Converge within 0.01%")
 names(pretty_conv) <- conv
+
+
 
 variables <- c("mcc", "sobs", "secs")
 pretty_variables <- c("Matthew's\nCorrelation Coefficient", "Number of OTUs", "Time to Cluster\n(seconds)")
