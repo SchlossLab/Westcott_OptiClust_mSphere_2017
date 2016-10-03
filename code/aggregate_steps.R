@@ -33,7 +33,7 @@ get_required_steps <- function(file, time){
 
 	if(partial_time < 0){	partial_time <- 0	}
 	c(steps$mcc[threshold], steps$num_otus[threshold], partial_time,
-		 steps$full[nrow(steps)], steps$num_otus[nrow(steps)], full_time)
+		 steps$mcc[nrow(steps)], steps$num_otus[nrow(steps)], full_time)
 }
 
 # Six datasets - two synthetic and four biological
