@@ -32,8 +32,8 @@ get_required_steps <- function(file, time){
 	partial_time <- full_time-extra_time
 
 	if(partial_time < 0){	partial_time <- 0	}
-	c(steps$iter[threshold], steps$num_otus[threshold], partial_time,
-		 max(steps$iter), steps$num_otus[nrow(steps)], full_time)
+	c(steps$mcc[threshold], steps$num_otus[threshold], partial_time,
+		 steps$full[nrow(steps)], steps$num_otus[nrow(steps)], full_time)
 }
 
 # Six datasets - two synthetic and four biological
@@ -69,8 +69,8 @@ rownames(timings) <- apply(timings[1:4], 1, build_steps_files)
 steps_names <- apply(results, 1, build_steps_files)
 all_stats <- t(sapply(steps_names, get_required_steps, time=timings))
 
-colnames(all_stats) <- c("close_steps", "close_sobs", "close_secs",
-											"conv_steps", "conv_sobs", "conv_secs")
+colnames(all_stats) <- c("close_mcc", "close_sobs", "close_secs",
+											"full_mcc", "full_sobs", "full_secs")
 
 write.table(x=cbind(results, all_stats), file='data/processed/cluster_steps.summary',
 			row.names=FALSE, col.names=TRUE, quote=FALSE)
