@@ -461,5 +461,5 @@ results/figures/seeding.tiff : code/build_seeding_figure.R data/processed/cluste
 	R -e "source('code/build_seeding_figure.R')"
 
 results/figures/performance.tiff : code/build_performance_figure.R data/processed/cluster_data.summary
-    R -e "source('code/build_performance_figure.R')"
+	R -e "source('code/build_performance_figure.R')"
 
