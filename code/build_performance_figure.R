@@ -30,12 +30,13 @@ full_tidy <- full_data %>%
 											min=min(value, na.rm=T),
 											max=max(value, na.rm=T))
 
-close_data <- read.table(file="data/processed/cluster_steps.summary", header=T)
-close_data <- close_data %>%  select(-starts_with("full_"))
+close_data <- read.table(file="data/processed/mcc_steps.summary", header=T)
+close_data <- close_data %>%  select(-starts_with("full_"), -close_steps, -close_secs_cluster)
 close_data$method <- 'mcc_close'
 colnames(close_data) <- c('dataset', 'frac', 'rep', 'method', 'mcc', 'num_otus', 'cluster_secs')
 
 close_tidy <- close_data %>%
+						filter(frac==1.0) %>%
 						gather(metric, value, mcc, num_otus, cluster_secs) %>%
 						group_by(dataset, method, metric) %>%
 						summarize(avg=mean(value, na.rm=T),
@@ -97,7 +98,7 @@ secs <- tidy %>% filter(metric == "cluster_secs") %>%
 	geom_point(position = position_dodge(0.7), size=2) +
 	geom_errorbar(position = position_dodge(0.7), aes(ymin=min, ymax=max), width=0.2) +
 	scale_y_log10() +
-	expand_limits(y=c(0,1)) +
+	# expand_limits(y=c(0,1)) +
 	geom_vline(xintercept=0.5 + (1:(length(levels(tidy$method))-1))) +
 	scale_x_discrete(breaks=levels(tidy$method), labels=pretty_methods[levels(tidy$method)]) +
 	scale_color_manual(breaks=datasets, labels=pretty_datasets, values=c('black', wes_palette("Darjeeling")), name=NULL)+
@@ -109,7 +110,7 @@ secs <- tidy %>% filter(metric == "cluster_secs") %>%
 
 
 my_legend <- theme(
-		legend.text = element_text(size=6),
+		legend.text = element_text(size=7),
 		legend.key.size = unit(0.55, "line"),
  		legend.key = element_rect(fill = NA, linetype=0),
 		legend.position=c(.65, 1.2),
