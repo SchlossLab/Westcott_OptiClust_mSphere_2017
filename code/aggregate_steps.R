@@ -19,6 +19,7 @@ build_steps_files <- function(x){
 
 #return the total number of steps to reach point where change is less than #0.01% or to convergence (0.00% change)
 get_required_steps <- function(file, time){
+	print(file)
 	steps <- read.table(file=file, header=T)
 
 	threshold <- which.min((steps$mcc - lag(steps$mcc))/steps$mcc > 0.0001)
@@ -29,11 +30,20 @@ get_required_steps <- function(file, time){
 	}
 
 	full_time <- time[file,"cluster_secs"]
+
 	partial_time <- full_time-extra_time
 
 	if(partial_time < 0){	partial_time <- 0	}
-	c(steps$mcc[threshold], steps$num_otus[threshold], partial_time,
-		 steps$mcc[nrow(steps)], steps$num_otus[nrow(steps)], full_time)
+	c(close_steps = steps$iter[threshold],
+		close_mcc = steps$mcc[threshold],
+		close_num_otus = steps$num_otus[threshold],
+		close_secs = partial_time,
+		close_secs_cluster = sum(steps$time[1:threshold]),
+		full_steps = max(steps$iter),
+		full_mcc = steps$mcc[nrow(steps)],
+		full_num_otus = steps$num_otus[nrow(steps)],
+		full_secs = full_time,
+		full_secs_cluster = sum(steps$time))
 }
 
 # Six datasets - two synthetic and four biological
@@ -41,7 +51,7 @@ datasets <- c("even", "human", "marine", "mice", "soil", "staggered")
 n_datasets <- length(datasets)
 
 # these are the fractions of *unique* sequences that were used for each dataset
-fractions <- 1#seq(0.2,1,0.2)
+fractions <- seq(0.2,1,0.2)
 n_fracs <- length(fractions)
 
 # we randomized the sequences (and their order) in each fraction ten times
@@ -62,15 +72,12 @@ results <- data.frame(dataset=dataset_vector, frac=frac_vector, rep=rep_vector, 
 cluster_data <- read.table(file="data/processed/cluster_data.summary", header=T,
 													stringsAsFactors=FALSE)
 timings <- cluster_data %>%
-							filter(method %in% methods, frac==1) %>%
+							filter(method %in% methods) %>%
 							select(dataset, frac, rep, method, cluster_secs)
 rownames(timings) <- apply(timings[1:4], 1, build_steps_files)
 
 steps_names <- apply(results, 1, build_steps_files)
 all_stats <- t(sapply(steps_names, get_required_steps, time=timings))
 
-colnames(all_stats) <- c("close_mcc", "close_sobs", "close_secs",
-											"full_mcc", "full_sobs", "full_secs")
-
-write.table(x=cbind(results, all_stats), file='data/processed/cluster_steps.summary',
+write.table(x=cbind(results, all_stats), file='data/processed/mcc_steps.summary',
 			row.names=FALSE, col.names=TRUE, quote=FALSE)
