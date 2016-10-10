@@ -81,7 +81,7 @@ my_legend <- theme(
 		legend.text = element_text(size=7),
 		legend.key.size = unit(0.55, "line"),
  		legend.key = element_rect(fill = NA, linetype=0),
-		legend.position=c(0.2, 0.8),
+		legend.position=c(0.3, 0.7),
 		legend.title=element_text(lineheight=-1),
 		legend.background = element_rect(fill="white", color="black"),
 		legend.margin = margin(t=0,4,4,4)
@@ -135,6 +135,6 @@ memory_plot <- memory_summary %>%
 
 ggdraw() +
 	draw_plot(speed_plot,  x=0, y=0.535, 1.0, 0.465) +
-	draw_plot(memory_plot, x=0, y=0.0, 1.0, 0.535) +
+	draw_plot(memory_plot, x=0, y=0.000, 1.0, 0.535) +
 	draw_plot_label(c("A", "B"), x=c(0,0), y=c(1.00,0.54), size=12) +
 	ggsave('results/figures/speed_memory.tiff', width=3.5, height=4.0, unit='in')
