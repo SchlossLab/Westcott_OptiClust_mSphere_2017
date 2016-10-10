@@ -447,7 +447,7 @@ data/processed/sobs_counts.tsv : $(LIST)
 data/processed/cluster_data.summary : data/processed/sobs_counts.tsv $(STATS) $(SUB_SM_DIST) $(SUB_LG_DIST) $(SENSSPEC) code/aggregate_stats.R
 	R -e "source('code/aggregate_stats.R')"
 
-data/processed/cluster_steps.summary: $(STEPS) data/processed/cluster_data.summary code/aggregate_steps.R
+data/processed/mcc_steps.summary: $(STEPS) data/processed/cluster_data.summary code/aggregate_steps.R
 	R -e "source('code/aggregate_steps.R')"
 
 
