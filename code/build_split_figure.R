@@ -99,4 +99,36 @@ split_data %>% filter(metric == "mcc") %>%
 		) +
 		ylab("Matthew's Correlation Coefficient") +
 		my_theme +
-		ggsave("results/figures/split.tiff", width=3.5, height=5.0, unit="in")
+		ggsave("results/figures/split_mcc.tiff", width=3.5, height=5.0, unit="in")
+
+
+figure <- split_data %>% filter(metric == "mcc") %>%
+	ggplot(aes(x=tax_level, y=avg, color=dataset, shape=method)) +
+		facet_grid(dataset ~ ., scales="free_y") +
+		geom_point() +
+		geom_line() +
+		scale_x_discrete(
+			aes(breaks=tax_level),
+			labels=taxon_level_names,
+			limits=1:6
+		) +
+		expand_limits(y=c(0,1)) +
+		scale_color_manual(
+			breaks=datasets,
+			values=c('black', wes_palette("Darjeeling")[1:3]),
+			name=NULL,
+			guide=FALSE
+		) +
+		scale_shape_manual(
+			breaks=methods,
+			labels=pretty_methods,
+			values = c(15,16,17),
+			name=NULL
+		) +
+		ylab("Matthew's Correlation Coefficient") +
+		my_theme
+
+
+gg
+		 +
+		ggsave("results/figures/split_mcc.tiff", width=3.5, height=5.0, unit="in")
