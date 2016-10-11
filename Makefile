@@ -440,6 +440,8 @@ $(SENSSPEC) : $$(subst sensspec,list, $$@) $$(addsuffix .sm.dist, $$(basename $$
 	mothur "#sens.spec(list=$(LIST), column=$(DIST), count=$(COUNT), cutoff=0.03, label=0.03)"
 
 
+# Generate files that summarize all of the above analyses
+
 data/processed/sobs_counts.tsv : $(LIST)
 	> $@
 	find data/*/*list -type f -print0 | xargs -0 grep '^0\.03\|user' | cut -f 1,2 | sed 's/:/\t/' >> $@
@@ -452,14 +454,17 @@ data/processed/mcc_steps.summary: $(STEPS) data/processed/cluster_data.summary c
 
 
 
+# Build figures...
 
-
-results/figures/convergence.tiff : code/build_convergence_figure.R data/processed/cluster_steps.summary
-	R -e "source('code/build_convergence_figure.R')"
-
-results/figures/seeding.tiff : code/build_seeding_figure.R data/processed/cluster_data.summary
-	R -e "source('code/build_seeding_figure.R')"
-
-results/figures/performance.tiff : code/build_performance_figure.R data/processed/cluster_data.summary
+results/figures/performance.tiff : code/build_performance_figure.R\
+																	data/processed/cluster_data.summary
 	R -e "source('code/build_performance_figure.R')"
 
+results/figures/speed_memory.tiff : code/build_scaling_figure.R\
+																		data/processed/mcc_steps.summary\
+																		data/processed/cluster_data.summary
+	R -e "source('code/build_scaling_figure.R')"
+
+results/figures/split_mcc.tiff : code/build_split_figure.R\
+																data/processed/cluster_data.summary
+	R -e "source('code/build_split_figure.R')"
