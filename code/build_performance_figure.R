@@ -1,3 +1,6 @@
+#devtools::install_github("hadley/ggplot2")
+#devtools::install_github("hadley/scales")
+#devtools::install_github("wilkelab/cowplot")
 library(dplyr, warn.conflicts=F)
 library(tidyr, warn.conflicts=F)
 library(ggplot2, warn.conflicts=F)
