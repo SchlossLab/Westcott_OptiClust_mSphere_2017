@@ -65,7 +65,7 @@ my_theme <- theme_classic() +
 		strip.background = element_blank(),
 		strip.text.y = element_blank(),
 
-		legend.position=c(0.7, 0.57),
+		legend.position=c(0.75, 0.8),
 		legend.text = element_text(size=7),
 		legend.key.size = unit(0.55, "line"),
  		legend.key = element_rect(fill = NA, linetype=0),
@@ -74,7 +74,7 @@ my_theme <- theme_classic() +
 		legend.margin = margin(t=0,4,4,4)
 	)
 
-split_data %>% filter(metric == "mcc") %>%
+figure <- split_data %>% filter(metric == "mcc") %>%
 	ggplot(aes(x=tax_level, y=avg, color=dataset, shape=method)) +
 		facet_grid(dataset ~ ., scales="free_y") +
 		geom_point() +
@@ -98,5 +98,10 @@ split_data %>% filter(metric == "mcc") %>%
 			name=NULL
 		) +
 		ylab("Matthew's Correlation Coefficient") +
-		my_theme +
-		ggsave("results/figures/split.tiff", width=3.5, height=5.0, unit="in")
+		my_theme
+
+
+ggdraw() +
+	draw_plot(figure,  x=0, y=0, 1.0, 1) +
+	draw_plot_label(pretty_datasets, x=rep(0.15,4), y=c(0.825,0.6,0.375,0.15), size=10, hjust=0) +
+	ggsave("results/figures/split_mcc.tiff", width=3.5, height=5.0, unit="in")
