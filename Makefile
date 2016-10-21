@@ -456,7 +456,8 @@ data/processed/mcc_steps.summary: $(STEPS) data/processed/cluster_data.summary c
 
 # Build figures...
 
-results/figures/performance.tiff : code/build_performance_figure.R\
+data/processed/performance_data.tsv results/figures/performance.tiff :\
+																	code/build_performance_figure.R\
 																	data/processed/cluster_data.summary
 	R -e "source('code/build_performance_figure.R')"
 
@@ -468,3 +469,9 @@ results/figures/speed_memory.tiff : code/build_scaling_figure.R\
 results/figures/split_mcc.tiff : code/build_split_figure.R\
 																data/processed/cluster_data.summary
 	R -e "source('code/build_split_figure.R')"
+
+
+write.paper : data/processed/performance_data.tsv\
+							results/figures/performance.tiff\
+							results/figures/speed_memory.tiff\
+							results/figures/split_mcc.tiff
