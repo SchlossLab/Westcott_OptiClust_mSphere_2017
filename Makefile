@@ -456,7 +456,7 @@ data/processed/mcc_steps.summary: $(STEPS) data/processed/cluster_data.summary c
 
 # Build figures...
 
-data/processed/performance_data.tsv results/figures/performance.tiff :\
+results/figures/performance.tiff :\
 																	code/build_performance_figure.R\
 																	data/processed/cluster_data.summary
 	R -e "source('code/build_performance_figure.R')"
@@ -471,7 +471,9 @@ results/figures/split_mcc.tiff : code/build_split_figure.R\
 	R -e "source('code/build_split_figure.R')"
 
 
-write.paper : data/processed/performance_data.tsv\
+write.paper : data/processed/mcc_steps.summary\
+							data/processed/cluster_data.summary\
 							results/figures/performance.tiff\
 							results/figures/speed_memory.tiff\
 							results/figures/split_mcc.tiff
+		R -e "library(rmarkdown);render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"

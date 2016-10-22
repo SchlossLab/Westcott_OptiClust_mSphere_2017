@@ -58,9 +58,6 @@ tidy$method <- factor(tidy$method, method_ordering$method)
 tidy$dataset <- factor(tidy$dataset, datasets)
 tidy$metric <- factor(tidy$metric, metrics)
 
-write.table(tidy, file="data/processed/performance_data.tsv", row.names=F, sep='\t', quote=F)
-
-
 my_theme <- theme_classic() +
 	theme(
 		axis.text.x = element_blank(),#(angle = 90, hjust = 1, vjust=0.5, size=7),
