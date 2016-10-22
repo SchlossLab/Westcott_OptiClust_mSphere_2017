@@ -476,4 +476,6 @@ write.paper : data/processed/mcc_steps.summary\
 							results/figures/performance.tiff\
 							results/figures/speed_memory.tiff\
 							results/figures/split_mcc.tiff
-		R -e "library(rmarkdown);render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"
+R -e "library(rmarkdown);render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"
+mv submission/Westcott_OptiClust_mSystems_2016.utf8.md submission/Westcott_OptiClust_mSystems_2016.md
+rm submission/Westcott_OptiClust_mSystems_2016.knit.md
