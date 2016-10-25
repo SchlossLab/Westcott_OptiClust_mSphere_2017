@@ -150,8 +150,4 @@ To assess how the the memory and time requirements scaled with the number of seq
 
 \newpage
 
-**Table 1. Description of datasets used to evaluate the OptiClust algorithm and compare its performance to other algorithms.**
-
-
-
 ## References

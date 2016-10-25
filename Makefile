@@ -477,11 +477,21 @@ results/figures/split_mcc.tiff : code/build_split_figure.R\
 	R -e "source('code/build_split_figure.R')"
 
 
+# Build tables...
+
+results/table/table_1.pdf : results/table/table_1.Rmd\
+															data/processed/datasets.summary
+	R -e 'render("$<")'
+
+
+# Build manuscript...
+
 write.paper : data/processed/mcc_steps.summary\
 							data/processed/cluster_data.summary\
+							results/tables/table_1.pdf\
 							results/figures/performance.tiff\
 							results/figures/speed_memory.tiff\
 							results/figures/split_mcc.tiff
-	R -e "library(rmarkdown);render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"
+	R -e "render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"
 	mv submission/Westcott_OptiClust_mSystems_2016.utf8.md submission/Westcott_OptiClust_mSystems_2016.md
 	rm submission/Westcott_OptiClust_mSystems_2016.knit.md
