@@ -153,7 +153,7 @@ To assess how the the memory and time requirements scaled with the number of seq
 
 **Figure 2. OptiClust performance** The average execution time (A) and memory usage (B) required to cluster the four natural datasets. The confidence intervals indicate the range between the minimum and maximum values. The y-axis is scaled by the square root to demonstrate the relationship between the time and memory requirements relative to the number of unique sequences squared.
 
-**Figure 3. Effects of taxonomically splitting the datasets on clustering quality.** The datasets were split at each taxonomic level based on their classification using a naive Bayesian classifier and clustered using average neighbor, VSEARCH-based AGC, and OptiClust.
+**Figure 3. Effects of taxonomically splitting the datasets on clustering quality.** The datasets were split at each taxonomic level based on their classification using a naive Bayesian classifier and clustered using average neighbor, VSEARCH-based DGC, and OptiClust.
 
 **Supplemental text.** Worked example of how OptiClust algorithm clusters sequences into OTUs.
 
