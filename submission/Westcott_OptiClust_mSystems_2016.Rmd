@@ -335,15 +335,11 @@ To assess how the the memory and time requirements scaled with the number of seq
 
 ## Figures
 
-**Figure 1. OptiClust performance.**
-Plot of MCC (A) and execution times (B) for the different starting conditions
-(C) A Number of steps required to converge with different thresholds
+**Figure 1. Comparison of de novo clustering algorithms.**  Plot of MCC (A), number of OTUs (B), and execution times (C) for the comparison of *de novo* clustering algorithms when applied to four natural and two synthetic datasets. The first three columns of each figure contain the results of clustering the datasets (i) seeding the algorithm with one sequence per OTU and allowing the algorithm to proceed until the MCC value no longer changed; (ii) seeding the algorithm with one sequence per OTU and allowing the algorithm to proceed until the MCC changed by less than 0.0001; (iii) seeding the algorithm with all of the sequences in one OTU and allowing the algorithm to proceed until the MCC value no longer changed. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time. The median of 10 re-orderings of the data is presented for each method and dataset. The confidence interval is indicated by the error bars, which are typically smaller than the plotting symbol.
 
-**Figure 2.** MCC values (A) and their coefficient of variation (B) and the number of observed OTUs (C) for comparison of *de novo* clustering algorithms when applied to four natural and two synthetic datasets. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time. The median of 10 re-orderings of the data is presented for each method and dataset.
+**Figure 2. OptiClust performance** The average execution time (A) and memory usage (B) required to cluster the four natural datasets. The confidence intervals indicate the range between the minimum and maximum values. The y-axis is scaled by the square root to demonstrate the relationship between the time and memory requirements relative to the number of unique sequences squared.
 
-**Figure 3.** Demonstration of how execution time (A) and memory usage (B) scale with the number of unique sequences for each clustering algorithm. For the purposes of this analysis, clustering was limited to 48 GB of RAM and 50 hours of execution time.
-
-**Figure 4.** Comparison of cluster.split and cluster for average neighbor, VSEARCH-based abundance-based greedy clustering, and OptiClust.
+**Figure 3. Effects of taxonomically splitting the datasets on clustering quality.** The datasets were split at each taxonomic level based on their classification using a naive Bayesian classifier and clustered using average neighbor, VSEARCH-based AGC, and OptiClust.
 
 **Supplemental text.** Worked example of how OptiClust algorithm clusters sequences into OTUs.
 
