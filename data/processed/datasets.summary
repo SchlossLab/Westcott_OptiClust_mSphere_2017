@@ -1,0 +1,7 @@
+n_samples	n_unique_seqs	n_total_seqs
+soil	18	143677	948243
+marine	7	75923	1384988
+human	489	121281	20951841
+mice	360	32447	2825495
+staggered	NA	11558	1156550
+even	NA	11558	1155800

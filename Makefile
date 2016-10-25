@@ -453,6 +453,12 @@ data/processed/mcc_steps.summary: $(STEPS) data/processed/cluster_data.summary c
 	R -e "source('code/aggregate_steps.R')"
 
 
+COUNT_FILES=$(foreach S,$(SAMPLES),data/$S/$S.count_table)
+
+data/processed/datasets.summary: code/summarize_datasets.R $(COUNT_FILES)
+	R -e "source('code/summarize_datasets.R')"
+
+
 
 # Build figures...
 
@@ -476,6 +482,6 @@ write.paper : data/processed/mcc_steps.summary\
 							results/figures/performance.tiff\
 							results/figures/speed_memory.tiff\
 							results/figures/split_mcc.tiff
-R -e "library(rmarkdown);render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"
-mv submission/Westcott_OptiClust_mSystems_2016.utf8.md submission/Westcott_OptiClust_mSystems_2016.md
-rm submission/Westcott_OptiClust_mSystems_2016.knit.md
+	R -e "library(rmarkdown);render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"
+	mv submission/Westcott_OptiClust_mSystems_2016.utf8.md submission/Westcott_OptiClust_mSystems_2016.md
+	rm submission/Westcott_OptiClust_mSystems_2016.knit.md
