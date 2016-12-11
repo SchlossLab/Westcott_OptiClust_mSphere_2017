@@ -488,7 +488,7 @@ results/table/table_1.pdf : results/table/table_1.Rmd\
 
 write.paper : data/processed/mcc_steps.summary\
 							data/processed/cluster_data.summary\
-							results/tables/table_1.pdf\
+							results/table/table_1.pdf\
 							results/figures/performance.tiff\
 							results/figures/speed_memory.tiff\
 							results/figures/split_mcc.tiff
