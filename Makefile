@@ -479,19 +479,20 @@ results/figures/split_mcc.tiff : code/build_split_figure.R\
 
 # Build tables...
 
-results/table/table_1.pdf : results/table/table_1.Rmd\
-															data/processed/datasets.summary
-	R -e 'render("$<")'
+#results/table/table_1.pdf : results/table/table_1.Rmd\
+#															data/processed/datasets.summary
+#	R -e 'render("$<")'
 
 
 # Build manuscript...
 
-write.paper : data/processed/mcc_steps.summary\
+write.paper : submission/msphere.csl\
+							submission/header.tex\
+							data/processed/mcc_steps.summary\
 							data/processed/cluster_data.summary\
-							results/table/table_1.pdf\
 							results/figures/performance.tiff\
 							results/figures/speed_memory.tiff\
 							results/figures/split_mcc.tiff
-	R -e "render('submission/Westcott_OptiClust_mSystems_2016.Rmd', clean=FALSE)"
-	mv submission/Westcott_OptiClust_mSystems_2016.utf8.md submission/Westcott_OptiClust_mSystems_2016.md
-	rm submission/Westcott_OptiClust_mSystems_2016.knit.md
+	R -e "render('submission/Westcott_OptiClust_mSphere_2016.Rmd', clean=FALSE)"
+	mv submission/Westcott_OptiClust_mSphere_2016.utf8.md submission/Westcott_OptiClust_mSphere_2016.md
+	rm submission/Westcott_OptiClust_mSphere_2016.knit.md

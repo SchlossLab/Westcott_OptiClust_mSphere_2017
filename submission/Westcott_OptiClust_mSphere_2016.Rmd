@@ -5,13 +5,42 @@ output:
   pdf_document:
     includes:
       in_header: header.tex
-csl: msystems.csl
+csl: msphere.csl
 fontsize: 11pt
 geometry: margin=1.0in
 ---
 
 
+```{r knitr_settings, eval=TRUE, echo=FALSE, cache=FALSE}
+library(dplyr, warn.conflicts=FALSE)
+library(tidyr)
+library(knitr)
 
+opts_chunk$set("tidy" = TRUE)
+opts_chunk$set("echo" = FALSE)
+opts_chunk$set("eval" = TRUE)
+opts_chunk$set("warning" = FALSE)
+opts_chunk$set("cache" = FALSE)
+
+inline_hook <- function(x){
+	print(x)
+	if(is.numeric(x)){
+		if(abs(x - round(x)) < .Machine$double.eps^0.5){
+			paste(format(x,big.mark=',', digits=0, scientific=FALSE))
+		} else {
+			paste(format(x,big.mark=',', digits=2, nsmall=2, scientific=FALSE))
+		}
+
+	} else {
+    	paste(x)      
+	}
+}
+knitr::knit_hooks$set(inline=inline_hook)
+
+basic_methods <- c('an', 'fn', 'nn', 'otuclust', 'sumaclust', 'swarm',
+										'uagc', 'udgc', 'vagc_1', 'vdgc_1', 'mcc')
+
+```
 
 \begin{center}
 \vspace{25mm}
@@ -54,44 +83,203 @@ The OptiClust algorithm uses the pairs of sequences that are within a desired th
 
 ***OptiClust-generated OTUs are more robust than those from other methods.***
 
+```{r performance_analysis}
+perf <- read.table(file="data/processed/cluster_data.summary", header=T) %>%
+				filter(frac == 1.0, method %in% basic_methods) %>%
+				select(dataset, method, cluster_secs, cluster_kb, mcc, num_otus) %>%
+				group_by(dataset, method) %>%
+				summarize(
+					mean_secs = mean(cluster_secs, na.rm=T),
+					mean_kb = mean(cluster_kb, na.rm=T),
+					mean_mcc = mean(mcc, na.rm=T),
+					mean_num_otus = mean(num_otus, na.rm=T)
+				)
+perf_summary <- perf %>%
+				group_by(method) %>%
+				summarize(
+					mean_mcc = mean(mean_mcc, na.rm=T),
+					mean_secs = mean(mean_secs, na.rm=T)
+				) %>%
+				mutate(
+					rel_mcc = mean_mcc/mean_mcc[method=='mcc'],
+					rel_secs = mean_secs/mean_secs[method=='mcc']
+				)
 
+mcc_rel_an <-100*(1-perf_summary %>% filter(method=="an") %>% select(rel_mcc))
+mcc_rel_vdgc <- 100*(1-perf_summary %>% filter(method=="vdgc_1") %>% select(rel_mcc))
 
-To evaluate the OptiClust algorithm and compare its performance to other algorithms, we utilized six datasets including two synthetic communities and four previously published large datasets generated from soil, marine, human, and murine samples (Table 1). When we seeded the OptiClust algorithm with each sequence in a separate OTU and ran the algorithm until complete convergence, the MCC values averaged 15.2 and 16.5% higher than the OTUs using average neighbor and distance-based greedy clustering (DGC) with VSEARCH, respectively (Figure 1). The number of OTUs formed by the various methods was negatively correlated with their MCC value ($\rho$=-0.47; p=0). The OptiClust algorithm was considerably faster than the hierarchical algorithms and somewhat slower than the heuristic-based algorithms. Across the six datasets, the OptiClust algorithm was 94.6-times faster than average neighbor and just as fast as DGC with VSEARCH. The human dataset was a challenge for a number of the algorithms. OTUCLUST and SumaClust were unable to cluster the human dataset in less than 50 hours and the average neighbor algorithm required more than 45 GB of RAM. The USEARCH-based methods were unable to cluster the human data using the 32-bit free version of the software that limits the amount of RAM to approximately 3.5 GB. These data demonstrate that OptiClust generated significantly more robust OTU assignments than existing methods across a diverse collection of datasets with performance that was comparable to popular methods.
+secs_rel_an <- perf_summary %>% filter(method=="an") %>% select(rel_secs)
+secs_rel_vdgc <- perf_summary %>% filter(method=="vdgc_1") %>% select(rel_secs)
+
+mcc_sobs_cor <- cor.test(perf$mean_num_otus, perf$mean_mcc, method="spearman")
+
+stopifnot(round(1/secs_rel_vdgc, 1) == 1)
+```
+
+To evaluate the OptiClust algorithm and compare its performance to other algorithms, we utilized six datasets including two synthetic communities and four previously published large datasets generated from soil, marine, human, and murine samples (Table 1). When we seeded the OptiClust algorithm with each sequence in a separate OTU and ran the algorithm until complete convergence, the MCC values averaged `r round(mcc_rel_an, 1)` and `r round(mcc_rel_vdgc, 1)`% higher than the OTUs using average neighbor and distance-based greedy clustering (DGC) with VSEARCH, respectively (Figure 1). The number of OTUs formed by the various methods was negatively correlated with their MCC value ($\rho$=`r round(mcc_sobs_cor$estimate, 2)`; p=`r round(mcc_sobs_cor$p.value, 2)`). The OptiClust algorithm was considerably faster than the hierarchical algorithms and somewhat slower than the heuristic-based algorithms. Across the six datasets, the OptiClust algorithm was `r round(secs_rel_an, 1)`-times faster than average neighbor and just as fast as DGC with VSEARCH. The human dataset was a challenge for a number of the algorithms. OTUCLUST and SumaClust were unable to cluster the human dataset in less than 50 hours and the average neighbor algorithm required more than 45 GB of RAM. The USEARCH-based methods were unable to cluster the human data using the 32-bit free version of the software that limits the amount of RAM to approximately 3.5 GB. These data demonstrate that OptiClust generated significantly more robust OTU assignments than existing methods across a diverse collection of datasets with performance that was comparable to popular methods.
 
 
 ***OptiClust stopping criteria.***
 
+```{r stopping_analysis}
+steps <- read.table(file="data/processed/mcc_steps.summary", header=T) %>%
+					filter(frac == 1.0, dataset!="even", dataset!="staggered") %>%
+					select(-rep, -frac, -method, -contains("_secs_cluster")) %>%
+					group_by(dataset) %>%
+					summarize(med_full_secs = median(full_secs),
+							per_diff_mcc = 100 * mean((full_mcc-close_mcc)/full_mcc),
+							diff_numotus = median(close_num_otus - full_num_otus),
+							per_diff_numotus = 100 * mean((close_num_otus - full_num_otus)/full_num_otus),
+							ratio_secs = mean(full_secs/close_secs),
+							med_close_steps = median(close_steps),
+							med_full_steps = median(full_steps)
+					)
+```
 
-
-By default, the mothur-based implementation of the algorithm stops when the optimization metric changes by less than 0.0001; however, this can be altered by the user. This implementation also allows the user to stop the algorithm if a maximum number of iterations is exceeded. By default mothur uses a maximum value of 100 iterations. The justification for allowing incomplete convergence was based on the observation that numerous iterations are performed that extend the time required to complete the clustering with minimal improvement in clustering. We evaluated the results of clustering to partial convergence (i.e. a change in the MCC value that was less than 0.0001) or until complete convergence of the MCC value (i.e. until it did not change between iterations) when seeding the algorithm with each sequence in a separate OTU (Figure 1). The small difference in MCC values between the output from partial and complete convergence resulted in a difference in the median number of OTUs that ranged between  1.5 and 17.0 OTUs. This represented a difference of less than 0.15%. Among the four natural datasets, between 3 and 6 were needed to achieve partial convergence and between 8 and 12.50 iterations were needed to reach full convergence. The additional steps required between 1.4 and 1.7 times longer to complete the algorithm. These results suggest that achieving full convergence of the optimization metric adds computational effort; however, considering full convergence took between 2 and 17 minutes the extra effort was relatively small. Although the mothur's default setting is partial convergence, the remainder of our analysis used complete convergence to be more conservative.
+By default, the mothur-based implementation of the algorithm stops when the optimization metric changes by less than 0.0001; however, this can be altered by the user. This implementation also allows the user to stop the algorithm if a maximum number of iterations is exceeded. By default mothur uses a maximum value of 100 iterations. The justification for allowing incomplete convergence was based on the observation that numerous iterations are performed that extend the time required to complete the clustering with minimal improvement in clustering. We evaluated the results of clustering to partial convergence (i.e. a change in the MCC value that was less than 0.0001) or until complete convergence of the MCC value (i.e. until it did not change between iterations) when seeding the algorithm with each sequence in a separate OTU (Figure 1). The small difference in MCC values between the output from partial and complete convergence resulted in a difference in the median number of OTUs that ranged between `r paste(format(round(range(steps$diff_numotus), 1), nsmall=1L), collapse=" and ")` OTUs. This represented a difference of less than `r format(round(max(steps$per_diff_numotus), 2), nsmall=1L)`%. Among the four natural datasets, between `r min(steps$med_close_steps)` and `r max(steps$med_close_steps)` were needed to achieve partial convergence and between `r min(steps$med_full_steps)` and `r max(steps$med_full_steps)` iterations were needed to reach full convergence. The additional steps required between `r paste(format(round(range(steps$ratio_secs), 1), nsmall=1L), collapse=" and ")` times longer to complete the algorithm. These results suggest that achieving full convergence of the optimization metric adds computational effort; however, considering full convergence took between `r paste(round(range(steps$med_full_secs/60), 0), collapse=" and ")` minutes the extra effort was relatively small. Although the mothur's default setting is partial convergence, the remainder of our analysis used complete convergence to be more conservative.
 
 
 ***Effect of seeding OTUs on OptiClust performance.***
 
+```{r aggregate_analysis}
+agg <- read.table(file="data/processed/cluster_data.summary", header=T, stringsAsFactors=F) %>%
+			filter(frac==1.0, method %in% (c("mcc", "mcc_agg"))) %>%
+			select(dataset, method, cluster_secs, mcc, num_otus) %>%
+			group_by(dataset, method) %>%
+			summarize(
+				mean_secs = mean(cluster_secs, na.rm=T),
+				mean_mcc = mean(mcc, na.rm=T),
+				mean_num_otus = mean(num_otus, na.rm=T)
+			) %>%
+			group_by(dataset) %>%
+			summarize(
+				fold_secs = mean_secs[method=="mcc_agg"]/mean_secs[method=="mcc"],
+				per_diff_mcc = 100*(1-mean_mcc[method=="mcc_agg"]/mean_mcc[method=="mcc"]),
+				per_diff_num_otus =100*(1-mean_num_otus[method=="mcc_agg"]/mean_num_otus[method=="mcc"])
+			)
+```
 
-
-By default the mothur implementation of the OptiClust algorithm starts with each sequence in a separate OTU. An alternative approach is to start with all of the sequences in a single OTU. We found that the MCC values for clusters generated seeding OptiClust with the sequences as a single OTU were between 0 and 11.5% lower than when seeding the algorithm with sequences in separate OTUs (Figure 1). Interestingly, with the exception of the human dataset (0.2% more OTUs), the number of OTUs was as much as 7.0% lower (mice) than when the algorithm was seeded with sequence in separate OTUs. Finally, the amount of time required to cluster the data when the algorithm was seeded with a single OTU was between 1.5 and 2.9-times longer than if sequences were seeded as separate OTUs. This analysis demonstrates that seeding the algorithm with sequences as separate OTUs resulted in the best OTU assignments in the shortest amount of time.
+By default the mothur implementation of the OptiClust algorithm starts with each sequence in a separate OTU. An alternative approach is to start with all of the sequences in a single OTU. We found that the MCC values for clusters generated seeding OptiClust with the sequences as a single OTU were between `r paste(round(range(agg$per_diff_mcc), 1), collapse=" and ")`% lower than when seeding the algorithm with sequences in separate OTUs (Figure 1). Interestingly, with the exception of the `r agg[which.min(agg$per_diff_num_otus),"dataset"]` dataset (`r format(abs(round(agg[which.min(agg$per_diff_num_otus),"per_diff_num_otus"], 1)), nsmall=1L)`% more OTUs), the number of OTUs was as much as `r format(round(agg[which.max(agg$per_diff_num_otus),"per_diff_num_otus"], 1), nsmall=1L)`% lower (`r agg[which.max(agg$per_diff_num_otus),"dataset"]`) than when the algorithm was seeded with sequence in separate OTUs. Finally, the amount of time required to cluster the data when the algorithm was seeded with a single OTU was between `r paste(format(round(range(agg$fold_secs), 1), nsmall=1L), collapse=" and ")`-times longer than if sequences were seeded as separate OTUs. This analysis demonstrates that seeding the algorithm with sequences as separate OTUs resulted in the best OTU assignments in the shortest amount of time.
 
 
 ***OptiClust-generated OTUs are as stable as those from other algorithms.***
 
+```{r stability_analysis}
+stability <- read.table(file="data/processed/cluster_data.summary",header=T) %>%
+						filter(frac == 1.0, method %in% basic_methods) %>%
+						select(dataset, method, mcc, num_otus) %>%
+						group_by(dataset, method) %>%
+						summarize(
+							cov_mcc = sd(mcc) / mean(mcc) * 100,
+							cov_num_otus = sd(num_otus) / mean(num_otus) * 100
+						) %>%
+						group_by(method) %>%
+						summarize(
+							med_cov_mcc = median(cov_mcc, na.rm=T),
+							med_cov_num_otus = median(cov_num_otus, na.rm=T)
+						)
+```
 
-
-One concern that many have with *de novo* clustering algorithms is that their output is sensitive to the initial order of the sequences. An additional concern with the OptiClust algorithm is that it may stabilize at a local optimum. To evaluate these concerns we compared the results obtained using ten randomizations of the order that sequences were given to the algorithm. The median the coefficient of variation across the six datasets for MCC values obtained from the replicate clusterings using OptiClust was 0.1% (Figure 1). We also measured the coefficient of variation for the number of OTUs across the six datasets for each method. The median coefficient of variation for the number of OTUs generated using OptiClust was 0.1%. Confirming our previous results, all of the methods we tested were stable to stochastic processes. Of the methods that involved randomization, the coefficient of variation for MCC values considerably smaller with OptiClust than the other methods and the coefficient of variation for the number of OTUs was comparable to the other methods. The variation observed in clustering quality suggested that the algorithm does not appear to converge to a locally optimum MCC value. More importantly, the random variation does yield output of a similarly high quality.
+One concern that many have with *de novo* clustering algorithms is that their output is sensitive to the initial order of the sequences. An additional concern with the OptiClust algorithm is that it may stabilize at a local optimum. To evaluate these concerns we compared the results obtained using ten randomizations of the order that sequences were given to the algorithm. The median the coefficient of variation across the six datasets for MCC values obtained from the replicate clusterings using OptiClust was `r format(round(stability %>% filter(method=="mcc") %>% select(med_cov_mcc), 1), nsmall=1L)`% (Figure 1). We also measured the coefficient of variation for the number of OTUs across the six datasets for each method. The median coefficient of variation for the number of OTUs generated using OptiClust was `r format(round(stability %>% filter(method=="mcc") %>% select(med_cov_num_otus), 1), nsmall=1L)`%. Confirming our previous results, all of the methods we tested were stable to stochastic processes. Of the methods that involved randomization, the coefficient of variation for MCC values considerably smaller with OptiClust than the other methods and the coefficient of variation for the number of OTUs was comparable to the other methods. The variation observed in clustering quality suggested that the algorithm does not appear to converge to a locally optimum MCC value. More importantly, the random variation does yield output of a similarly high quality.
 
 
 ***Time and memory required to complete Optimization-based clustering scales efficiently.***
 
+```{r scaling_analysis}
+datasets <- c('human', 'mice', 'marine', 'soil')
+
+speed_data <- read.table(file="data/processed/mcc_steps.summary", header=T)
+
+speed_models <- speed_data %>%
+		filter(dataset %in% datasets) %>%
+		select(dataset, frac, full_secs_cluster, full_steps) %>%
+		group_by(dataset) %>%
+		do(
+			model = nls((full_secs_cluster/full_steps) ~ b * frac ^ z,
+														start = list(b = 1000, z = 2), data= .)
+		)
+
+speed_coef <- c(
+		speed_models[speed_models$dataset=="human",2][[1]][[1]]$m$getPars()["z"],
+		speed_models[speed_models$dataset=="mice",2][[1]][[1]]$m$getPars()["z"],
+		speed_models[speed_models$dataset=="marine",2][[1]][[1]]$m$getPars()["z"],
+		speed_models[speed_models$dataset=="soil",2][[1]][[1]]$m$getPars()["z"]
+	)
+names(speed_coef) <- datasets
+
+memory_data <- read.table(file="data/processed/cluster_data.summary", header=T)
+
+memory_models <- memory_data %>%
+		filter(dataset %in% datasets, method == "mcc") %>%
+		mutate(cluster_gb=cluster_kb/1048000) %>%
+		select(dataset, frac, cluster_gb) %>%
+		group_by(dataset) %>%
+		do(model = nls((cluster_gb) ~ b * frac ^ z, start = list(b = 1e6, z = 3), data= .))
+
+memory_coef <- c(
+		memory_models[memory_models$dataset=="human",2][[1]][[1]]$m$getPars()["z"],
+		memory_models[memory_models$dataset=="mice",2][[1]][[1]]$m$getPars()["z"],
+		memory_models[memory_models$dataset=="marine",2][[1]][[1]]$m$getPars()["z"],
+		memory_models[memory_models$dataset=="soil",2][[1]][[1]]$m$getPars()["z"]
+	)
+names(memory_coef) <- datasets
+
+```
+
+Although not as important as the quality of clustering, the amount of time and memory required to assign sequences to OTUs is a legitimate concern. To evaluate how the speed and memory usage scaled with the number of sequences in the dataset, we measured the time required and maximum RAM usage to cluster 20, 40, 60, 80, and 100% of the unique sequences from each of the natural datasets using the OptiClust algorithm (Figure 2). Within each iteration of the algorithm, each sequence is compared to every other sequence and each comparison requires a recalculation of the confusion matrix. This would result in a worst case algorithmic complexity on the order of N^3, where N is the number of unique sequences. Because the algorithm only needs to keep track of the sequence pairs that are within the threshold of each other, it is likely that the implementation of the algorithm is more efficient. To empirically determine the algorithmic complexity, we fit a power law function to the data in Figure 2A. We observed power coefficients between `r paste(format(round(range(speed_coef), 1), nsmall=1L), collapse=" and ")` for the `r paste(names(speed_coef[c(which.min(speed_coef), which.max(speed_coef))]), collapse=" and ")` datasets, respectively. The algorithm requires storing a matrix that contains the pairs of sequences that are close to each other as well as a matrix that indicates which sequences are clustered together. The memory required to store these matrices is on the order of N^2, where N is the number of unique sequences. In fact, when we fit a power law function to the data in Figure 2B, the power coefficients were  `r format(round(median(memory_coef), 1), nsmall=1L)`. This analysis suggests that doubling the number of sequences in a dataset would increase the time required to cluster the data by 4 to 8-fold and increase the RAM required by 4-fold. It is possible that future improvements to the implementation of the algorithm could improve this performance.
 
 
-Although not as important as the quality of clustering, the amount of time and memory required to assign sequences to OTUs is a legitimate concern. To evaluate how the speed and memory usage scaled with the number of sequences in the dataset, we measured the time required and maximum RAM usage to cluster 20, 40, 60, 80, and 100% of the unique sequences from each of the natural datasets using the OptiClust algorithm (Figure 2). Within each iteration of the algorithm, each sequence is compared to every other sequence and each comparison requires a recalculation of the confusion matrix. This would result in a worst case algorithmic complexity on the order of N^3, where N is the number of unique sequences. Because the algorithm only needs to keep track of the sequence pairs that are within the threshold of each other, it is likely that the implementation of the algorithm is more efficient. To empirically determine the algorithmic complexity, we fit a power law function to the data in Figure 2A. We observed power coefficients between 1.7 and 2.5 for the marine and human datasets, respectively. The algorithm requires storing a matrix that contains the pairs of sequences that are close to each other as well as a matrix that indicates which sequences are clustered together. The memory required to store these matrices is on the order of N^2, where N is the number of unique sequences. In fact, when we fit a power law function to the data in Figure 2B, the power coefficients were  1.9. This analysis suggests that doubling the number of sequences in a dataset would increase the time required to cluster the data by 4 to 8-fold and increase the RAM required by 4-fold. It is possible that future improvements to the implementation of the algorithm could improve this performance.
+```{r split_analysis}
+datasets <- c('soil', 'marine', 'mice', 'human')
 
+full_data <- read.table(file="data/processed/cluster_data.summary", header=T, stringsAsFactors=FALSE)
 
+full_data$method <- gsub("^mcc$", "mcc_split1_8", full_data$method)
+full_data$method <- gsub("^vdgc_1$", "vdgc_split1_8", full_data$method)
+full_data$method <- gsub("^an$", "an_split1_8", full_data$method)
 
+split_data <- full_data %>%
+				mutate(method = gsub("^mcc$", "mcc_split1_8", method)) %>%
+				mutate(method = gsub("^vdgc_1$", "vdgc_split1_8", method)) %>%
+				mutate(method = gsub("^an$", "an_split1_8", method)) %>%
+				filter(
+						grepl("split", method),
+						frac==1.0,
+						dataset==datasets
+				) %>%
+				select(dataset, method, mcc, num_otus) %>%
+				separate(method, into=c("method", "split", "processors"), sep="_") %>%
+				mutate(tax_level=as.numeric(gsub("split", "", split))) %>%
+				select(-split, -processors) %>%
+				gather(metric, value, mcc, num_otus) %>%
+				group_by(dataset, method, metric, tax_level) %>%
+				summarize(
+					mean=if(sum(!is.na(value))>0){mean(value, na.rm=TRUE)}	else { NA }
+				)
+
+rel_mcc_data <- split_data %>%
+			filter(metric == "mcc") %>%
+			group_by(dataset, method, tax_level) %>%
+			summarize(mean = mean(mean, na.rm=T)) %>%
+			group_by(dataset, method) %>%
+			mutate(rel_mean=mean/mean[tax_level==1]) %>%
+			group_by(method, tax_level) %>%
+			summarize(min_mcc = min(rel_mean, na.rm=T))
+
+rel_otu_data <- split_data %>%
+			filter(metric == "num_otus") %>%
+			group_by(dataset, method, tax_level) %>%
+			summarize(mean = mean(mean, na.rm=T)) %>%
+			group_by(dataset, method) %>%
+			mutate(rel_mean=mean/mean[tax_level==1]) %>%
+			group_by(method, tax_level) %>%
+			summarize(max_num_otus = max(rel_mean, na.rm=T))
+
+```
 
 ***Cluster splitting heuristic generates OTUs that are as good as non-split approach (Figure 6).***
 
-We previously described a heuristic to accelerate OTU assignments where sequences were first classified to taxonomic groups and within each taxon sequences were assigned to OTUs using the average neighbor clustering algorithm [@Schloss2011]. This accelerated the clustering and reduce the memory requirements because the number of unique sequences is effectively reduced by splitting sequences across taxonomic groups. Furthermore, because sequences in different taxonomic groups are assumed to belong to different OTUs they are independent, which permits parallelization and additional reduction in computation time. Reduction in clustering quality are encountered in this approach if there are errors in classification or if two sequences within the desired threshold belong to different taxonomic groups. It is expected that these errors would increase as the taxonomic level goes from kingdom to genus. To characterize the clustering quality, we calculated the MCC values using OptiClust, average neighbor, and DGC with VSEARCH when splitting at each taxonomic level (Figure 3). For each method, the MCC values decreased as the taxonomic resolution increased; however, the decrease in MCC as not as large as the difference between clustering methods. As the resolution of the taxonomic levels increased, the clustering quality remained high, relative to clusters formed from the entire dataset (i.e. kingdom-level). The MCC values when splitting the datasets at the class and genus levels were within 98.0 and 93.0%, respectively, of the MCC values obtained from the entire dataset. These decreases in MCC value resulted in the formation of as many as 4.7 and 22.5% more OTUs, respectively, than were observed from the entire dataset. For the datasets included in the current analysis, the use of the cluster splitting heuristic was probably not worth the loss in clustering quality. However, as datasets become larger, it may be necessary to use the heuristic to clustering the data into OTUs.
+We previously described a heuristic to accelerate OTU assignments where sequences were first classified to taxonomic groups and within each taxon sequences were assigned to OTUs using the average neighbor clustering algorithm [@Schloss2011]. This accelerated the clustering and reduce the memory requirements because the number of unique sequences is effectively reduced by splitting sequences across taxonomic groups. Furthermore, because sequences in different taxonomic groups are assumed to belong to different OTUs they are independent, which permits parallelization and additional reduction in computation time. Reduction in clustering quality are encountered in this approach if there are errors in classification or if two sequences within the desired threshold belong to different taxonomic groups. It is expected that these errors would increase as the taxonomic level goes from kingdom to genus. To characterize the clustering quality, we calculated the MCC values using OptiClust, average neighbor, and DGC with VSEARCH when splitting at each taxonomic level (Figure 3). For each method, the MCC values decreased as the taxonomic resolution increased; however, the decrease in MCC as not as large as the difference between clustering methods. As the resolution of the taxonomic levels increased, the clustering quality remained high, relative to clusters formed from the entire dataset (i.e. kingdom-level). The MCC values when splitting the datasets at the class and genus levels were within `r format(round(min(100*(rel_mcc_data %>% filter(tax_level == 3))$min_mcc), 1), nsmall=1L)` and `r format(round(min(100*(rel_mcc_data %>% filter(tax_level == 6))$min_mcc), 1), nsmall=1L)`%, respectively, of the MCC values obtained from the entire dataset. These decreases in MCC value resulted in the formation of as many as `r format(round(min(100*((rel_otu_data %>% filter(tax_level == 3))$max_num_otus-1), na.rm=T), 1), nsmall=1L)` and `r format(round(min(100*((rel_otu_data %>% filter(tax_level == 6))$max_num_otus-1), na.rm=T), 1), nsmall=1L)`% more OTUs, respectively, than were observed from the entire dataset. For the datasets included in the current analysis, the use of the cluster splitting heuristic was probably not worth the loss in clustering quality. However, as datasets become larger, it may be necessary to use the heuristic to clustering the data into OTUs.
 
 
 ## Discussion
@@ -132,7 +320,7 @@ To assess the reproducibility of the algorithms we randomized the starting order
 To assess how the the memory and time requirements scaled with the number of sequences included in each sequence collection, we randomly subsampled 20, 40, 60, or 80% of the unique sequences in each collection. We obtained 10 subsamples at each depth for each dataset and ran each collection (N= 50 = 5 sequencing depths x 10 replicates) through each of the algorithms. We used the timeout script to quantify the maximum RAM used and the amount of time required to process each sequence collection (https://github.com/pshved/timeout). We limited each algorithm to 45 GB of RAM and 50 hours using a single processor.
 
 
-***Data and code availability.*** The workflow utilized commands in GNU make (v.3.81), GNU bash (v.4.1.2), mothur (v.1.39.0) [@Schloss2009b], and R (v.3.3.2) [@language2015]. Within R we utilized the wesanderson (v.0.3.2) [@wesanderson], dplyr (v.0.5.0) [@dplyr], tidyr (v.0.6.0) [@tidyr], cowplot (v.0.6.3) [@cowplot], and ggplot2 (v.2.2.0.9000) [@ggplot2] packages. A reproducible version of this manuscript and analysis is available at https://github.com/SchlossLab/Westcott_OptiClust_mSphere_2017.
+***Data and code availability.*** The workflow utilized commands in GNU make (v.3.81), GNU bash (v.4.1.2), mothur (v.1.39.0) [@Schloss2009b], and R (v.`r paste(version$major, version$minor, sep='.')`) [@language2015]. Within R we utilized the wesanderson (v.`r packageDescription("wesanderson")$Version`) [@wesanderson], dplyr (v.`r packageDescription("dplyr")$Version`) [@dplyr], tidyr (v.`r packageDescription("tidyr")$Version`) [@tidyr], cowplot (v.`r packageDescription("cowplot")$Version`) [@cowplot], and ggplot2 (v.`r packageDescription("ggplot2")$Version`) [@ggplot2] packages. A reproducible version of this manuscript and analysis is available at https://github.com/SchlossLab/Westcott_OptiClust_mSphere_2017.
 
 
 \newpage
@@ -140,22 +328,72 @@ To assess how the the memory and time requirements scaled with the number of seq
 
 **Table 1. Description of datasets used to evaluate the OptiClust algorithm and compare its performance to other algorithms.** Each dataset contains sequences from the V4 region of the 16S rRNA gene. The even and staggered datasets were generated by extracting the V4 region from full length reference sequences and the datasets from the natural communities were generated by sequencing the V4 region using a Illumina MiSeq with either paired 150 or 250 nt reads.
 
-\begin{table}[!ht]
-\centering
-\begin{tabular}{lcccc}
-  \hline
-\textbf{Dataset (Ref.)} & \textbf{\bigcell{c}{Read \\ Length }} & \textbf{\bigcell{c}{Samples \\ (N) }} & \textbf{\bigcell{c}{Total \\ Seqs. (N)}} & \textbf{\bigcell{c}{Unique \\ Seqs. (N) }} \\ 
-  \hline
-Soil ([@Johnston2016]) & 150 & 18 &    948,243 & 143,677 \\ 
-  Marine ([@Henson2016]) & 250 & 7 &  1,384,988 &  75,923 \\ 
-  Mice ([@Schloss2012]) & 250 & 360 &  2,825,495 &  32,447 \\ 
-  Human ([@Baxter2016]) & 250 & 489 & 20,951,841 & 121,281 \\ 
-  Even ([@Kopylova2016; @Schloss2016a]) & NA & NA &  1,155,800 &  11,558 \\ 
-  Staggered ([@Kopylova2016; @Schloss2016a]) & NA & NA &  1,156,550 &  11,558 \\ 
-   \hline
-\end{tabular}
-\label{}
-\end{table}
+```{r results='asis', echo=FALSE, warning=FALSE, eval=TRUE}
+library('xtable')
+
+options(xtable.sanitize.text.function=identity)
+
+
+dataset <- c(
+							soil = "Soil",
+							marine = "Marine",
+							mice = "Mice",
+							human = "Human",
+							even = "Even",
+							staggered = "Staggered"
+						)
+
+sequencing <- c(
+							soil = "150",
+							marine = "250",
+							mice = "250",
+							human = "250",
+							even = "NA",
+							staggered = "NA"
+						)
+
+reference <-  c(
+							soil = "[@Johnston2016]",
+							marine = "[@Henson2016]",
+							mice = "[@Schloss2012]",
+							human = "[@Baxter2016]",
+							even = "[@Kopylova2016; @Schloss2016a]",
+							staggered = "[@Kopylova2016; @Schloss2016a]"
+						)
+
+data_summary <- read.table(file="data/processed/datasets.summary", header=T, na.string="", stringsAsFactors=F)
+data_summary <- data_summary[names(reference),]
+
+stopifnot(names(dataset) == rownames(data_summary))
+stopifnot(names(sequencing) == rownames(data_summary))
+stopifnot(names(reference) == rownames(data_summary))
+
+dataset_ref <- paste0(dataset, ' (', reference, ')')
+
+data_table <- cbind(dataset_ref, sequencing, data_summary$n_samples,
+ 										format(data_summary$n_total_seqs, big.mark=','),
+ 										format(data_summary$n_unique_seqs, big.mark=','))
+
+colnames(data_table) <- c("Dataset (Ref.)",
+													"\\bigcell{c}{Read \\\\ Length }",
+													"\\bigcell{c}{Samples \\\\ (N) }",
+													"\\bigcell{c}{Total \\\\ Seqs. (N)}",
+													"\\bigcell{c}{Unique \\\\ Seqs. (N) }")
+
+colnames(data_table) <- paste0("\\textbf{", colnames(data_table), "}")
+
+composite <- xtable(data_table, label="")
+
+align(composite) <- "llcccc"
+
+print(composite,
+		include.rownames=FALSE,
+		include.colnames=TRUE,
+		hline.after = c(-1,0, nrow(composite)),
+		comment=FALSE,
+		table.placement="!ht"
+		)
+```
 
 
 \newpage
