@@ -132,7 +132,7 @@ To assess the reproducibility of the algorithms we randomized the starting order
 To assess how the the memory and time requirements scaled with the number of sequences included in each sequence collection, we randomly subsampled 20, 40, 60, or 80% of the unique sequences in each collection. We obtained 10 subsamples at each depth for each dataset and ran each collection (N= 50 = 5 sequencing depths x 10 replicates) through each of the algorithms. We used the timeout script to quantify the maximum RAM used and the amount of time required to process each sequence collection (https://github.com/pshved/timeout). We limited each algorithm to 45 GB of RAM and 50 hours using a single processor.
 
 
-***Data and code availability.*** The workflow utilized commands in GNU make (v.3.81), GNU bash (v.4.1.2), mothur (v.1.39.0) [@Schloss2009b], and R (v.3.3.2) [@language2015]. Within R we utilized the wesanderson (v.0.3.2) [@wesanderson], dplyr (v.0.5.0) [@dplyr], tidyr (v.0.6.0) [@tidyr], cowplot (v.0.6.3) [@cowplot], and ggplot2 (v.2.2.0.9000) [@ggplot2] packages. A reproducible version of this manuscript and analysis is available at https://github.com/SchlossLab/Westcott_OptiClust_mSphere_2017.
+***Data and code availability.*** The workflow utilized commands in GNU make (v.3.81), GNU bash (v.4.1.2), mothur (v.1.39.0) [@Schloss2009b], and R (v.3.3.2) [@language2015]. Within R we utilized the wesanderson (v.0.3.2) [@wesanderson], dplyr (v.0.5.0) [@dplyr], tidyr (v.0.6.0) [@tidyr], cowplot (v.0.6.9990) [@cowplot], and ggplot2 (v.2.1.0.9001) [@ggplot2] packages. A reproducible version of this manuscript and analysis is available at https://github.com/SchlossLab/Westcott_OptiClust_mSphere_2017.
 
 
 \newpage
