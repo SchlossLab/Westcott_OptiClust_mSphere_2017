@@ -42,6 +42,8 @@ basic_methods <- c('an', 'fn', 'nn', 'otuclust', 'sumaclust', 'swarm',
 
 ```
 
+**Running title:** OptiClust: Optimized Clustering
+
 \begin{center}
 \vspace{25mm}
 Sarah L. Westcott and Patrick D. Schloss${^\dagger}$
@@ -280,7 +282,7 @@ We previously described a heuristic to accelerate OTU assignments where sequence
 ## Discussion
 Myriad methods have been proposed for assigning 16S rRNA gene sequences to OTUs that each claim improved performance based on speed, memory usage, representation of taxonomic information, and number of OTUs. Each of these metrics is subjective and do not actually indicate the quality of the clustering. This led us to propose using the MCC as a metric for assessing the quality of clustering, post hoc. Here, we described a new clustering method that seeks to optimize clustering based on an objective criterion that measures clustering quality in real time. In the OptiClust algorithm clustering is driven by optimizing a metric that assesses whether any two sequences should be grouped into the same OTU. The result is clusters that are significantly more robust and is efficient in the time and memory required to cluster the sequences into OTUs. This makes it more tractable to analyze large datasets without sacrificing clustering quality as was previously necessary using heuristic methods.
 
-The cluster optimization procedure is dependent on the metric that is chosen for optimization. We employed the MCC because it includes the four values from a confusion matrix. Other algorithms such as the furthest neighbor and nearest neighbor algorithms minimize the number of FP and FN, respectively; however, these suffer because the number of FN and FP are not controlled [@Schloss2005; @Schloss2011]. Alternatively, one could optimize based on the sensitivity, specificity, or accuracy, which are each based on two values from the confusion matrix or they could optimize based on the F1 score, which is based on three values from the confusion matrix. Because these metrics do not balance all four parameters equally, it is likely that one parameter will dominate in the optimization procedure [@Powers2011]. For example, optimizing for sensitivity could lead to a large number of FPs. Since we would like to minimize both FPs and FNs and not just the total number of false assignments, we decided to optimize utilizing the MCC. It is possible that other metrics could be developed and employed for optimization of the clustering.
+The cluster optimization procedure is dependent on the metric that is chosen for optimization. We employed the MCC because it includes the four values from a confusion matrix. Other algorithms such as the furthest neighbor and nearest neighbor algorithms minimize the number of FP and FN, respectively; however, these suffer because the number of FN and FP are not controlled [@Schloss2005; @Schloss2011]. Alternatively, one could optimize based on the sensitivity, specificity, or accuracy, which are each based on two values from the confusion matrix or they could optimize based on the F1 score, which is based on three values from the confusion matrix. Because these metrics do not balance all four parameters equally, it is likely that one parameter will dominate in the optimization procedure. For example, optimizing for sensitivity could lead to a large number of FPs. Since we would like to minimize both FPs and FNs and not just the total number of false assignments, we decided to optimize utilizing the MCC. It is possible that other metrics could be developed and employed for optimization of the clustering.
 
 The OptiClust algorithm is relatively simple. For each sequence it effectively ask whether the MCC value will increase if the sequence is moved to a different OTU including creating a new OTU. If the value does not change, it remains in the current OTU. The algorithm repeats until the MCC value stabilizes. Assuming that the algorithm is seeded with each sequence in a separate OTU, it does not appear that the algorithm converges to a local optimum. Furthermore, execution of the algorithm with different random number generator seeds produces OTU assignments of consistently high quality. Future improvements to the implementation of the algorithm could provide optimization to further improve its speed and susceptibility to find a local optimum. Users are encourage to repeat the OTU assignment several times to confirm that they have found the best OTU assignments.
 
@@ -317,6 +319,10 @@ To assess how the the memory and time requirements scaled with the number of seq
 
 ***Data and code availability.*** The workflow utilized commands in GNU make (v.3.81), GNU bash (v.4.1.2), mothur (v.1.39.0) [@Schloss2009b], and R (v.`r paste(version$major, version$minor, sep='.')`) [@language2015]. Within R we utilized the wesanderson (v.`r packageDescription("wesanderson")$Version`) [@wesanderson], dplyr (v.`r packageDescription("dplyr")$Version`) [@dplyr], tidyr (v.`r packageDescription("tidyr")$Version`) [@tidyr], cowplot (v.`r packageDescription("cowplot")$Version`) [@cowplot], and ggplot2 (v.`r packageDescription("ggplot2")$Version`) [@ggplot2] packages. A reproducible version of this manuscript and analysis is available at https://github.com/SchlossLab/Westcott_OptiClust_mSphere_2017.
 
+
+
+## Acknowledgements
+This work was supported through funding from the National Institutes of Health to PDS (). SLW designed, implemented, and evaluated the algorithm. PDS designed and evaluated the algorithm. Both authors wrote and edited the manuscript.
 
 \newpage
 
