@@ -17,7 +17,9 @@ geometry: margin=1.0in
 
 \begin{center}
 
-**Running title:** OptiClust: Optimized Clustering
+Running title: OptiClust: Optimized Clustering
+
+
 \vspace{25mm}
 Sarah L. Westcott and Patrick D. Schloss${^\dagger}$
 

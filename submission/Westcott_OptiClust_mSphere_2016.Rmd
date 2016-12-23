@@ -46,7 +46,9 @@ basic_methods <- c('an', 'fn', 'nn', 'otuclust', 'sumaclust', 'swarm',
 
 \begin{center}
 
-**Running title:** OptiClust: Optimized Clustering
+Running title: OptiClust: Optimized Clustering
+
+
 \vspace{25mm}
 Sarah L. Westcott and Patrick D. Schloss${^\dagger}$
 
