@@ -143,4 +143,5 @@ ggdraw() +
 	draw_plot(speed_plot,  x=0, y=0.535, 1.0, 0.465) +
 	draw_plot(memory_plot, x=0, y=0.000, 1.0, 0.535) +
 	draw_plot_label(c("A", "B"), x=c(0,0), y=c(1.00,0.54), size=12) +
-	ggsave('results/figures/speed_memory.tiff', width=3.5, height=4.0, unit='in')
+	ggsave('results/figures/speed_memory.tiff', width=3.5, height=4.0, unit='in') +
+	ggsave('results/figures/speed_memory.png', width=3.5, height=4.0, unit='in')

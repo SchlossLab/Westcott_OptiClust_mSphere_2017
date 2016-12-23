@@ -126,4 +126,5 @@ ggdraw() +
 	draw_plot(sobs + theme(axis.title.y=element_text(margin=margin(r=11,l=0,t=0,b=0))) + my_legend,x=0,y=0.4,1,0.3) +
 	draw_plot(secs,x=0,y=0.0,1,0.4) +
 	draw_plot_label(c("A", "B", "C"), x=c(0,0,0), y=c(1.00,0.71,0.41), size=12) +
-	ggsave('results/figures/performance.tiff', width=6.875, height=5.5, unit='in')
+	ggsave('results/figures/performance.tiff', width=6.875, height=5.5, unit='in') +
+	ggsave('results/figures/performance.png', width=6.875, height=5.5, unit='in')

@@ -104,4 +104,5 @@ figure <- split_data %>% filter(metric == "mcc") %>%
 ggdraw() +
 	draw_plot(figure,  x=0, y=0, 1.0, 1) +
 	draw_plot_label(pretty_datasets, x=rep(0.15,4), y=c(0.825,0.6,0.375,0.15), size=10, hjust=0) +
-	ggsave("results/figures/split_mcc.tiff", width=3.5, height=5.0, unit="in")
+	ggsave("results/figures/split_mcc.tiff", width=3.5, height=5.0, unit="in") +
+	ggsave("results/figures/split_mcc.png", width=3.5, height=5.0, unit="in")

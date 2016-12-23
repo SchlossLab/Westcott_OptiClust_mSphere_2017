@@ -462,17 +462,17 @@ data/processed/datasets.summary: code/summarize_datasets.R $(COUNT_FILES)
 
 # Build figures...
 
-results/figures/performance.tiff :\
+results/figures/performance.% :\
 																	code/build_performance_figure.R\
 																	data/processed/cluster_data.summary
 	R -e "source('code/build_performance_figure.R')"
 
-results/figures/speed_memory.tiff : code/build_scaling_figure.R\
+results/figures/speed_memory.% : code/build_scaling_figure.R\
 																		data/processed/mcc_steps.summary\
 																		data/processed/cluster_data.summary
 	R -e "source('code/build_scaling_figure.R')"
 
-results/figures/split_mcc.tiff : code/build_split_figure.R\
+results/figures/split_mcc.% : code/build_split_figure.R\
 																data/processed/cluster_data.summary
 	R -e "source('code/build_split_figure.R')"
 
@@ -490,9 +490,9 @@ write.paper : submission/msphere.csl\
 							submission/header.tex\
 							data/processed/mcc_steps.summary\
 							data/processed/cluster_data.summary\
-							results/figures/performance.tiff\
-							results/figures/speed_memory.tiff\
-							results/figures/split_mcc.tiff
+							results/figures/performance.tiff results/figures/performance.png\
+							results/figures/speed_memory.tiff results/figures/speed_memory.png\
+							results/figures/split_mcc.tiff results/figures/split_mcc.png
 	R -e "render('submission/Westcott_OptiClust_mSphere_2016.Rmd', clean=FALSE)"
 	mv submission/Westcott_OptiClust_mSphere_2016.utf8.md submission/Westcott_OptiClust_mSphere_2016.md
 	rm submission/Westcott_OptiClust_mSphere_2016.knit.md
