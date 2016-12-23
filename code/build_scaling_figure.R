@@ -6,6 +6,7 @@ library(tidyr, quietly=T, warn.conflicts=F)
 library(ggplot2, quietly=T, warn.conflicts=F)
 library(wesanderson, quietly=T, warn.conflicts=F)
 library(cowplot, quietly=T, warn.conflicts=F)
+library(scales)
 
 basic_methods <- c('mcc')
 pretty_methods <- c('OptiClust')
@@ -36,11 +37,6 @@ speed_models <- speed_data %>%
 		group_by(dataset) %>%
 		do(model = nls((full_secs_cluster/full_steps) ~ b * frac ^ z, start = list(b = 1000, z = 2), data= .))
 
-# speed_models[[1,2]]$m$getPars()["z"]	#2.131886
-# speed_models[[2,2]]$m$getPars()["z"]	#2.975044
-# speed_models[[3,2]]$m$getPars()["z"]	#2.687899
-# speed_models[[4,2]]$m$getPars()["z"]	#2.379366
-
 
 
 
@@ -62,10 +58,9 @@ memory_models <- memory_data %>%
 		group_by(dataset) %>%
 		do(model = nls((cluster_gb) ~ b * frac ^ z, start = list(b = 1e6, z = 3), data= .))
 
-# memory_models[[1,2]]$m$getPars()["z"]	#1.998879
-# memory_models[[2,2]]$m$getPars()["z"]	#1.97656
-# memory_models[[3,2]]$m$getPars()["z"]	#1.995457
-# memory_models[[4,2]]$m$getPars()["z"]	#1.957556
+
+#######################################################
+
 
 my_theme <- theme_classic() +
 	theme(
@@ -90,12 +85,19 @@ my_legend <- theme(
 		legend.margin = margin(t=0,4,4,4)
 	)
 
+mysqrt_trans <- function() {
+  trans_new("mysqrt",
+            transform = base::sqrt,
+            inverse = function(x) ifelse(x<0, 0, x^2),
+            domain = c(0, Inf))
+}
+
 speed_plot <- speed_summary %>%
 		ggplot() +
 		geom_line(aes(frac, avg, color=dataset)) +
 		geom_point(aes(frac, avg, color=dataset)) +
 		geom_errorbar(aes(frac, ymin=min, ymax=max, col=dataset), width=0.02) +
-		scale_y_sqrt(breaks=c(0,2,4,8,16,32,64,128,256)) +
+		scale_y_continuous(breaks=c(0,1,4,9,16,25,36,49,64,81), limits=c(0,81), trans=mysqrt_trans()) +
 		scale_color_manual(
 						breaks=names(pretty_datasets),
 						labels=pretty_datasets,
@@ -116,7 +118,8 @@ memory_plot <- memory_summary %>%
 	geom_line(aes(frac, avg, color=dataset)) +
 	geom_point(aes(frac, avg, color=dataset)) +
 	geom_errorbar(aes(frac, ymin=min, ymax=max, col=dataset), width=0.02) +
-	scale_y_sqrt(breaks=c(0,1,2,3,4,5,6,7,8), limits=c(0,8)) +
+	scale_y_continuous(breaks=c(0, 0.25,1,2.25,4), limits=c(0,4), trans=mysqrt_trans()) +
+	coord_cartesian(ylim = c(0, 4)) +
 	scale_color_manual(
 					breaks=names(pretty_datasets),
 					labels=pretty_datasets,
@@ -132,7 +135,7 @@ memory_plot <- memory_summary %>%
 	my_theme +
 	theme(
 		axis.text.x = element_text(size=7,margin=margin(t=3,0,0,0)),
-		axis.title.y = element_text(margin=margin(r=13,0,0,0))
+		axis.title.y = element_text(margin=margin(r=0,0,0,0))
 	)
 
 
