@@ -441,6 +441,8 @@ $(SENSSPEC) : $$(subst sensspec,list, $$@) $$(addsuffix .sm.dist, $$(basename $$
 
 
 # Generate files that summarize all of the above analyses
+data/processed/distance_counts.tsv : $(SUB_SM_DIST)
+	wc -l data/*/*.1_0.01.sm.dist | grep "data" | sed "s/^ *//g" | sed "s/ /\t/" > data/processed/distance_counts.tsv
 
 data/processed/sobs_counts.tsv : $(LIST)
 	> $@
@@ -455,7 +457,7 @@ data/processed/mcc_steps.summary: $(STEPS) data/processed/cluster_data.summary c
 
 COUNT_FILES=$(foreach S,$(SAMPLES),data/$S/$S.count_table)
 
-data/processed/datasets.summary: code/summarize_datasets.R $(COUNT_FILES)
+data/processed/datasets.summary: code/summarize_datasets.R $(COUNT_FILES) data/processed/distance_counts.tsv data/processed/sobs_counts.tsv
 	R -e "source('code/summarize_datasets.R')"
 
 
