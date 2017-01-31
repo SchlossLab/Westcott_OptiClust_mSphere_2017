@@ -1,3 +1,5 @@
+library(dplyr)
+
 dataset <- c('soil', 'marine', 'human', 'mice', 'staggered', 'even')
 
 distances <- read.table(file="data/processed/distance_counts.tsv")
