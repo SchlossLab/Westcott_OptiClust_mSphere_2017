@@ -479,13 +479,6 @@ results/figures/split_mcc.% : code/build_split_figure.R\
 	R -e "source('code/build_split_figure.R')"
 
 
-# Build tables...
-
-#results/table/table_1.pdf : results/table/table_1.Rmd\
-#															data/processed/datasets.summary
-#	R -e 'render("$<")'
-
-
 # Build manuscript...
 
 write.paper : submission/msphere.csl\
