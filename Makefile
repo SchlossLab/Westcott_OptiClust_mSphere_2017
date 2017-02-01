@@ -97,7 +97,7 @@ SENS_LIST = $(subst sm.dist,sens.list,$(SUB_SM_DIST))
 TPTN_LIST = $(subst sm.dist,tptn.list,$(SUB_SM_DIST))
 FPFN_LIST = $(subst sm.dist,fpfn.list,$(SUB_SM_DIST))
 TP_LIST = $(subst sm.dist,tp.list,$(SUB_SM_DIST))
-FB_LIST = $(subst sm.dist,fn.list,$(SUB_SM_DIST))
+OPTIFN_LIST = $(subst sm.dist,opti_fn.list,$(SUB_SM_DIST))
 NPV_LIST = $(subst sm.dist,npv.list,$(SUB_SM_DIST))
 
 
@@ -115,7 +115,7 @@ SWARM_LIST = $(subst fasta,swarm.list,$(SUB_FASTA))
 
 MCC_AGG_LIST = $(subst sm.dist,mcc_agg.list,$(SUB_SM_DIST))
 
-LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST) $(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLT_LIST) $(MCC_SPLT_LIST) $(VDGC_SPLT_LIST) $(SWARM_LIST)  $(UAGC_LIST) $(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST) $(SENS_LIST) $(TPTN_LIST) $(FPFN_LIST) $(TP_LIST) $(FN_LIST) $(NPV_LIST)
+LIST = $(NN_LIST) $(FN_LIST) $(AN_LIST) $(VAGC1_LIST) $(VDGC1_LIST) $(VAGC8_LIST) $(VDGC8_LIST) $(MCC_LIST) $(F1SCORE_LIST) $(ACCURACY_LIST) $(AN_SPLT_LIST) $(MCC_SPLT_LIST) $(VDGC_SPLT_LIST) $(SWARM_LIST)  $(UAGC_LIST) $(UDGC_LIST) $(OTUCLUST_LIST) $(SUMACLUST_LIST) $(MCC_AGG_LIST) $(SENS_LIST) $(TPTN_LIST) $(FPFN_LIST) $(TP_LIST) $(OPTIFN_LIST) $(NPV_LIST)
 
 SENSSPEC = $(subst list,sensspec,$(LIST))
 STEPS = $(subst list,steps,$(MCC_LIST) $(MCC_AGG))
@@ -385,16 +385,16 @@ $(SENS_LIST) : $$(subst .sens.list,.sm.dist, $$@) $$(subst sens.list,count_table
 	rm $(TIMEOUT)
 
 .SECONDEXPANSION:
-$(FN_LIST) : $$(subst .fn.list,.sm.dist, $$@) $$(subst fn.list,count_table, $$@)
+$(OPTIFN_LIST) : $$(subst .opti_fn.list,.sm.dist, $$@) $$(subst opti_fn.list,count_table, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval COUNT=$(word 2,$^))
 	$(eval STATS=$(subst list,stats, $@))
 	$(eval TIMEOUT=$(subst list,timeout, $@))
-	$(eval TEMP=$(subst fn.list,sm.opti_fn.list,$@))
-	$(eval TEMP1=$(subst fn.list,sm.opti_fn.sensspec,$@))
-	$(eval TEMP2=$(subst fn.list,fn.sensspec,$@))
-	$(eval TEMP3=$(subst fn.list,sm.opti_fn.steps,$@))
-	$(eval TEMP4=$(subst fn.list,fn.steps,$@))
+	$(eval TEMP=$(subst opti_fn.list,sm.opti_fn.list,$@))
+	$(eval TEMP1=$(subst opti_fn.list,sm.opti_fn.sensspec,$@))
+	$(eval TEMP2=$(subst opti_fn.list,opti_fn.sensspec,$@))
+	$(eval TEMP3=$(subst opti_fn.list,sm.opti_fn.steps,$@))
+	$(eval TEMP4=$(subst opti_fn.list,opti_fn.steps,$@))
 	/usr/bin/time -o $(STATS) code/timeout -t $(MAXTIME) -s $(MAXMEM) mothur "#cluster(column=$(DIST), count=$(COUNT), method=opti, metric=fn, delta=0, cutoff=0.03)" 2> $(TIMEOUT)
 	touch $(TEMP)
 	touch $(TEMP1)
