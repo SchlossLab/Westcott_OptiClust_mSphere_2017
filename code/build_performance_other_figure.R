@@ -9,10 +9,11 @@ library(wesanderson, warn.conflicts=F)
 
 basic_methods <- c('accuracy', 'f1score', 'fpfn', 'mcc', 'npv', 'opti_fn', 'sens', 'tp', 'tptn')
 
-pretty_methods <- c('Accuracy\n(max.)', 'F1-score\n(max.)', 'False Positives +\nFalse Negatives\n(min.)',
+pretty_methods <- c('Accuracy (max.)', 'F1-score (max.)',
+										'False Positives +\nFalse Negatives (min.)',
 										"Matthew's Correlation\nCoefficient (max.)",
-										"Negative\nPredictive\nValue (max.)", "False Negatives\n(min.)", "Sensitivity\n(max.)",
- 										"True Positives\n(max.)", "True Positives +\nTrue Negatives (max.)")
+										"Negative Predictive\nValue (max.)", "False Negatives (min.)", "Sensitivity (max.)",
+ 										"True Positives (max.)", "True Positives +\nTrue Negatives (max.)")
 
 names(pretty_methods) <- basic_methods
 
