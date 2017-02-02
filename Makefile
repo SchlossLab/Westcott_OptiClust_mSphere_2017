@@ -630,3 +630,11 @@ write.paper : submission/msphere.csl\
 	R -e "render('submission/Westcott_OptiClust_mSphere_2016.Rmd', clean=FALSE)"
 	mv submission/Westcott_OptiClust_mSphere_2016.utf8.md submission/Westcott_OptiClust_mSphere_2016.md
 	rm submission/Westcott_OptiClust_mSphere_2016.knit.md
+
+
+submission/track_changes.pdf: submission/Westcott_OptiClust_mSphere_2016_orig.tex\
+															submission/Westcott_OptiClust_mSphere_2016.tex
+	latexdiff submission/Westcott_OptiClust_mSphere_2016_orig.tex submission/Westcott_OptiClust_mSphere_2016.tex > diff.tex
+	pdflatex diff.tex
+	mv diff.pdf submission/track_changes.pdf
+	rm diff.*
