@@ -30,7 +30,7 @@ for(i in 1:length(libraries)){
 
 #write.table(all_step_data, file="test.tsv", row.names=FALSE)
 #all_step_data <- read.table(file="test.tsv", header=T, stringsAsFactors=F)
-#all_step_data$dataset <- factor(all_step_data$dataset, levels=datasets)
+all_step_data$dataset <- factor(all_step_data$dataset, levels=datasets)
 
 my_theme <- theme_classic() +
 	theme(
