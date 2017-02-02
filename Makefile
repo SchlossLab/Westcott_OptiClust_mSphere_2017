@@ -606,6 +606,10 @@ results/figures/split_mcc.% : code/build_split_figure.R\
 																data/processed/cluster_data.summary
 	R -e "source('code/build_split_figure.R')"
 
+results/figures/optimization.% : code/build_optimization_figure.R\
+																	$(STEPS)
+	R -e "source('code/build_optimization_figure.R')"
+
 
 # Build manuscript...
 

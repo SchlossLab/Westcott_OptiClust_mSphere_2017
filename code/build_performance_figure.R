@@ -22,7 +22,7 @@ pretty_metrics <- c("Matthew's\nCorrelation Coefficient", "Number of OTUs", "Tim
 names(pretty_metrics) <- metrics
 
 
-full_data <- read.table(file="data/processed/cluster_data.summary", header=T)
+full_data <- read.table(file="data/processed/cluster_data.summary", header=T, stringsAsFactors=F)
 
 full_tidy <- full_data %>%
 						filter(method %in% basic_methods, frac==1.0) %>%
@@ -33,7 +33,7 @@ full_tidy <- full_data %>%
 											min=min(value, na.rm=T),
 											max=max(value, na.rm=T))
 
-close_data <- read.table(file="data/processed/mcc_steps.summary", header=T)
+close_data <- read.table(file="data/processed/mcc_steps.summary", header=T, stringsAsFactors=F)
 close_data <- close_data %>%  select(-starts_with("full_"), -close_steps, -close_secs_cluster)
 close_data$method <- 'mcc_close'
 colnames(close_data) <- c('dataset', 'frac', 'rep', 'method', 'mcc', 'num_otus', 'cluster_secs')
@@ -70,8 +70,11 @@ my_theme <- theme_classic() +
 		legend.position = "none"
 	)
 
+
+alpha <- 0.3
 mcc <- tidy %>% filter(metric == "mcc") %>%
 	ggplot(aes(method, avg, col=dataset, shape=dataset))+
+	geom_hline(yintercept = seq(0,1,0.25), colour = "gray", size=0.15) +
 	geom_point(position = position_dodge(0.7), size=2) +
 	geom_errorbar(position = position_dodge(0.7), aes(ymin=min, ymax=max), width=0.2) +
 	expand_limits(y=c(0,1)) +
@@ -84,6 +87,8 @@ mcc <- tidy %>% filter(metric == "mcc") %>%
 
 sobs <- tidy %>% filter(metric == "num_otus") %>%
 	ggplot(aes(method, avg, col=dataset, shape=dataset))+
+	geom_hline(yintercept = seq(0,1e5,2.5e4), colour = "gray", size=0.15) +
+
 	geom_point(position = position_dodge(0.7), size=2) +
 	geom_errorbar(position = position_dodge(0.7), aes(ymin=min, ymax=max), width=0.2) +
 	expand_limits(y=c(0,1)) +
@@ -96,6 +101,8 @@ sobs <- tidy %>% filter(metric == "num_otus") %>%
 
 secs <- tidy %>% filter(metric == "cluster_secs") %>%
 	ggplot(aes(method, avg, col=dataset, shape=dataset))+
+	geom_hline(yintercept = c(1,100,10000), colour = "gray", size=0.15) +
+
 	geom_point(position = position_dodge(0.7), size=2) +
 	geom_errorbar(position = position_dodge(0.7), aes(ymin=min, ymax=max), width=0.2) +
 	scale_y_log10() +
