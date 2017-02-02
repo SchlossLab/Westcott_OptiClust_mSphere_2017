@@ -3,6 +3,7 @@ title: "**OptiClust: Improved method for assigning amplicon-based sequence data 
 bibliography: references.bib
 output:
   pdf_document:
+    keep_tex: true
     includes:
       in_header: header.tex
     fig_caption: false
