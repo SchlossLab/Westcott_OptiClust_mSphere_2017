@@ -638,3 +638,6 @@ submission/track_changes.pdf: submission/Westcott_OptiClust_mSphere_2016_orig.te
 	pdflatex diff.tex
 	mv diff.pdf submission/track_changes.pdf
 	rm diff.*
+
+submission/response_to_reviewers.pdf : submission/response_to_reviewers.md submission/header.tex
+	pandoc $< -o $@ --include-in-header=submission/header.tex
