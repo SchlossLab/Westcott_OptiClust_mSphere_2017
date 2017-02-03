@@ -55,7 +55,7 @@ all_step_data %>%
 	geom_line() +
 	scale_color_manual(breaks=levels(all_step_data$dataset), labels=pretty_datasets[levels(all_step_data$dataset)],
 											values=c('black', wes_palette("Darjeeling")), name=NULL) +
-	xlab("Number of Iterations") + ylab("Matthew's\nCorrelation Coefficient") +
+	xlab("Number of Iterations") + ylab("Matthews\nCorrelation Coefficient") +
 	expand_limits(y=c(0.7,0.9), x=c(0,17)) +
 	scale_x_continuous(breaks=c(0,5,10,15,20), labels=c(0,5,10,15,20)) +
 	my_theme +

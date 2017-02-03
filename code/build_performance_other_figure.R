@@ -11,7 +11,7 @@ basic_methods <- c('accuracy', 'f1score', 'fpfn', 'mcc', 'npv', 'opti_fn', 'sens
 
 pretty_methods <- c('Accuracy (max.)', 'F1-score (max.)',
 										'False Positives +\nFalse Negatives (min.)',
-										"Matthew's Correlation\nCoefficient (max.)",
+										"Matthews Correlation\nCoefficient (max.)",
 										"Negative Predictive\nValue (max.)", "False Negatives (min.)", "Sensitivity (max.)",
  										"True Positives (max.)", "True Positives +\nTrue Negatives (max.)")
 
@@ -22,7 +22,7 @@ pretty_datasets <- c("Soil", "Marine", "Mice", "Human", "Even", "Staggered")
 names(pretty_datasets) <- datasets
 
 metrics <- c("mcc", "num_otus", "cluster_secs")
-pretty_metrics <- c("Matthew's\nCorrelation Coefficient", "Number of OTUs", "Time to Cluster\n(seconds)")
+pretty_metrics <- c("Matthews\nCorrelation Coefficient", "Number of OTUs", "Time to Cluster\n(seconds)")
 names(pretty_metrics) <- metrics
 
 

@@ -18,7 +18,7 @@ pretty_datasets <- c("Soil", "Marine", "Mice", "Human", "Even", "Staggered")
 names(pretty_datasets) <- datasets
 
 metrics <- c("mcc", "num_otus", "cluster_secs")
-pretty_metrics <- c("Matthew's\nCorrelation Coefficient", "Number of OTUs", "Time to Cluster\n(seconds)")
+pretty_metrics <- c("Matthews\nCorrelation Coefficient", "Number of OTUs", "Time to Cluster\n(seconds)")
 names(pretty_metrics) <- metrics
 
 
