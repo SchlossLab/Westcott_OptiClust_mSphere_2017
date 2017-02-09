@@ -1,0 +1,76 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    includes:
+      in_header: table_header.tex
+tables: true
+geometry: margin=0.2in
+---
+
+**Table S1. Summary of the average number of true positives, true negatives, false positives, false negatives and the resulting Matthews correlation coefficient for each of the clustering methods that were analyzed in this study for each of the six datasets.** Blank values indicate that those conditions could not be completed in 50 hours with 45 GB of RAM.
+
+```{r results='asis', echo=FALSE, warning=FALSE, eval=TRUE}
+library(xtable)
+library(dplyr, warn.conflicts=FALSE)
+
+my_methods <- c("accuracy", "an", "f1score", "fn", "fpfn", "mcc", "mcc_agg", "nn", "npv", "opti_fn",
+							"otuclust", "sens", "sumaclust", "swarm", "tptn", "uagc", "udgc", "vagc_1",
+							"vdgc_1")
+
+pretty_methods <- c(accuracy = "Accuracy", an = "Average Neighbor", f1score = "F1-score",
+ 										fn = "Furthest Neighbor", fpfn = "FPs + FNs",
+										mcc = "MCC (separate OTUs)", mcc_agg = "MCC (single OTU)",
+										nn = "Nearest Neighbor", npv = "Negative Predictive Value",
+										opti_fn = "FN", otuclust = "OTUCLUST", sens = "Sensitivity",
+										sumaclust = "Sumaclust", swarm = "Swarm", tptn = "TP + TN",
+										uagc = "USEARCH (w/AGC)", udgc = "USEARCH (w/DGC)",
+										vagc_1 = "VSEARCH (w/AGC)", vdgc_1 = "VSEARCH (w/AGC)")
+
+
+datasets <- c('soil', 'marine', 'mice', 'human', 'even', 'staggered')
+
+pretty_datasets <- c(soil = "Soil", marine = "Marine", mice = "Mice",
+										human = "Human", even = "Even", staggered = "Staggered")
+
+
+data <- read.table(file="data/processed/cluster_data.summary", header=T, stringsAsFactors = T)
+data$dataset = factor(data$dataset, levels=c("soil", "marine", "mice", "human", "even", "staggered"))
+
+summary_data <- data %>% filter(frac==1.0, method %in% my_methods) %>%
+													select(-c(frac, cluster_secs, cluster_kb, dist_secs)) %>%
+													group_by(dataset, method) %>%
+													summarize(tp.mean = round(mean(tp)),
+																		tn.mean = round(mean(tn)),
+																		fp.mean = round(mean(fp)),
+																		fn.mean = round(mean(fn)),
+																		mcc.mean = mean(mcc)) %>%
+													arrange(dataset, -mcc.mean)
+
+summary_data$dataset <- pretty_datasets[as.character(summary_data$dataset)]
+summary_data$method <- pretty_methods[as.character(summary_data$method)]
+
+colnames(summary_data) <- c("Dataset",
+													"Method",
+													"\\bigcell{c}{True \\\\ Positives}",
+													"\\bigcell{c}{True \\\\ Negatives}",
+													"\\bigcell{c}{False \\\\ Positives}",
+													"\\bigcell{c}{False \\\\ Negatives}",
+													"MCC")
+colnames(summary_data) <- paste0("\\textbf{", colnames(summary_data), "}")
+
+options(xtable.sanitize.text.function=identity)
+
+composite <- xtable(summary_data, label="")
+
+align(composite) <- "llcrrrrc"
+digits(composite) <- c(0,0,0,0,0,0,0,4)
+print(composite,
+		include.rownames=FALSE,
+		include.colnames=TRUE,
+		hline.after = c(-1,0, nrow(composite)),
+		comment=FALSE,
+		size="tiny",
+		table.placement="!ht"
+		)
+```

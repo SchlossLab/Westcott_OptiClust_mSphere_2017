@@ -56,7 +56,7 @@ The following need to be installed and in the path...
 * swarm (v.2.1.9)
 * SumaClust (v.1.0.20)
 * micca (OTUClust v.0.1) - comes with QIIME
-* R (v.3.3.2) 
+* R (v.3.3.2)
     + knitr / rmarkdown
     + dplyr (v.0.5.0)
     + tidyr (v.0.6.0)

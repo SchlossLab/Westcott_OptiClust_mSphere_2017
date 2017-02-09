@@ -9,11 +9,10 @@
 \else % if luatex or xelatex
   \ifxetex
     \usepackage{mathspec}
-    \usepackage{xltxtra,xunicode}
   \else
     \usepackage{fontspec}
   \fi
-  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
   \newcommand{\euro}{€}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -24,22 +23,12 @@
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
 \usepackage[margin=1.0in]{geometry}
-\ifxetex
-  \usepackage[setpagesize=false, % page size defined by xetex
-              unicode=false, % unicode breaks when used with xetex
-              xetex]{hyperref}
-\else
-  \usepackage[unicode=true]{hyperref}
-\fi
-\hypersetup{breaklinks=true,
-            bookmarks=true,
-            pdfauthor={},
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
             pdftitle={OptiClust: Improved method for assigning amplicon-based sequence data to operational taxonomic units},
-            colorlinks=true,
-            citecolor=blue,
-            urlcolor=blue,
-            linkcolor=magenta,
-            pdfborder={0 0 0}}
+            pdfborder={0 0 0},
+            breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
@@ -81,6 +70,7 @@ data to operational taxonomic units}}
   \preauthor{}\postauthor{}
   \date{}
   \predate{}\postdate{}
+
 
 % Redefines (sub)paragraphs to behave more like sections
 \ifx\paragraph\undefined\else
@@ -292,9 +282,9 @@ assessing the quality of the clusters within the mothur-based
 implementation of the algorithm (e.g.~sensitivity, specificity,
 accuracy, F1-score, etc.), the default metric for optimization and
 assessment is MCC because it includes all four parameters from the
-confusion matrix (Figure S1). The algorithm continues until the
-optimization metric stabilizes or until it reaches a defined stopping
-criteria.
+confusion matrix (Figure S1; Table S1). The algorithm continues until
+the optimization metric stabilizes or until it reaches a defined
+stopping criteria.
 
 \textbf{\emph{OptiClust-generated OTUs are more robust than those from
 other methods.}} To evaluate the OptiClust algorithm and compare its
@@ -305,8 +295,8 @@ we seeded the OptiClust algorithm with each sequence in a separate OTU
 and ran the algorithm until complete convergence, the MCC values
 averaged 15.2 and 16.5\% higher than the OTUs using average neighbor and
 distance-based greedy clustering (DGC) with VSEARCH, respectively
-(Figure 1). The number of OTUs formed by the various methods was
-negatively correlated with their MCC value (\(\rho\)=-0.47;
+(Figure 1; Table S1). The number of OTUs formed by the various methods
+was negatively correlated with their MCC value (\(\rho\)=-0.47;
 p\textless{}0.001). The OptiClust algorithm was considerably faster than
 the hierarchical algorithms and somewhat slower than the heuristic-based
 algorithms. Across the six datasets, the OptiClust algorithm was
@@ -599,7 +589,7 @@ assignments. We also evalauted the ability of OptiClust to optimize to
 metrics other than MCC. These included accuracy, F1-score, negative
 predictive value, positive predictive value, false discovery rate,
 senitivity, specificity, the sum of TPs and TNs, the sum of FPs and FNs,
-and the number of FNs, FPs, TNs, and TPs (Figure S1).
+and the number of FNs, FPs, TNs, and TPs (Figure S1; Table S1).
 
 \textbf{\emph{Benchmarking.}} We evaluated the quality of the sequence
 clustering, reproducibility of the clustering, the speed of clustering,
@@ -641,8 +631,8 @@ processor.
 commands in GNU make (v.3.81), GNU bash (v.4.1.2), mothur (v.1.39.0)
 (11), and R (v.3.3.2) (44). Within R we utilized the wesanderson
 (v.0.3.2) (45), dplyr (v.0.5.0) (46), tidyr (v.0.6.0) (47), cowplot
-(v.0.6.9990) (48), and ggplot2 (v.2.1.0.9001) (49) packages. A
-reproducible version of this manuscript and analysis is available at
+(v.0.6.3) (48), and ggplot2 (v.2.2.0.9000) (49) packages. A reproducible
+version of this manuscript and analysis is available at
 \url{https://github.com/SchlossLab/Westcott_OptiClust_mSphere_2017}.
 
 \subsection{Acknowledgements}\label{acknowledgements}
@@ -755,28 +745,37 @@ correlation coefficient. This was repeated 10 times for each dataset.
 
 \newpage
 
+\newpage
+
 \textbf{Supplemental text.} Worked example of how OptiClust algorithm
 clusters sequences into OTUs.
 
+\textbf{Table S1. Summary of the average number of true positives, true
+negatives, false positives, false negatives and the resulting Matthews
+correlation coefficient for each of the clustering methods that were
+analyzed in this study for each of the six datasets.} Blank values
+indicate that those conditions could not be completed in 50 hours with
+45 GB of RAM.
+
 \newpage
 
-\hyperdef{}{references}{\label{references}}
 \subsection*{References}\label{references}
 \addcontentsline{toc}{subsection}{References}
 
-\hyperdef{}{ref-Schloss2016b}{\label{ref-Schloss2016b}}
+\hypertarget{refs}{}
+\hypertarget{ref-Schloss2016b}{}
 1. \textbf{Schloss PD}, \textbf{Girard RA}, \textbf{Martin T},
 \textbf{Edwards J}, \textbf{Thrash JC}. 2016. Status of the archaeal and
 bacterial census: An update. mBio \textbf{7}:e00201--16.
-doi:\url{http://doi.org/10.1128/mbio.00201-16}.
+doi:\href{https://doi.org/10.1128/mbio.00201-16}{10.1128/mbio.00201-16}.
 
-\hyperdef{}{ref-Locey2016}{\label{ref-Locey2016}}
+\hypertarget{ref-Locey2016}{}
 2. \textbf{Locey KJ}, \textbf{Lennon JT}. 2016. Scaling laws predict
 global microbial diversity. Proceedings of the National Academy of
 Sciences \textbf{113}:5970--5975.
-doi:\url{http://doi.org/10.1073/pnas.1521291113}.
+doi:\href{https://doi.org/10.1073/pnas.1521291113}{10.1073/pnas.1521291113}.
 
-\hyperdef{}{ref-Rideout2014}{\label{ref-Rideout2014}}
+\hypertarget{ref-Rideout2014}{}
 3. \textbf{Rideout JR}, \textbf{He Y}, \textbf{Navas-Molina JA},
 \textbf{Walters WA}, \textbf{Ursell LK}, \textbf{Gibbons SM},
 \textbf{Chase J}, \textbf{McDonald D}, \textbf{Gonzalez A},
@@ -784,55 +783,57 @@ doi:\url{http://doi.org/10.1073/pnas.1521291113}.
 \textbf{Huse SM}, \textbf{Zhou H-W}, \textbf{Knight R}, \textbf{Caporaso
 JG}. 2014. Subsampled open-reference clustering creates consistent,
 comprehensive OTU definitions and scales to billions of sequences. PeerJ
-\textbf{2}:e545. doi:\url{http://doi.org/10.7717/peerj.545}.
+\textbf{2}:e545.
+doi:\href{https://doi.org/10.7717/peerj.545}{10.7717/peerj.545}.
 
-\hyperdef{}{ref-Huttenhower2012}{\label{ref-Huttenhower2012}}
+\hypertarget{ref-Huttenhower2012}{}
 4. \textbf{Consortium THMP}. 2012. Structure, function and diversity of
 the healthy human microbiome. Nature \textbf{486}:207--214.
-doi:\url{http://doi.org/10.1038/nature11234}.
+doi:\href{https://doi.org/10.1038/nature11234}{10.1038/nature11234}.
 
-\hyperdef{}{ref-Eckburg2005}{\label{ref-Eckburg2005}}
+\hypertarget{ref-Eckburg2005}{}
 5. \textbf{Eckburg PB}, \textbf{Bik EM}, \textbf{Bernstein CN},
 \textbf{Purdom E}, \textbf{Dethlefsen L}, \textbf{Sargent M},
 \textbf{Gill SR}, \textbf{Nelson KE}, \textbf{Relman DA}. 2005.
 Diversity of the human intestinal microbial flora. Science
 \textbf{308}:1635--1638.
 
-\hyperdef{}{ref-Elshahed2008}{\label{ref-Elshahed2008}}
+\hypertarget{ref-Elshahed2008}{}
 6. \textbf{Elshahed MS}, \textbf{Youssef NH}, \textbf{Spain AM},
 \textbf{Sheik C}, \textbf{Najar FZ}, \textbf{Sukharnikov LO},
 \textbf{Roe BA}, \textbf{Davis JP}, \textbf{Schloss PD}, \textbf{Bailey
 VL}, \textbf{Krumholz LR}. 2008. Novelty and uniqueness patterns of rare
 members of the soil biosphere. Applied and Environmental Microbiology
-\textbf{74}:5422--5428. doi:\url{http://doi.org/10.1128/aem.00410-08}.
+\textbf{74}:5422--5428.
+doi:\href{https://doi.org/10.1128/aem.00410-08}{10.1128/aem.00410-08}.
 
-\hyperdef{}{ref-Kozich2013}{\label{ref-Kozich2013}}
+\hypertarget{ref-Kozich2013}{}
 7. \textbf{Kozich JJ}, \textbf{Westcott SL}, \textbf{Baxter NT},
 \textbf{Highlander SK}, \textbf{Schloss PD}. 2013. Development of a
 dual-index sequencing strategy and curation pipeline for analyzing
 amplicon sequence data on the MiSeq Illumina sequencing platform.
 Applied and Environmental Microbiology \textbf{79}:5112--5120.
-doi:\url{http://doi.org/10.1128/aem.01043-13}.
+doi:\href{https://doi.org/10.1128/aem.01043-13}{10.1128/aem.01043-13}.
 
-\hyperdef{}{ref-Schloss2009a}{\label{ref-Schloss2009a}}
+\hypertarget{ref-Schloss2009a}{}
 8. \textbf{Schloss PD}. 2009. A high-throughput DNA sequence aligner for
 microbial ecology studies. PLOS ONE \textbf{4}:e8230.
-doi:\url{http://doi.org/10.1371/journal.pone.0008230}.
+doi:\href{https://doi.org/10.1371/journal.pone.0008230}{10.1371/journal.pone.0008230}.
 
-\hyperdef{}{ref-Edgar2011}{\label{ref-Edgar2011}}
+\hypertarget{ref-Edgar2011}{}
 9. \textbf{Edgar RC}, \textbf{Haas BJ}, \textbf{Clemente JC},
 \textbf{Quince C}, \textbf{Knight R}. 2011. UCHIME improves sensitivity
 and speed of chimera detection. Bioinformatics \textbf{27}:2194--2200.
-doi:\url{http://doi.org/10.1093/bioinformatics/btr381}.
+doi:\href{https://doi.org/10.1093/bioinformatics/btr381}{10.1093/bioinformatics/btr381}.
 
-\hyperdef{}{ref-Wang2007}{\label{ref-Wang2007}}
+\hypertarget{ref-Wang2007}{}
 10. \textbf{Wang Q}, \textbf{Garrity GM}, \textbf{Tiedje JM},
 \textbf{Cole JR}. 2007. Naive bayesian classifier for rapid assignment
 of rRNA sequences into the new bacterial taxonomy. Applied and
 Environmental Microbiology \textbf{73}:5261--5267.
-doi:\url{http://doi.org/10.1128/aem.00062-07}.
+doi:\href{https://doi.org/10.1128/aem.00062-07}{10.1128/aem.00062-07}.
 
-\hyperdef{}{ref-Schloss2009b}{\label{ref-Schloss2009b}}
+\hypertarget{ref-Schloss2009b}{}
 11. \textbf{Schloss PD}, \textbf{Westcott SL}, \textbf{Ryabin T},
 \textbf{Hall JR}, \textbf{Hartmann M}, \textbf{Hollister EB},
 \textbf{Lesniewski RA}, \textbf{Oakley BB}, \textbf{Parks DH},
@@ -841,9 +842,10 @@ doi:\url{http://doi.org/10.1128/aem.00062-07}.
 Introducing mothur: Open-source, platform-independent,
 community-supported software for describing and comparing microbial
 communities. Applied and Environmental Microbiology
-\textbf{75}:7537--7541. doi:\url{http://doi.org/10.1128/aem.01541-09}.
+\textbf{75}:7537--7541.
+doi:\href{https://doi.org/10.1128/aem.01541-09}{10.1128/aem.01541-09}.
 
-\hyperdef{}{ref-Caporaso2010}{\label{ref-Caporaso2010}}
+\hypertarget{ref-Caporaso2010}{}
 12. \textbf{Caporaso JG}, \textbf{Kuczynski J}, \textbf{Stombaugh J},
 \textbf{Bittinger K}, \textbf{Bushman FD}, \textbf{Costello EK},
 \textbf{Fierer N}, \textbf{Peña AG}, \textbf{Goodrich JK},
@@ -855,16 +857,16 @@ communities. Applied and Environmental Microbiology
 \textbf{Yatsunenko T}, \textbf{Zaneveld J}, \textbf{Knight R}. 2010.
 QIIME allows analysis of high-throughput community sequencing data.
 Nature Methods \textbf{7}:335--336.
-doi:\url{http://doi.org/10.1038/nmeth.f.303}.
+doi:\href{https://doi.org/10.1038/nmeth.f.303}{10.1038/nmeth.f.303}.
 
-\hyperdef{}{ref-Schloss2011}{\label{ref-Schloss2011}}
+\hypertarget{ref-Schloss2011}{}
 13. \textbf{Schloss PD}, \textbf{Westcott SL}. 2011. Assessing and
 improving methods used in operational taxonomic unit-based approaches
 for 16S rRNA gene sequence analysis. Applied and Environmental
 Microbiology \textbf{77}:3219--3226.
-doi:\url{http://doi.org/10.1128/aem.02810-10}.
+doi:\href{https://doi.org/10.1128/aem.02810-10}{10.1128/aem.02810-10}.
 
-\hyperdef{}{ref-NavasMolina2013}{\label{ref-NavasMolina2013}}
+\hypertarget{ref-NavasMolina2013}{}
 14. \textbf{Navas-Molina JA}, \textbf{Peralta-Sánchez JM},
 \textbf{González A}, \textbf{McMurdie PJ}, \textbf{Vázquez-Baeza Y},
 \textbf{Xu Z}, \textbf{Ursell LK}, \textbf{Lauber C}, \textbf{Zhou H},
@@ -874,223 +876,225 @@ doi:\url{http://doi.org/10.1128/aem.02810-10}.
 microbiome using QIIME, pp. 371--444. \emph{In} Methods in enzymology.
 Elsevier BV.
 
-\hyperdef{}{ref-Westcott2015}{\label{ref-Westcott2015}}
+\hypertarget{ref-Westcott2015}{}
 15. \textbf{Westcott SL}, \textbf{Schloss PD}. 2015. De novo clustering
 methods outperform reference-based methods for assigning 16S rRNA gene
 sequences to operational taxonomic units. PeerJ \textbf{3}:e1487.
-doi:\url{http://doi.org/10.7717/peerj.1487}.
+doi:\href{https://doi.org/10.7717/peerj.1487}{10.7717/peerj.1487}.
 
-\hyperdef{}{ref-Schloss2005}{\label{ref-Schloss2005}}
+\hypertarget{ref-Schloss2005}{}
 16. \textbf{Schloss PD}, \textbf{Handelsman J}. 2005. Introducing DOTUR,
 a computer program for defining operational taxonomic units and
 estimating species richness. Applied and Environmental microbiology
 \textbf{71}:1501--1506.
 
-\hyperdef{}{ref-Edgar2010}{\label{ref-Edgar2010}}
+\hypertarget{ref-Edgar2010}{}
 17. \textbf{Edgar RC}. 2010. Search and clustering orders of magnitude
 faster than BLAST. Bioinformatics \textbf{26}:2460--2461.
-doi:\url{http://doi.org/10.1093/bioinformatics/btq461}.
+doi:\href{https://doi.org/10.1093/bioinformatics/btq461}{10.1093/bioinformatics/btq461}.
 
-\hyperdef{}{ref-Rognes2016}{\label{ref-Rognes2016}}
+\hypertarget{ref-Rognes2016}{}
 18. \textbf{Rognes T}, \textbf{Flouri T}, \textbf{Nichols B},
 \textbf{Quince C}, \textbf{Mahé F}. 2016. VSEARCH: A versatile open
 source tool for metagenomics. PeerJ \textbf{4}:e2584.
-doi:\url{http://doi.org/10.7717/peerj.2584}.
+doi:\href{https://doi.org/10.7717/peerj.2584}{10.7717/peerj.2584}.
 
-\hyperdef{}{ref-Albanese2015}{\label{ref-Albanese2015}}
+\hypertarget{ref-Albanese2015}{}
 19. \textbf{Albanese D}, \textbf{Fontana P}, \textbf{Filippo CD},
 \textbf{Cavalieri D}, \textbf{Donati C}. 2015. MICCA: A complete and
 accurate software for taxonomic profiling of metagenomic data.
 Scientific Reports \textbf{5}:9743.
-doi:\url{http://doi.org/10.1038/srep09743}.
+doi:\href{https://doi.org/10.1038/srep09743}{10.1038/srep09743}.
 
-\hyperdef{}{ref-Mah2014}{\label{ref-Mah2014}}
+\hypertarget{ref-Mah2014}{}
 20. \textbf{Mahé F}, \textbf{Rognes T}, \textbf{Quince C},
 \textbf{Vargas C de}, \textbf{Dunthorn M}. 2014. Swarm: Robust and fast
 clustering method for amplicon-based studies. PeerJ \textbf{2}:e593.
-doi:\url{http://doi.org/10.7717/peerj.593}.
+doi:\href{https://doi.org/10.7717/peerj.593}{10.7717/peerj.593}.
 
-\hyperdef{}{ref-Sun2009}{\label{ref-Sun2009}}
+\hypertarget{ref-Sun2009}{}
 21. \textbf{Sun Y}, \textbf{Cai Y}, \textbf{Liu L}, \textbf{Yu F},
 \textbf{Farrell ML}, \textbf{McKendree W}, \textbf{Farmerie W}. 2009.
 ESPRIT: Estimating species richness using large collections of 16S rRNA
 pyrosequences. Nucleic Acids Research \textbf{37}:e76--e76.
-doi:\url{http://doi.org/10.1093/nar/gkp285}.
+doi:\href{https://doi.org/10.1093/nar/gkp285}{10.1093/nar/gkp285}.
 
-\hyperdef{}{ref-Cai2011}{\label{ref-Cai2011}}
+\hypertarget{ref-Cai2011}{}
 22. \textbf{Cai Y}, \textbf{Sun Y}. 2011. ESPRIT-tree: Hierarchical
 clustering analysis of millions of 16S rRNA pyrosequences in quasilinear
 computational time. Nucleic Acids Research \textbf{39}:e95--e95.
-doi:\url{http://doi.org/10.1093/nar/gkr349}.
+doi:\href{https://doi.org/10.1093/nar/gkr349}{10.1093/nar/gkr349}.
 
-\hyperdef{}{ref-Edgar2013}{\label{ref-Edgar2013}}
+\hypertarget{ref-Edgar2013}{}
 23. \textbf{Edgar RC}. 2013. UPARSE: Highly accurate OTU sequences from
 microbial amplicon reads. Nature Methods \textbf{10}:996--998.
-doi:\url{http://doi.org/10.1038/nmeth.2604}.
+doi:\href{https://doi.org/10.1038/nmeth.2604}{10.1038/nmeth.2604}.
 
-\hyperdef{}{ref-Mah2015}{\label{ref-Mah2015}}
+\hypertarget{ref-Mah2015}{}
 24. \textbf{Mahé F}, \textbf{Rognes T}, \textbf{Quince C},
 \textbf{Vargas C de}, \textbf{Dunthorn M}. 2015. Swarm v2:
 Highly-scalable and high-resolution amplicon clustering. PeerJ
-\textbf{3}:e1420. doi:\url{http://doi.org/10.7717/peerj.1420}.
+\textbf{3}:e1420.
+doi:\href{https://doi.org/10.7717/peerj.1420}{10.7717/peerj.1420}.
 
-\hyperdef{}{ref-Barriuso2011}{\label{ref-Barriuso2011}}
+\hypertarget{ref-Barriuso2011}{}
 25. \textbf{Barriuso J}, \textbf{Valverde JR}, \textbf{Mellado RP}.
 2011. Estimation of bacterial diversity using next generation sequencing
 of 16S rDNA: A comparison of different workflows. BMC Bioinformatics
-\textbf{12}:473. doi:\url{http://doi.org/10.1186/1471-2105-12-473}.
+\textbf{12}:473.
+doi:\href{https://doi.org/10.1186/1471-2105-12-473}{10.1186/1471-2105-12-473}.
 
-\hyperdef{}{ref-Bonder2012}{\label{ref-Bonder2012}}
+\hypertarget{ref-Bonder2012}{}
 26. \textbf{Bonder MJ}, \textbf{Abeln S}, \textbf{Zaura E},
 \textbf{Brandt BW}. 2012. Comparing clustering and pre-processing in
 taxonomy analysis. Bioinformatics \textbf{28}:2891--2897.
-doi:\url{http://doi.org/10.1093/bioinformatics/bts552}.
+doi:\href{https://doi.org/10.1093/bioinformatics/bts552}{10.1093/bioinformatics/bts552}.
 
-\hyperdef{}{ref-Chen2013}{\label{ref-Chen2013}}
+\hypertarget{ref-Chen2013}{}
 27. \textbf{Chen W}, \textbf{Zhang CK}, \textbf{Cheng Y}, \textbf{Zhang
 S}, \textbf{Zhao H}. 2013. A comparison of methods for clustering 16S
 rRNA sequences into OTUs. PLOS ONE \textbf{8}:e70837.
-doi:\url{http://doi.org/10.1371/journal.pone.0070837}.
+doi:\href{https://doi.org/10.1371/journal.pone.0070837}{10.1371/journal.pone.0070837}.
 
-\hyperdef{}{ref-Huse2010}{\label{ref-Huse2010}}
+\hypertarget{ref-Huse2010}{}
 28. \textbf{Huse SM}, \textbf{Welch DM}, \textbf{Morrison HG},
 \textbf{Sogin ML}. 2010. Ironing out the wrinkles in the rare biosphere
 through improved OTU clustering. Environmental Microbiology
 \textbf{12}:1889--1898.
-doi:\url{http://doi.org/10.1111/j.1462-2920.2010.02193.x}.
+doi:\href{https://doi.org/10.1111/j.1462-2920.2010.02193.x}{10.1111/j.1462-2920.2010.02193.x}.
 
-\hyperdef{}{ref-May2014}{\label{ref-May2014}}
+\hypertarget{ref-May2014}{}
 29. \textbf{May A}, \textbf{Abeln S}, \textbf{Crielaard W},
 \textbf{Heringa J}, \textbf{Brandt BW}. 2014. Unraveling the outcome of
 16S rDNA-based taxonomy analysis through mock data and simulations.
 Bioinformatics \textbf{30}:1530--1538.
-doi:\url{http://doi.org/10.1093/bioinformatics/btu085}.
+doi:\href{https://doi.org/10.1093/bioinformatics/btu085}{10.1093/bioinformatics/btu085}.
 
-\hyperdef{}{ref-Sun2011}{\label{ref-Sun2011}}
+\hypertarget{ref-Sun2011}{}
 30. \textbf{Sun Y}, \textbf{Cai Y}, \textbf{Huse SM}, \textbf{Knight R},
 \textbf{Farmerie WG}, \textbf{Wang X}, \textbf{Mai V}. 2011. A
 large-scale benchmark study of existing algorithms for
 taxonomy-independent microbial community analysis. Briefings in
 Bioinformatics \textbf{13}:107--121.
-doi:\url{http://doi.org/10.1093/bib/bbr009}.
+doi:\href{https://doi.org/10.1093/bib/bbr009}{10.1093/bib/bbr009}.
 
-\hyperdef{}{ref-White2010}{\label{ref-White2010}}
+\hypertarget{ref-White2010}{}
 31. \textbf{White JR}, \textbf{Navlakha S}, \textbf{Nagarajan N},
 \textbf{Ghodsi M-R}, \textbf{Kingsford C}, \textbf{Pop M}. 2010.
 Alignment and clustering of phylogenetic markers - implications for
 microbial diversity studies. BMC Bioinformatics \textbf{11}:152.
-doi:\url{http://doi.org/10.1186/1471-2105-11-152}.
+doi:\href{https://doi.org/10.1186/1471-2105-11-152}{10.1186/1471-2105-11-152}.
 
-\hyperdef{}{ref-AlGhalith2016}{\label{ref-AlGhalith2016}}
+\hypertarget{ref-AlGhalith2016}{}
 32. \textbf{Al-Ghalith GA}, \textbf{Montassier E}, \textbf{Ward HN},
 \textbf{Knights D}. 2016. NINJA-OPS: Fast accurate marker gene alignment
 using concatenated ribosomes. PLOS Computational Biology
 \textbf{12}:e1004658.
-doi:\url{http://doi.org/10.1371/journal.pcbi.1004658}.
+doi:\href{https://doi.org/10.1371/journal.pcbi.1004658}{10.1371/journal.pcbi.1004658}.
 
-\hyperdef{}{ref-He2015}{\label{ref-He2015}}
+\hypertarget{ref-He2015}{}
 33. \textbf{He Y}, \textbf{Caporaso JG}, \textbf{Jiang X-T},
 \textbf{Sheng H-F}, \textbf{Huse SM}, \textbf{Rideout JR}, \textbf{Edgar
 RC}, \textbf{Kopylova E}, \textbf{Walters WA}, \textbf{Knight R},
 \textbf{Zhou H-W}. 2015. Stability of operational taxonomic units: An
 important but neglected property for analyzing microbial diversity.
 Microbiome \textbf{3}.
-doi:\url{http://doi.org/10.1186/s40168-015-0081-x}.
+doi:\href{https://doi.org/10.1186/s40168-015-0081-x}{10.1186/s40168-015-0081-x}.
 
-\hyperdef{}{ref-Kopylova2016}{\label{ref-Kopylova2016}}
+\hypertarget{ref-Kopylova2016}{}
 34. \textbf{Kopylova E}, \textbf{Navas-Molina JA}, \textbf{Mercier C},
 \textbf{Xu ZZ}, \textbf{Mahé F}, \textbf{He Y}, \textbf{Zhou H-W},
 \textbf{Rognes T}, \textbf{Caporaso JG}, \textbf{Knight R}. 2016.
 Open-source sequence clustering methods improve the state of the art.
 mSystems \textbf{1}:e00003--15.
-doi:\url{http://doi.org/10.1128/msystems.00003-15}.
+doi:\href{https://doi.org/10.1128/msystems.00003-15}{10.1128/msystems.00003-15}.
 
-\hyperdef{}{ref-Schmidt2014}{\label{ref-Schmidt2014}}
+\hypertarget{ref-Schmidt2014}{}
 35. \textbf{Schmidt TSB}, \textbf{Rodrigues JFM}, \textbf{Mering C von}.
 2014. Limits to robustness and reproducibility in the demarcation of
 operational taxonomic units. Environ Microbiol \textbf{17}:1689--1706.
-doi:\url{http://doi.org/10.1111/1462-2920.12610}.
+doi:\href{https://doi.org/10.1111/1462-2920.12610}{10.1111/1462-2920.12610}.
 
-\hyperdef{}{ref-Schloss2016a}{\label{ref-Schloss2016a}}
+\hypertarget{ref-Schloss2016a}{}
 36. \textbf{Schloss PD}. 2016. Application of a database-independent
 approach to assess the quality of operational taxonomic unit picking
 methods. mSystems \textbf{1}:e00027--16.
-doi:\url{http://doi.org/10.1128/msystems.00027-16}.
+doi:\href{https://doi.org/10.1128/msystems.00027-16}{10.1128/msystems.00027-16}.
 
-\hyperdef{}{ref-Matthews1975}{\label{ref-Matthews1975}}
+\hypertarget{ref-Matthews1975}{}
 37. \textbf{Matthews B}. 1975. Comparison of the predicted and observed
 secondary structure of t4 phage lysozyme. Biochimica et Biophysica Acta
 (BBA) - Protein Structure \textbf{405}:442--451.
-doi:\url{http://doi.org/10.1016/0005-2795(75)90109-9}.
+doi:\href{https://doi.org/10.1016/0005-2795(75)90109-9}{10.1016/0005-2795(75)90109-9}.
 
-\hyperdef{}{ref-Pruesse2007}{\label{ref-Pruesse2007}}
+\hypertarget{ref-Pruesse2007}{}
 38. \textbf{Pruesse E}, \textbf{Quast C}, \textbf{Knittel K},
 \textbf{Fuchs BM}, \textbf{Ludwig W}, \textbf{Peplies J},
 \textbf{Glockner FO}. 2007. SILVA: A comprehensive online resource for
 quality checked and aligned ribosomal RNA sequence data compatible with
 ARB. Nucleic Acids Research \textbf{35}:7188--7196.
-doi:\url{http://doi.org/10.1093/nar/gkm864}.
+doi:\href{https://doi.org/10.1093/nar/gkm864}{10.1093/nar/gkm864}.
 
-\hyperdef{}{ref-Baxter2016}{\label{ref-Baxter2016}}
+\hypertarget{ref-Baxter2016}{}
 39. \textbf{Baxter NT}, \textbf{Ruffin MT}, \textbf{Rogers MAM},
 \textbf{Schloss PD}. 2016. Microbiota-based model improves the
 sensitivity of fecal immunochemical test for detecting colonic lesions.
 Genome Medicine \textbf{8}.
-doi:\url{http://doi.org/10.1186/s13073-016-0290-3}.
+doi:\href{https://doi.org/10.1186/s13073-016-0290-3}{10.1186/s13073-016-0290-3}.
 
-\hyperdef{}{ref-Schloss2012}{\label{ref-Schloss2012}}
+\hypertarget{ref-Schloss2012}{}
 40. \textbf{Schloss PD}, \textbf{Schubert AM}, \textbf{Zackular JP},
 \textbf{Iverson KD}, \textbf{Young VB}, \textbf{Petrosino JF}. 2012.
 Stabilization of the murine gut microbiome following weaning. Gut
 Microbes \textbf{3}:383--393.
-doi:\url{http://doi.org/10.4161/gmic.21008}.
+doi:\href{https://doi.org/10.4161/gmic.21008}{10.4161/gmic.21008}.
 
-\hyperdef{}{ref-Johnston2016}{\label{ref-Johnston2016}}
+\hypertarget{ref-Johnston2016}{}
 41. \textbf{Johnston ER}, \textbf{Rodriguez-R LM}, \textbf{Luo C},
 \textbf{Yuan MM}, \textbf{Wu L}, \textbf{He Z}, \textbf{Schuur EAG},
 \textbf{Luo Y}, \textbf{Tiedje JM}, \textbf{Zhou J},
 \textbf{Konstantinidis KT}. 2016. Metagenomics reveals pervasive
 bacterial populations and reduced community diversity across the alaska
 tundra ecosystem. Front Microbiol \textbf{7}.
-doi:\url{http://doi.org/10.3389/fmicb.2016.00579}.
+doi:\href{https://doi.org/10.3389/fmicb.2016.00579}{10.3389/fmicb.2016.00579}.
 
-\hyperdef{}{ref-Henson2016}{\label{ref-Henson2016}}
+\hypertarget{ref-Henson2016}{}
 42. \textbf{Henson MW}, \textbf{Pitre DM}, \textbf{Weckhorst JL},
 \textbf{Lanclos VC}, \textbf{Webber AT}, \textbf{Thrash JC}. 2016.
 Artificial seawater media facilitate cultivating members of the
 microbial majority from the gulf of mexico. mSphere
 \textbf{1}:e00028--16.
-doi:\url{http://doi.org/10.1128/msphere.00028-16}.
+doi:\href{https://doi.org/10.1128/msphere.00028-16}{10.1128/msphere.00028-16}.
 
-\hyperdef{}{ref-Schloss2010}{\label{ref-Schloss2010}}
+\hypertarget{ref-Schloss2010}{}
 43. \textbf{Schloss PD}. 2010. The effects of alignment quality,
 distance calculation method, sequence filtering, and region on the
 analysis of 16S rRNA gene-based studies. PLOS Comput Biol
 \textbf{6}:e1000844.
-doi:\url{http://doi.org/10.1371/journal.pcbi.1000844}.
+doi:\href{https://doi.org/10.1371/journal.pcbi.1000844}{10.1371/journal.pcbi.1000844}.
 
-\hyperdef{}{ref-language2015}{\label{ref-language2015}}
+\hypertarget{ref-language2015}{}
 44. \textbf{R Core Team}. 2015. R: A language and environment for
 statistical computing. R Foundation for Statistical Computing, Vienna,
 Austria.
 
-\hyperdef{}{ref-wesanderson}{\label{ref-wesanderson}}
+\hypertarget{ref-wesanderson}{}
 45. \textbf{Ram K}, \textbf{Wickham H}. 2015. wesanderson: A wes
 anderson palette generator.
 
-\hyperdef{}{ref-dplyr}{\label{ref-dplyr}}
+\hypertarget{ref-dplyr}{}
 46. \textbf{Wickham H}, \textbf{Francois R}. 2016. dplyr: A grammar of
 data manipulation.
 
-\hyperdef{}{ref-tidyr}{\label{ref-tidyr}}
+\hypertarget{ref-tidyr}{}
 47. \textbf{Wickham H}. 2016. tidyr: Easily tidy data with `spread()`
 and `gather()` functions.
 
-\hyperdef{}{ref-cowplot}{\label{ref-cowplot}}
+\hypertarget{ref-cowplot}{}
 48. \textbf{Wilke CO}. cowplot: Streamlined plot theme and plot
 annotations for 'ggplot2'.
 
-\hyperdef{}{ref-ggplot2}{\label{ref-ggplot2}}
+\hypertarget{ref-ggplot2}{}
 49. \textbf{Wickham H}. 2009. ggplot2: Elegant graphics for data
 analysis. Springer-Verlag New York.
 

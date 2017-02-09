@@ -615,6 +615,11 @@ results/figures/split_mcc.% : code/build_split_figure.R\
 																data/processed/cluster_data.summary
 	R -e "source('code/build_split_figure.R')"
 
+results/tables/table_s1.pdf : results/tables/table_s1.Rmd data/processed/cluster_data.summary
+	R -e 'render("$<")'
+
+submission/supplemental_text.pdf : submission/supplemental_text.Rmd
+	R -e 'render("$<")'
 
 # Build manuscript...
 
@@ -626,7 +631,9 @@ write.paper : submission/msphere.csl\
 							results/figures/optimization.tiff results/figures/optimization.png\
 							results/figures/performance_other.tiff results/figures/performance_other.png\
 							results/figures/speed_memory.tiff results/figures/speed_memory.png\
-							results/figures/split_mcc.tiff results/figures/split_mcc.png
+							results/figures/split_mcc.tiff results/figures/split_mcc.png\
+							submission/supplemental_text.pdf\
+							results/tables/table_s1.pdf
 	R -e "render('submission/Westcott_OptiClust_mSphere_2016.Rmd', clean=FALSE)"
 	mv submission/Westcott_OptiClust_mSphere_2016.utf8.md submission/Westcott_OptiClust_mSphere_2016.md
 	rm submission/Westcott_OptiClust_mSphere_2016.knit.md
