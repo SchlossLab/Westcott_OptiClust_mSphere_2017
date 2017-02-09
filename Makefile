@@ -627,11 +627,11 @@ write.paper : submission/msphere.csl\
 							submission/header.tex\
 							data/processed/mcc_steps.summary\
 							data/processed/cluster_data.summary\
-							results/figures/performance.tiff results/figures/performance.png\
-							results/figures/optimization.tiff results/figures/optimization.png\
-							results/figures/performance_other.tiff results/figures/performance_other.png\
-							results/figures/speed_memory.tiff results/figures/speed_memory.png\
-							results/figures/split_mcc.tiff results/figures/split_mcc.png\
+							results/figures/performance.eps results/figures/performance.png\
+							results/figures/optimization.eps results/figures/optimization.png\
+							results/figures/performance_other.eps results/figures/performance_other.png\
+							results/figures/speed_memory.eps results/figures/speed_memory.png\
+							results/figures/split_mcc.eps results/figures/split_mcc.png\
 							submission/supplemental_text.pdf\
 							results/tables/table_s1.pdf
 	R -e "render('submission/Westcott_OptiClust_mSphere_2016.Rmd', clean=FALSE)"

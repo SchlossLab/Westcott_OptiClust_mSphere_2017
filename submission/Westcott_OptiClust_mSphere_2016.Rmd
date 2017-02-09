@@ -394,42 +394,21 @@ kable(data_table, row.names=F, align="lcccccc")
 
 \newpage
 
-\includegraphics[width=6.0in]{../results/figures/performance.png}
-
 **Figure 1. Comparison of de novo clustering algorithms.**  Plot of MCC (A), number of OTUs (B), and execution times (C) for the comparison of *de novo* clustering algorithms when applied to four natural and two synthetic datasets. The first three columns of each figure contain the results of clustering the datasets (i) seeding the algorithm with one sequence per OTU and allowing the algorithm to proceed until the MCC value no longer changed; (ii) seeding the algorithm with one sequence per OTU and allowing the algorithm to proceed until the MCC changed by less than 0.0001; (iii) seeding the algorithm with all of the sequences in one OTU and allowing the algorithm to proceed until the MCC value no longer changed. The human dataset could not be clustered by the average neighbor, Sumaclust, USEARCH, or OTUCLUST with less than 45 GB of RAM or 50 hours of execution time. The median of 10 re-orderings of the data is presented for each method and dataset. The range of observed values is indicated by the error bars, which are typically smaller than the plotting symbol.
 
-\newpage
-
-\includegraphics[width=3.5in]{../results/figures/speed_memory.png}
-
 **Figure 2. OptiClust performance** The average execution time (A) and memory usage (B) required to cluster the four natural datasets. The confidence intervals indicate the range between the minimum and maximum values. The y-axis is scaled by the square root to demonstrate the relationship between the time and memory requirements relative to the number of unique sequences squared.
-
-\newpage
-
-\includegraphics[width=3.5in]{../results/figures/split_mcc.png}
 
 **Figure 3. Effects of taxonomically splitting the datasets on clustering quality.** The datasets were split at each taxonomic level based on their classification using a naive Bayesian classifier and clustered using average neighbor, VSEARCH-based DGC, and OptiClust.
 
 \newpage
 
-\includegraphics[width=6.0in]{../results/figures/performance_other.png}
+**Table S1. Summary of the average number of true positives, true negatives, false positives, false negatives and the resulting Matthews correlation coefficient for each of the clustering methods that were analyzed in this study for each of the six datasets.** Blank values indicate that those conditions could not be completed in 50 hours with 45 GB of RAM.
 
 **Figure S1. The OptiClust algorithm is able to effectively cluster sequences into OTUs by minimizing or maximizing numerous metrics.** Plot of MCC (A), number of OTUs (B), and execution times (C) for the comparison of output from the OptiClust algorithm when to minimizing or maximizing a variety of parameters when applied to four natural and two synthetic datasets. Within mothur, OTU assignments can also be made using other metrics including minimizing false positives and maximizing the specificity, positive predictive value, and true negatives; however, these all resulted in sequences being assigned to separate OTUs, which resulted in no false positives and the maximum number of true negatives. The error bars indicate the range of values observed for 10 replicates.
 
-\newpage
-
-\includegraphics[width=3.5in]{../results/figures/optimization.png}
-
 **Figure S2. The OptiClust algorithm rapidly converges to optimize the Matthews correlation coefficient.** The six datasets were clustered into OTUs using the OptiClust algorithm seeking to maximize the Matthews correlation coefficient. This was repeated 10 times for each dataset.
 
-\newpage
-
-
-\newpage
-
 **Supplemental text.** Worked example of how OptiClust algorithm clusters sequences into OTUs.
-
-**Table S1. Summary of the average number of true positives, true negatives, false positives, false negatives and the resulting Matthews correlation coefficient for each of the clustering methods that were analyzed in this study for each of the six datasets.** Blank values indicate that those conditions could not be completed in 50 hours with 45 GB of RAM.
 
 \newpage
 

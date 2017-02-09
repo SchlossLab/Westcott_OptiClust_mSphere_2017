@@ -122,5 +122,5 @@ ggdraw() +
 	draw_plot(sobs + theme(axis.title.y=element_text(margin=margin(r=11,l=0,t=0,b=0))) + my_legend,x=0,y=0.45,1,0.275) +
 	draw_plot(secs,x=0,y=0.0,1,0.45) +
 	draw_plot_label(c("A", "B", "C"), x=c(0,0,0), y=c(1.00,0.735,0.46), size=12) +
-	ggsave('results/figures/performance_other.tiff', width=6.875, height=5.5, unit='in') +
-	ggsave('results/figures/performance_other.png', width=6.875, height=5.5, unit='in')
+	ggsave('results/figures/performance_other.eps', width=6.875, height=5.5, units='in') +
+	ggsave('results/figures/performance_other.png', width=6.875, height=5.5, units='in')

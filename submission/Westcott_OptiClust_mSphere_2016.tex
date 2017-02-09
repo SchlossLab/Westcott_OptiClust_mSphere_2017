@@ -678,8 +678,6 @@ Staggered (34, 36) & NA & NA & 1,156,550 & 11,558 & 29,694 &
 
 \newpage
 
-\includegraphics[width=6.0in]{results/figures/performance.png}
-
 \textbf{Figure 1. Comparison of de novo clustering algorithms.} Plot of
 MCC (A), number of OTUs (B), and execution times (C) for the comparison
 of \emph{de novo} clustering algorithms when applied to four natural and
@@ -697,20 +695,12 @@ presented for each method and dataset. The range of observed values is
 indicated by the error bars, which are typically smaller than the
 plotting symbol.
 
-\newpage
-
-\includegraphics[width=3.5in]{results/figures/speed_memory.png}
-
 \textbf{Figure 2. OptiClust performance} The average execution time (A)
 and memory usage (B) required to cluster the four natural datasets. The
 confidence intervals indicate the range between the minimum and maximum
 values. The y-axis is scaled by the square root to demonstrate the
 relationship between the time and memory requirements relative to the
 number of unique sequences squared.
-
-\newpage
-
-\includegraphics[width=3.5in]{results/figures/split_mcc.png}
 
 \textbf{Figure 3. Effects of taxonomically splitting the datasets on
 clustering quality.} The datasets were split at each taxonomic level
@@ -719,7 +709,12 @@ clustered using average neighbor, VSEARCH-based DGC, and OptiClust.
 
 \newpage
 
-\includegraphics[width=6.0in]{results/figures/performance_other.png}
+\textbf{Table S1. Summary of the average number of true positives, true
+negatives, false positives, false negatives and the resulting Matthews
+correlation coefficient for each of the clustering methods that were
+analyzed in this study for each of the six datasets.} Blank values
+indicate that those conditions could not be completed in 50 hours with
+45 GB of RAM.
 
 \textbf{Figure S1. The OptiClust algorithm is able to effectively
 cluster sequences into OTUs by minimizing or maximizing numerous
@@ -734,28 +729,13 @@ separate OTUs, which resulted in no false positives and the maximum
 number of true negatives. The error bars indicate the range of values
 observed for 10 replicates.
 
-\newpage
-
-\includegraphics[width=3.5in]{results/figures/optimization.png}
-
 \textbf{Figure S2. The OptiClust algorithm rapidly converges to optimize
 the Matthews correlation coefficient.} The six datasets were clustered
 into OTUs using the OptiClust algorithm seeking to maximize the Matthews
 correlation coefficient. This was repeated 10 times for each dataset.
 
-\newpage
-
-\newpage
-
 \textbf{Supplemental text.} Worked example of how OptiClust algorithm
 clusters sequences into OTUs.
-
-\textbf{Table S1. Summary of the average number of true positives, true
-negatives, false positives, false negatives and the resulting Matthews
-correlation coefficient for each of the clustering methods that were
-analyzed in this study for each of the six datasets.} Blank values
-indicate that those conditions could not be completed in 50 hours with
-45 GB of RAM.
 
 \newpage
 

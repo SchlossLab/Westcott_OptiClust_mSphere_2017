@@ -59,5 +59,5 @@ all_step_data %>%
 	expand_limits(y=c(0.7,0.9), x=c(0,17)) +
 	scale_x_continuous(breaks=c(0,5,10,15,20), labels=c(0,5,10,15,20)) +
 	my_theme +
-	ggsave("results/figures/optimization.tiff", width=3.5, height=2.5, unit='in') +
+	ggsave("results/figures/optimization.eps", width=3.5, height=2.5, unit='in') +
 	ggsave("results/figures/optimization.png", width=3.5, height=2.5, unit='in')
